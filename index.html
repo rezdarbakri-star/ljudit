@@ -139,19 +139,22 @@ const SPECIAL_SOUNDS = {
    LEVEL DEFINITIONS
    ───────────────────────────────────────────── */
 
+// Distractor items for intro levels (non-letters that fill card slots)
+const DISTRACTOR_EMOJIS = ["🐶","🐱","🦁","🐸","🚗","🏠","⭐","🌈","🎈","🍎","🐻","🦊","🐧","🎸","⚽","🌺","🦋","🍕","🚀","🎨"];
+
 const LEVELS = [
   // --- STEG 1: Uthållna konsonanter (en i taget) ---
-  { id:1, name:"Lär dig S", sub:"Var är S?", type:"intro-letter", focus:"S", icon:"🐣", color:"#4ECDC4" },
-  { id:2, name:"Lär dig L", sub:"Var är L?", type:"intro-letter", focus:"L", icon:"🐣", color:"#45B7D1" },
-  { id:3, name:"Lär dig M", sub:"Var är M?", type:"intro-letter", focus:"M", icon:"🐣", color:"#F39C12" },
+  { id:1, name:"Lär dig M", sub:"Var är M?", type:"intro-letter", focus:"M", icon:"🐣", color:"#F39C12" },
+  { id:2, name:"Lär dig S", sub:"Var är S?", type:"intro-letter", focus:"S", icon:"🐣", color:"#4ECDC4" },
+  { id:3, name:"Lär dig L", sub:"Var är L?", type:"intro-letter", focus:"L", icon:"🐣", color:"#45B7D1" },
   { id:4, name:"Lär dig F", sub:"Var är F?", type:"intro-letter", focus:"F", icon:"🐣", color:"#A29BFE" },
-  // --- STEG 2: Första vokalerna (för att kunna ljuda ord) ---
+  // --- STEG 2: Första vokalerna ---
   { id:5, name:"Lär dig O", sub:"Var är O?", type:"intro-letter", focus:"O", icon:"🐣", color:"#E17055" },
   { id:6, name:"Lär dig A", sub:"Var är A?", type:"intro-letter", focus:"A", icon:"🐣", color:"#00B894" },
-  // --- STEG 3: Blanda de första bokstäverna ---
-  { id:7, name:"Blanda S, L, M, F", sub:"2 kort", type:"letter-pair", count:2, letters:["S","L","M","F"], icon:"🌱", color:"#4ECDC4" },
-  { id:8, name:"Blanda S, L, M, F", sub:"3 kort", type:"letter-pair", count:3, letters:["S","L","M","F"], icon:"🌱", color:"#45B7D1" },
-  // --- STEG 4: Fler konsonanter + blanda ---
+  // --- STEG 3: Blanda ---
+  { id:7, name:"Blanda M, S, L, F", sub:"2 kort", type:"letter-pair", count:2, letters:["M","S","L","F"], icon:"🌱", color:"#4ECDC4" },
+  { id:8, name:"Blanda M, S, L, F", sub:"3 kort", type:"letter-pair", count:3, letters:["M","S","L","F"], icon:"🌱", color:"#45B7D1" },
+  // --- STEG 4: Fler konsonanter ---
   { id:9, name:"Lär dig N", sub:"Var är N?", type:"intro-letter", focus:"N", icon:"🐣", color:"#6C5CE7" },
   { id:10, name:"Lär dig R", sub:"Var är R?", type:"intro-letter", focus:"R", icon:"🐣", color:"#FD79A8" },
   { id:11, name:"Lär dig V", sub:"Var är V?", type:"intro-letter", focus:"V", icon:"🐣", color:"#FDCB6E" },
@@ -679,10 +682,11 @@ function CelebrationOverlay({ active, onDone }) {
 function ParentTips({ level, onClose }) {
   const tips = {
     "intro-letter": [
-      "Nu lär sig barnet EN bokstav i taget — det är hela poängen!",
-      "Tryck på 🔊 och säg: \"Hör du? Hitta den bokstaven!\"",
-      "Om barnet trycker fel, hör det vad den bokstaven säger istället.",
-      "Repetera ljudet ofta — det bygger associationen mellan form och ljud.",
+      "Börja med att låta barnet lyssna på bokstavsljudet — tryck på bokstaven!",
+      "Säg: \"Den där säger mmm!\" — LJUD, inte bokstavsnamn.",
+      "I spelet gömmer sig bokstaven bland bilder och andra bokstäver.",
+      "Om barnet trycker fel på en annan bokstav hör det vad den säger istället.",
+      "Det blir svårare gradvis — först bland bilder, sen bland fler bokstäver.",
     ],
     "letter-pair": [
       "Säg alltid vad bokstaven GÖR för ljud, inte vad den HETER.",
@@ -890,95 +894,247 @@ function ProgressBar({ current, total, color = "#4ECDC4" }) {
    ───────────────────────────────────────────── */
 
 /* ─────────────────────────────────────────────
-   GAME: INTRO LETTER (learn one letter at a time)
-   Starts with 2 cards, escalates to 3 after a few correct.
-   Focus letter stays the same throughout — always "Var är [X]?"
+   GAME: INTRO LETTER
+   Phase 1: Tutorial — "Vet du vad den här säger?" → play sound → confirm
+   Phase 2: Game — find letter among emojis & other letters, escalating
    ───────────────────────────────────────────── */
 
-const INTRO_PHASE_1_ROUNDS = 4; // rounds with 2 cards
-const INTRO_PHASE_2_ROUNDS = 4; // rounds with 3 cards
-const INTRO_TOTAL = INTRO_PHASE_1_ROUNDS + INTRO_PHASE_2_ROUNDS;
+const INTRO_GAME_ROUNDS = 8;
 
 function IntroLetterGame({ level, onComplete, onBack }) {
   const { focus } = level;
+  const [phase, setPhase] = useState("meet"); // meet → listen → play
   const [round, setRound] = useState(0);
   const [options, setOptions] = useState([]);
   const [feedback, setFeedback] = useState(null);
   const [showCelebration, setShowCelebration] = useState(false);
   const nextRoundRef = useRef(null);
+  const phonetic = PHONETIC_SOUNDS[focus] || focus.toLowerCase();
 
-  // How many cards this round?
-  const cardCount = round < INTRO_PHASE_1_ROUNDS ? 2 : 3;
-
-  // Distractors: avoid similar-sounding letters
-  const distractorPool = useMemo(() => {
+  // Distractors: letters that don't sound similar
+  const letterDistractorPool = useMemo(() => {
     const similar = SIMILAR_SOUNDS[focus] || [];
     return EASY_LETTERS.filter(l => l !== focus && !similar.includes(l));
   }, [focus]);
 
+  // Round difficulty:
+  // 0-2: focus + 1 emoji (2 cards — super easy)
+  // 3-5: focus + 1 emoji + 1 letter (3 cards)
+  // 6-7: focus + 2 letters (3 cards — no emojis)
   const setupRound = useCallback(() => {
-    const distractors = pickRandom(distractorPool, cardCount - 1, []);
-    setOptions(shuffle([focus, ...distractors]));
+    let items;
+    if (round < 3) {
+      const emoji = pickRandom(DISTRACTOR_EMOJIS, 1, [])[0];
+      items = shuffle([
+        { type:"letter", value: focus },
+        { type:"emoji", value: emoji },
+      ]);
+    } else if (round < 6) {
+      const emoji = pickRandom(DISTRACTOR_EMOJIS, 1, [])[0];
+      const letter = pickRandom(letterDistractorPool, 1, [])[0];
+      items = shuffle([
+        { type:"letter", value: focus },
+        { type:"emoji", value: emoji },
+        { type:"letter", value: letter },
+      ]);
+    } else {
+      const letters = pickRandom(letterDistractorPool, 2, []);
+      items = shuffle([
+        { type:"letter", value: focus },
+        { type:"letter", value: letters[0] },
+        { type:"letter", value: letters[1] },
+      ]);
+    }
+    setOptions(items);
     setFeedback(null);
-  }, [focus, cardCount, distractorPool]);
+  }, [focus, round, letterDistractorPool]);
 
-  useEffect(() => { setupRound(); }, [setupRound, round]);
+  useEffect(() => {
+    if (phase === "play") setupRound();
+  }, [setupRound, round, phase]);
 
-  const handleTap = (letter) => {
+  const handleTap = (item, idx) => {
     if (feedback || showCelebration) return;
-    if (letter === focus) {
-      setFeedback({ letter, correct: true });
+    if (item.type === "letter" && item.value === focus) {
+      setFeedback({ idx, correct: true });
+      playSound(focus);
       nextRoundRef.current = round + 1;
       setTimeout(() => setShowCelebration(true), 500);
-    } else {
-      setFeedback({ letter, correct: false });
-      playSound(letter);
+    } else if (item.type === "letter") {
+      setFeedback({ idx, correct: false });
+      playSound(item.value);
       setTimeout(() => setFeedback(null), 1200);
+    } else {
+      // Emoji tapped — gentle "nope"
+      setFeedback({ idx, correct: false });
+      setTimeout(() => setFeedback(null), 800);
     }
   };
 
   const handleCelebrationDone = useCallback(() => {
     setShowCelebration(false);
     const next = nextRoundRef.current;
-    if (next >= INTRO_TOTAL) {
+    if (next >= INTRO_GAME_ROUNDS) {
       setTimeout(() => onComplete(), 300);
     } else {
       setRound(next);
     }
   }, [onComplete]);
 
+  // ── PHASE: MEET ──
+  if (phase === "meet") {
+    return (
+      <div style={{
+        display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+        minHeight:"calc(100vh - 80px)", padding:"24px 20px", textAlign:"center",
+      }}>
+        <div style={{ fontSize:14, color:"#B2BEC3", fontWeight:600, marginBottom:24 }}>
+          Säg till barnet:
+        </div>
+        <div style={{
+          fontSize:20, color:"#2D3436", fontWeight:700, lineHeight:1.6, marginBottom:32,
+          maxWidth:300,
+        }}>
+          Vet du vad den här bokstaven säger? Tryck och lyssna!
+        </div>
+        <div style={{
+          width:140, height:140, borderRadius:32,
+          background:`linear-gradient(135deg, ${level.color}, ${level.color}BB)`,
+          display:"flex", alignItems:"center", justifyContent:"center",
+          fontSize:72, fontWeight:800, color:"white",
+          boxShadow:`0 8px 30px ${level.color}44`,
+          cursor:"pointer",
+          transition:"transform 0.15s ease",
+        }}
+          onClick={() => { playSound(focus); setPhase("listen"); }}
+        >
+          {focus}
+        </div>
+        <div style={{ fontSize:14, color:"#B2BEC3", marginTop:24 }}>
+          👆 Tryck på bokstaven
+        </div>
+      </div>
+    );
+  }
+
+  // ── PHASE: LISTEN (after playing sound) ──
+  if (phase === "listen") {
+    return (
+      <div style={{
+        display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+        minHeight:"calc(100vh - 80px)", padding:"24px 20px", textAlign:"center",
+      }}>
+        <div style={{
+          width:120, height:120, borderRadius:28,
+          background:`linear-gradient(135deg, ${level.color}, ${level.color}BB)`,
+          display:"flex", alignItems:"center", justifyContent:"center",
+          fontSize:60, fontWeight:800, color:"white",
+          boxShadow:`0 8px 30px ${level.color}44`, marginBottom:24,
+        }}>
+          {focus}
+        </div>
+        <div style={{
+          fontSize:22, color:"#2D3436", fontWeight:700, lineHeight:1.6, marginBottom:8,
+        }}>
+          {phonetic.toUpperCase()}!
+        </div>
+        <div style={{
+          fontSize:17, color:"#636E72", lineHeight:1.6, marginBottom:32, maxWidth:300,
+        }}>
+          Den där bokstaven säger <strong>"{phonetic}"</strong>!
+        </div>
+
+        <button
+          onClick={() => playSound(focus)}
+          style={{
+            padding:"14px 36px", borderRadius:16, border:"none",
+            background:"#DFE6E9", fontSize:16, fontWeight:600, color:"#636E72",
+            cursor:"pointer", marginBottom:16,
+          }}
+        >
+          🔊 Lyssna igen
+        </button>
+
+        <button
+          onClick={() => setPhase("play")}
+          style={{
+            padding:"16px 40px", borderRadius:20, border:"none",
+            background:`linear-gradient(135deg, ${level.color}, ${level.color}DD)`,
+            fontSize:17, fontWeight:700, color:"white",
+            cursor:"pointer", boxShadow:`0 4px 15px ${level.color}44`,
+          }}
+        >
+          Nu spelar vi! 🎮
+        </button>
+
+        <div style={{
+          fontSize:14, color:"#B2BEC3", marginTop:24, maxWidth:280, lineHeight:1.5,
+        }}>
+          Säg: "Nu gömmer sig {phonetic}! Kan du hitta den?"
+        </div>
+      </div>
+    );
+  }
+
+  // ── PHASE: PLAY (the actual game) ──
   return (
     <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100vh - 80px)", padding:"12px 16px 24px" }}>
       <CelebrationOverlay active={showCelebration} onDone={handleCelebrationDone} />
-      <ProgressBar current={round} total={INTRO_TOTAL} color={level.color} />
+      <ProgressBar current={round} total={INTRO_GAME_ROUNDS} color={level.color} />
       <div style={{ fontSize:14, color:"#B2BEC3", marginTop:6 }}>
-        {round} av {INTRO_TOTAL}
+        {round} av {INTRO_GAME_ROUNDS}
       </div>
 
-      {/* Letter cards - centered */}
+      {/* Cards - centered */}
       <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center" }}>
         <div style={{ display:"flex", gap:16, flexWrap:"wrap", justifyContent:"center" }}>
-          {options.map(letter => (
-            <LetterCard
-              key={letter}
-              letter={letter}
-              onClick={handleTap}
-              size="large"
-              state={
-                feedback?.letter === letter
-                  ? feedback.correct ? "correct" : "wrong"
-                  : feedback?.correct && letter === focus ? "correct" : "default"
-              }
-              disabled={!!feedback || showCelebration}
-            />
-          ))}
+          {options.map((item, idx) => {
+            const isTarget = item.type === "letter" && item.value === focus;
+            const fbState = feedback?.idx === idx
+              ? feedback.correct ? "correct" : "wrong"
+              : feedback?.correct && isTarget ? "correct" : "default";
+
+            if (item.type === "emoji") {
+              // Emoji distractor card
+              return (
+                <div
+                  key={`emoji-${idx}`}
+                  onClick={() => handleTap(item, idx)}
+                  style={{
+                    width:110, height:130, borderRadius:20,
+                    display:"flex", alignItems:"center", justifyContent:"center",
+                    fontSize:56,
+                    background: fbState === "wrong" ? "#FFF0F0" : "white",
+                    border: fbState === "wrong" ? "3px solid #FF6B6B" : "3px solid #EEE",
+                    cursor:"pointer",
+                    transition:"all 0.2s ease",
+                    boxShadow:"0 4px 15px rgba(0,0,0,0.06)",
+                    transform: fbState === "wrong" ? "scale(0.95)" : "scale(1)",
+                  }}
+                >
+                  {item.value}
+                </div>
+              );
+            }
+            // Letter card
+            return (
+              <LetterCard
+                key={`letter-${item.value}-${idx}`}
+                letter={item.value}
+                onClick={() => handleTap(item, idx)}
+                size="large"
+                state={fbState}
+                disabled={!!feedback || showCelebration}
+              />
+            );
+          })}
         </div>
       </div>
 
       {/* Sound button - thumb zone */}
       <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:8, paddingBottom:8 }}>
         <div style={{ fontSize:15, color:"#636E72", fontWeight:600 }}>
-          Var är {focus}?
+          Var är {phonetic}?
         </div>
         <SoundButton soundKey={focus} type="letters" label="Lyssna 🔊" large color={level.color} />
       </div>
@@ -1018,6 +1174,7 @@ function LetterPairGame({ level, onComplete, onBack }) {
     if (feedback || showCelebration) return;
     if (letter === target) {
       setFeedback({ letter, correct: true });
+      playSound(letter);
       const newPool = pool.slice(1);
       nextPoolRef.current = newPool;
       setTimeout(() => {
@@ -1914,7 +2071,11 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome }) {
             {cat.levels.map(level => {
               const done = completedLevels.has(level.id);
               const hasAudio = levelHasAudio(level);
-              const locked = !hasAudio;
+              const prevDone = level.id === 1 || completedLevels.has(level.id - 1);
+              const noAudio = !hasAudio;
+              const notReady = hasAudio && !prevDone && !done;
+              const locked = noAudio || notReady;
+              const lockReason = noAudio ? "Ljud saknas" : notReady ? "Slutför föregående nivå först" : "";
               return (
                 <button
                   key={level.id}
@@ -1944,7 +2105,7 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome }) {
                   <div style={{ flex:1 }}>
                     <div style={{ fontSize:15, fontWeight:700, color: locked ? "#B2BEC3" : "#2D3436" }}>{level.name}</div>
                     <div style={{ fontSize:12, color:"#B2BEC3", fontWeight:500 }}>
-                      {locked ? "Ljud saknas" : level.sub}
+                      {locked ? lockReason : level.sub}
                     </div>
                   </div>
                   <div style={{ fontSize:18, color:"#DFE6E9" }}>{locked ? "" : "›"}</div>
