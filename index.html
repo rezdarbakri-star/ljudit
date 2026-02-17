@@ -926,7 +926,7 @@ function ProgressBar({ current, total, color = "#4ECDC4" }) {
 
 const INTRO_ROUNDS = 5;
 
-function IntroLetterGame({ level, onComplete, onBack }) {
+function IntroLetterGame({ level, onComplete, onBack, skipRoundRef }) {
   const { focus, count = 2, emojisOnly = true, tutorial = false } = level;
   const [phase, setPhase] = useState(tutorial ? "meet" : "play");
   const [round, setRound] = useState(0);
@@ -935,6 +935,14 @@ function IntroLetterGame({ level, onComplete, onBack }) {
   const [showCelebration, setShowCelebration] = useState(false);
   const nextRoundRef = useRef(null);
   const phonetic = PHONETIC_SOUNDS[focus] || focus.toLowerCase();
+
+  useEffect(() => {
+    if (skipRoundRef) skipRoundRef.current = () => {
+      if (phase !== "play") { setPhase("play"); return; }
+      if (round + 1 >= INTRO_ROUNDS) onComplete();
+      else setRound(r => r + 1);
+    };
+  });
 
   const letterPool = useMemo(() => {
     const similar = SIMILAR_SOUNDS[focus] || [];
@@ -1105,7 +1113,7 @@ function IntroLetterGame({ level, onComplete, onBack }) {
 const SEEK_ROUNDS = 6;
 const CARD_COLORS = ["#FF6B6B","#4ECDC4","#45B7D1","#96CEB4","#FFEAA7","#DDA0DD","#F39C12","#A29BFE","#FD79A8","#00B894","#6C5CE7","#E17055","#74B9FF","#FDCB6E"];
 
-function SeekLetterGame({ level, onComplete, onBack }) {
+function SeekLetterGame({ level, onComplete, onBack, skipRoundRef }) {
   const { focus } = level;
   const [round, setRound] = useState(0);
   const [grid, setGrid] = useState([]);
@@ -1118,6 +1126,13 @@ function SeekLetterGame({ level, onComplete, onBack }) {
   // Grid size escalates: 6 → 9 → 12
   const gridSize = round < 2 ? 6 : round < 4 ? 9 : 12;
   const cols = round < 2 ? 3 : round < 4 ? 3 : 4;
+
+  useEffect(() => {
+    if (skipRoundRef) skipRoundRef.current = () => {
+      if (round + 1 >= SEEK_ROUNDS) onComplete();
+      else setRound(r => r + 1);
+    };
+  });
 
   const letterDistractorPool = useMemo(() => {
     const similar = SIMILAR_SOUNDS[focus] || [];
@@ -1253,7 +1268,7 @@ function SeekLetterGame({ level, onComplete, onBack }) {
    GAME: LETTER PAIR (pick correct from options)
    ───────────────────────────────────────────── */
 
-function LetterPairGame({ level, onComplete, onBack }) {
+function LetterPairGame({ level, onComplete, onBack, skipRoundRef }) {
   const { letters, count } = level;
   const [pool, setPool] = useState(() => shuffle([...letters]));
   const [target, setTarget] = useState(null);
@@ -1263,6 +1278,14 @@ function LetterPairGame({ level, onComplete, onBack }) {
   const [showCelebration, setShowCelebration] = useState(false);
   const nextPoolRef = useRef(null);
   const total = letters.length;
+
+  useEffect(() => {
+    if (skipRoundRef) skipRoundRef.current = () => {
+      const next = pool.slice(1);
+      if (next.length === 0) onComplete();
+      else { setPool(next); setCompleted(c => c + 1); }
+    };
+  });
 
   const setupRound = useCallback(() => {
     if (pool.length === 0) return;
@@ -2321,9 +2344,11 @@ function App() {
     setScreen("home");
   };
 
+  const skipRoundRef = useRef(null);
+
   const renderGame = () => {
     if (!currentLevel) return null;
-    const props = { key: currentLevel.id, level: currentLevel, onComplete: handleComplete, onBack: () => setScreen("levels") };
+    const props = { key: currentLevel.id, level: currentLevel, onComplete: handleComplete, onBack: () => setScreen("levels"), skipRoundRef };
 
     switch (currentLevel.type) {
       case "intro-letter": return <IntroLetterGame {...props} />;
@@ -2400,9 +2425,7 @@ function App() {
             display:"flex", alignItems:"center", justifyContent:"center",
           }}>💡</button>
           <button onClick={() => {
-            const idx = LEVELS.findIndex(l => l.id === currentLevel.id);
-            if (idx < LEVELS.length - 1) startLevel(LEVELS[idx + 1]);
-            else setScreen("levels");
+            if (skipRoundRef.current) skipRoundRef.current();
           }} style={{
             width:40, height:40, borderRadius:12, border:"2px solid #DFE6E9",
             background:"white", fontSize:14, cursor:"pointer",
