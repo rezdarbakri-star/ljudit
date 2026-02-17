@@ -143,44 +143,53 @@ const SPECIAL_SOUNDS = {
 const DISTRACTOR_EMOJIS = ["🐶","🐱","🦁","🐸","🚗","🏠","⭐","🌈","🎈","🍎","🐻","🦊","🐧","🎸","⚽","🌺","🦋","🍕","🚀","🎨"];
 
 const LEVELS = [
-  // --- STEG 1: Uthållna konsonanter (en i taget) ---
+  // --- STEG 1: Lär + Hitta (en bokstav i taget) ---
   { id:1, name:"Lär dig M", sub:"Var är M?", type:"intro-letter", focus:"M", icon:"🐣", color:"#F39C12" },
-  { id:2, name:"Lär dig S", sub:"Var är S?", type:"intro-letter", focus:"S", icon:"🐣", color:"#4ECDC4" },
-  { id:3, name:"Lär dig L", sub:"Var är L?", type:"intro-letter", focus:"L", icon:"🐣", color:"#45B7D1" },
-  { id:4, name:"Lär dig F", sub:"Var är F?", type:"intro-letter", focus:"F", icon:"🐣", color:"#A29BFE" },
+  { id:2, name:"Hitta M", sub:"M gömmer sig!", type:"seek-letter", focus:"M", icon:"🔍", color:"#F39C12" },
+  { id:3, name:"Lär dig S", sub:"Var är S?", type:"intro-letter", focus:"S", icon:"🐣", color:"#4ECDC4" },
+  { id:4, name:"Hitta S", sub:"S gömmer sig!", type:"seek-letter", focus:"S", icon:"🔍", color:"#4ECDC4" },
+  { id:5, name:"Lär dig L", sub:"Var är L?", type:"intro-letter", focus:"L", icon:"🐣", color:"#45B7D1" },
+  { id:6, name:"Hitta L", sub:"L gömmer sig!", type:"seek-letter", focus:"L", icon:"🔍", color:"#45B7D1" },
+  { id:7, name:"Lär dig F", sub:"Var är F?", type:"intro-letter", focus:"F", icon:"🐣", color:"#A29BFE" },
+  { id:8, name:"Hitta F", sub:"F gömmer sig!", type:"seek-letter", focus:"F", icon:"🔍", color:"#A29BFE" },
   // --- STEG 2: Första vokalerna ---
-  { id:5, name:"Lär dig O", sub:"Var är O?", type:"intro-letter", focus:"O", icon:"🐣", color:"#E17055" },
-  { id:6, name:"Lär dig A", sub:"Var är A?", type:"intro-letter", focus:"A", icon:"🐣", color:"#00B894" },
+  { id:9, name:"Lär dig O", sub:"Var är O?", type:"intro-letter", focus:"O", icon:"🐣", color:"#E17055" },
+  { id:10, name:"Hitta O", sub:"O gömmer sig!", type:"seek-letter", focus:"O", icon:"🔍", color:"#E17055" },
+  { id:11, name:"Lär dig A", sub:"Var är A?", type:"intro-letter", focus:"A", icon:"🐣", color:"#00B894" },
+  { id:12, name:"Hitta A", sub:"A gömmer sig!", type:"seek-letter", focus:"A", icon:"🔍", color:"#00B894" },
   // --- STEG 3: Blanda ---
-  { id:7, name:"Blanda M, S, L, F", sub:"2 kort", type:"letter-pair", count:2, letters:["M","S","L","F"], icon:"🌱", color:"#4ECDC4" },
-  { id:8, name:"Blanda M, S, L, F", sub:"3 kort", type:"letter-pair", count:3, letters:["M","S","L","F"], icon:"🌱", color:"#45B7D1" },
+  { id:13, name:"Blanda M, S, L, F", sub:"2 kort", type:"letter-pair", count:2, letters:["M","S","L","F"], icon:"🌱", color:"#4ECDC4" },
+  { id:14, name:"Blanda M, S, L, F", sub:"3 kort", type:"letter-pair", count:3, letters:["M","S","L","F"], icon:"🌱", color:"#45B7D1" },
   // --- STEG 4: Fler konsonanter ---
-  { id:9, name:"Lär dig N", sub:"Var är N?", type:"intro-letter", focus:"N", icon:"🐣", color:"#6C5CE7" },
-  { id:10, name:"Lär dig R", sub:"Var är R?", type:"intro-letter", focus:"R", icon:"🐣", color:"#FD79A8" },
-  { id:11, name:"Lär dig V", sub:"Var är V?", type:"intro-letter", focus:"V", icon:"🐣", color:"#FDCB6E" },
-  { id:12, name:"Alla uthållna", sub:"2 kort", type:"letter-pair", count:2, letters:EASY_LETTERS, icon:"🔤", color:"#96CEB4" },
-  { id:13, name:"Alla uthållna", sub:"3 kort", type:"letter-pair", count:3, letters:EASY_LETTERS, icon:"🔤", color:"#45B7D1" },
+  { id:15, name:"Lär dig N", sub:"Var är N?", type:"intro-letter", focus:"N", icon:"🐣", color:"#6C5CE7" },
+  { id:16, name:"Hitta N", sub:"N gömmer sig!", type:"seek-letter", focus:"N", icon:"🔍", color:"#6C5CE7" },
+  { id:17, name:"Lär dig R", sub:"Var är R?", type:"intro-letter", focus:"R", icon:"🐣", color:"#FD79A8" },
+  { id:18, name:"Hitta R", sub:"R gömmer sig!", type:"seek-letter", focus:"R", icon:"🔍", color:"#FD79A8" },
+  { id:19, name:"Lär dig V", sub:"Var är V?", type:"intro-letter", focus:"V", icon:"🐣", color:"#FDCB6E" },
+  { id:20, name:"Hitta V", sub:"V gömmer sig!", type:"seek-letter", focus:"V", icon:"🔍", color:"#FDCB6E" },
+  { id:21, name:"Alla uthållna", sub:"2 kort", type:"letter-pair", count:2, letters:EASY_LETTERS, icon:"🔤", color:"#96CEB4" },
+  { id:22, name:"Alla uthållna", sub:"3 kort", type:"letter-pair", count:3, letters:EASY_LETTERS, icon:"🔤", color:"#45B7D1" },
   // --- STEG 5: Korta konsonanter ---
-  { id:14, name:"Korta ljud", sub:"B, D, G, K, P, T", type:"letter-pair", count:2, letters:MEDIUM_LETTERS, icon:"📖", color:"#FFEAA7" },
-  { id:15, name:"Korta ljud", sub:"3 kort", type:"letter-pair", count:3, letters:MEDIUM_LETTERS, icon:"📚", color:"#F39C12" },
-  { id:16, name:"Alla hittills", sub:"En i taget", type:"single-letter", letters:[...EASY_LETTERS, ...FIRST_VOWELS, ...MEDIUM_LETTERS], icon:"👆", color:"#E17055" },
+  { id:23, name:"Korta ljud", sub:"B, D, G, K, P, T", type:"letter-pair", count:2, letters:MEDIUM_LETTERS, icon:"📖", color:"#FFEAA7" },
+  { id:24, name:"Korta ljud", sub:"3 kort", type:"letter-pair", count:3, letters:MEDIUM_LETTERS, icon:"📚", color:"#F39C12" },
+  { id:25, name:"Alla hittills", sub:"En i taget", type:"single-letter", letters:[...EASY_LETTERS, ...FIRST_VOWELS, ...MEDIUM_LETTERS], icon:"👆", color:"#E17055" },
   // --- STEG 6: Fler vokaler + svåra ---
-  { id:17, name:"Fler vokaler", sub:"E, I, U, Y", type:"letter-pair", count:2, letters:MORE_VOWELS, icon:"🎯", color:"#A29BFE" },
-  { id:18, name:"Å, Ä, Ö", sub:"Svenska vokaler", type:"letter-pair", count:2, letters:SWEDISH_EXTRA, icon:"🇸🇪", color:"#0984E3" },
-  { id:19, name:"Svåra bokstäver", sub:"C, H, J, Q, W, X, Z", type:"letter-pair", count:2, letters:HARD_LETTERS, icon:"⭐", color:"#6C5CE7" },
+  { id:26, name:"Fler vokaler", sub:"E, I, U, Y", type:"letter-pair", count:2, letters:MORE_VOWELS, icon:"🎯", color:"#A29BFE" },
+  { id:27, name:"Å, Ä, Ö", sub:"Svenska vokaler", type:"letter-pair", count:2, letters:SWEDISH_EXTRA, icon:"🇸🇪", color:"#0984E3" },
+  { id:28, name:"Svåra bokstäver", sub:"C, H, J, Q, W, X, Z", type:"letter-pair", count:2, letters:HARD_LETTERS, icon:"⭐", color:"#6C5CE7" },
   // --- LÄSA ORD ---
-  { id:20, name:"Läsa ord", sub:"Nivå 1 (3 bokstäver)", type:"word-read", wordLevel:1, icon:"📝", color:"#FD79A8" },
-  { id:21, name:"Läsa ord", sub:"Nivå 2 (4 bokstäver)", type:"word-read", wordLevel:2, icon:"📝", color:"#E84393" },
-  { id:22, name:"Läsa ord", sub:"Nivå 3 (5 bokstäver)", type:"word-read", wordLevel:3, icon:"📝", color:"#D63031" },
+  { id:29, name:"Läsa ord", sub:"Nivå 1 (3 bokstäver)", type:"word-read", wordLevel:1, icon:"📝", color:"#FD79A8" },
+  { id:30, name:"Läsa ord", sub:"Nivå 2 (4 bokstäver)", type:"word-read", wordLevel:2, icon:"📝", color:"#E84393" },
+  { id:31, name:"Läsa ord", sub:"Nivå 3 (5 bokstäver)", type:"word-read", wordLevel:3, icon:"📝", color:"#D63031" },
   // --- AVANCERAT ---
-  { id:23, name:"Ljuda ut", sub:"Dra ut på orden", type:"blending", icon:"🚗", color:"#00B894" },
-  { id:24, name:"Rita bokstäver", sub:"Hör ljud → rita", type:"draw-letter", icon:"✏️", color:"#6C5CE7" },
-  { id:25, name:"Stava ord", sub:"Hör ord → stava", type:"spell-word", icon:"🔠", color:"#0984E3" },
+  { id:32, name:"Ljuda ut", sub:"Dra ut på orden", type:"blending", icon:"🚗", color:"#00B894" },
+  { id:33, name:"Rita bokstäver", sub:"Hör ljud → rita", type:"draw-letter", icon:"✏️", color:"#6C5CE7" },
+  { id:34, name:"Stava ord", sub:"Hör ord → stava", type:"spell-word", icon:"🔠", color:"#0984E3" },
   // --- SPECIALLJUD ---
-  { id:26, name:"NG-ljudet", sub:"Specialljud", type:"special-sound", soundKey:"NG", icon:"🔊", color:"#E17055" },
-  { id:27, name:"CK-ljudet", sub:"Specialljud", type:"special-sound", soundKey:"CK", icon:"🔊", color:"#FDCB6E" },
-  { id:28, name:"SKJ-ljudet", sub:"Specialljud", type:"special-sound", soundKey:"SKJ", icon:"🔊", color:"#74B9FF" },
-  { id:29, name:"CH-ljudet", sub:"Specialljud", type:"special-sound", soundKey:"CH", icon:"🔊", color:"#A29BFE" },
+  { id:35, name:"NG-ljudet", sub:"Specialljud", type:"special-sound", soundKey:"NG", icon:"🔊", color:"#E17055" },
+  { id:36, name:"CK-ljudet", sub:"Specialljud", type:"special-sound", soundKey:"CK", icon:"🔊", color:"#FDCB6E" },
+  { id:37, name:"SKJ-ljudet", sub:"Specialljud", type:"special-sound", soundKey:"SKJ", icon:"🔊", color:"#74B9FF" },
+  { id:38, name:"CH-ljudet", sub:"Specialljud", type:"special-sound", soundKey:"CH", icon:"🔊", color:"#A29BFE" },
 ];
 
 /* ─────────────────────────────────────────────
@@ -688,6 +697,12 @@ function ParentTips({ level, onClose }) {
       "Om barnet trycker fel på en annan bokstav hör det vad den säger istället.",
       "Det blir svårare gradvis — först bland bilder, sen bland fler bokstäver.",
     ],
+    "seek-letter": [
+      "Nu gömmer sig bokstaven i ett rutnät med kort!",
+      "Fråga: \"Var gömmer sig mmm?\" — låt barnet leta!",
+      "Det börjar lätt med 6 kort och blir svårare med 9 och sen 12.",
+      "Bland bilderna finns också andra bokstäver — bra träning!",
+    ],
     "letter-pair": [
       "Säg alltid vad bokstaven GÖR för ljud, inte vad den HETER.",
       "Tryck på 🔊-knappen för att höra det fonetiska ljudet.",
@@ -1124,6 +1139,159 @@ function IntroLetterGame({ level, onComplete, onBack }) {
         <div style={{ fontSize:15, color:"#636E72", fontWeight:600 }}>
           Var är {phonetic}?
         </div>
+        <SoundButton soundKey={focus} type="letters" label="Lyssna 🔊" large color={level.color} />
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   GAME: SEEK LETTER (find letter in a grid of cards)
+   "Finn-fem-fel" style — hunt for the letter among
+   emojis, toys, animals, and a few other letters.
+   ───────────────────────────────────────────── */
+
+const SEEK_ROUNDS = 6;
+const CARD_COLORS = ["#FF6B6B","#4ECDC4","#45B7D1","#96CEB4","#FFEAA7","#DDA0DD","#F39C12","#A29BFE","#FD79A8","#00B894","#6C5CE7","#E17055","#74B9FF","#FDCB6E"];
+
+function SeekLetterGame({ level, onComplete, onBack }) {
+  const { focus } = level;
+  const [round, setRound] = useState(0);
+  const [grid, setGrid] = useState([]);
+  const [feedback, setFeedback] = useState(null);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [found, setFound] = useState(false);
+  const nextRoundRef = useRef(null);
+  const phonetic = PHONETIC_SOUNDS[focus] || focus.toLowerCase();
+
+  // Grid size escalates: 6 → 9 → 12
+  const gridSize = round < 2 ? 6 : round < 4 ? 9 : 12;
+  const cols = round < 2 ? 3 : round < 4 ? 3 : 4;
+
+  const letterDistractorPool = useMemo(() => {
+    const similar = SIMILAR_SOUNDS[focus] || [];
+    return EASY_LETTERS.filter(l => l !== focus && !similar.includes(l));
+  }, [focus]);
+
+  const setupRound = useCallback(() => {
+    // Pick random emojis and a couple distractor letters
+    const numLetters = round < 2 ? 1 : round < 4 ? 2 : 3;
+    const numEmojis = gridSize - 1 - numLetters;
+    const emojis = pickRandom(DISTRACTOR_EMOJIS, numEmojis, []);
+    const letters = pickRandom(letterDistractorPool, numLetters, []);
+
+    const items = [
+      { type:"target", value: focus, id:"target" },
+      ...emojis.map((e, i) => ({ type:"emoji", value: e, id:`e${i}` })),
+      ...letters.map((l, i) => ({ type:"letter", value: l, id:`l${i}` })),
+    ];
+
+    // Give each card a random color
+    const shuffled = shuffle(items).map((item, idx) => ({
+      ...item,
+      color: CARD_COLORS[idx % CARD_COLORS.length],
+    }));
+
+    setGrid(shuffled);
+    setFeedback(null);
+    setFound(false);
+  }, [focus, round, gridSize, letterDistractorPool]);
+
+  useEffect(() => { setupRound(); }, [setupRound, round]);
+
+  const handleTap = (item, idx) => {
+    if (feedback || showCelebration || found) return;
+    if (item.type === "target") {
+      setFound(true);
+      setFeedback({ idx, correct: true });
+      playSound(focus);
+      nextRoundRef.current = round + 1;
+      setTimeout(() => setShowCelebration(true), 600);
+    } else if (item.type === "letter") {
+      setFeedback({ idx, correct: false });
+      playSound(item.value);
+      setTimeout(() => setFeedback(null), 1000);
+    } else {
+      setFeedback({ idx, correct: false });
+      setTimeout(() => setFeedback(null), 600);
+    }
+  };
+
+  const handleCelebrationDone = useCallback(() => {
+    setShowCelebration(false);
+    const next = nextRoundRef.current;
+    if (next >= SEEK_ROUNDS) {
+      setTimeout(() => onComplete(), 300);
+    } else {
+      setRound(next);
+    }
+  }, [onComplete]);
+
+  const cardW = cols === 4 ? 72 : 90;
+  const cardH = cols === 4 ? 82 : 100;
+
+  return (
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100vh - 80px)", padding:"12px 16px 24px" }}>
+      <CelebrationOverlay active={showCelebration} onDone={handleCelebrationDone} />
+      <ProgressBar current={round} total={SEEK_ROUNDS} color={level.color} />
+      <div style={{ fontSize:13, color:"#B2BEC3", marginTop:4, fontStyle:"italic" }}>
+        Fråga ditt barn: "Var gömmer sig <strong style={{ color:"#636E72" }}>"{phonetic}"</strong>?"
+      </div>
+
+      {/* Grid of cards */}
+      <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", padding:"12px 0" }}>
+        <div style={{
+          display:"grid",
+          gridTemplateColumns:`repeat(${cols}, ${cardW}px)`,
+          gap:10,
+        }}>
+          {grid.map((item, idx) => {
+            const isTarget = item.type === "target";
+            const fbThis = feedback?.idx === idx;
+            const showCorrect = fbThis && feedback.correct;
+            const showWrong = fbThis && !feedback.correct;
+            const foundTarget = found && isTarget;
+
+            return (
+              <div
+                key={item.id}
+                onClick={() => handleTap(item, idx)}
+                style={{
+                  width:cardW, height:cardH, borderRadius:16,
+                  display:"flex", alignItems:"center", justifyContent:"center",
+                  cursor:"pointer",
+                  transition:"all 0.2s ease",
+                  border: showCorrect || foundTarget
+                    ? "3px solid #00B894"
+                    : showWrong ? "3px solid #FF6B6B"
+                    : "3px solid transparent",
+                  transform: showCorrect ? "scale(1.15)"
+                    : showWrong ? "scale(0.9)"
+                    : "scale(1)",
+                  background: isTarget
+                    ? (foundTarget ? `${level.color}` : `linear-gradient(135deg, ${item.color}22, ${item.color}44)`)
+                    : `linear-gradient(135deg, ${item.color}22, ${item.color}44)`,
+                  boxShadow: showCorrect
+                    ? `0 4px 20px ${level.color}66`
+                    : "0 2px 8px rgba(0,0,0,0.06)",
+                  fontSize: item.type === "emoji" ? 36 : 32,
+                  fontWeight: item.type !== "emoji" ? 800 : 400,
+                  color: item.type !== "emoji" ? item.color : undefined,
+                }}
+              >
+                {foundTarget ? (
+                  <span style={{ fontSize:42, fontWeight:800, color:"white" }}>{focus}</span>
+                ) : (
+                  item.value
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Sound button - thumb zone */}
+      <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:8, paddingBottom:8 }}>
         <SoundButton soundKey={focus} type="letters" label="Lyssna 🔊" large color={level.color} />
       </div>
     </div>
@@ -2028,12 +2196,12 @@ function HomeScreen({ onStart, onStudio, completedLevels, audioReady }) {
 
 function LevelSelectScreen({ onSelect, completedLevels, onHome, onUnlockAll }) {
   const categories = [
-    { title:"Uthållna ljud", levels: LEVELS.filter(l => l.id <= 8), emoji:"🐣" },
-    { title:"Fler ljud", levels: LEVELS.filter(l => l.id >= 9 && l.id <= 13), emoji:"🌱" },
-    { title:"Alla bokstäver", levels: LEVELS.filter(l => l.id >= 14 && l.id <= 19), emoji:"🔤" },
-    { title:"Läsa ord", levels: LEVELS.filter(l => l.id >= 20 && l.id <= 22), emoji:"📖" },
-    { title:"Avancerat", levels: LEVELS.filter(l => l.id >= 23 && l.id <= 25), emoji:"🚀" },
-    { title:"Specialljud", levels: LEVELS.filter(l => l.id >= 26), emoji:"🔊" },
+    { title:"Uthållna ljud", levels: LEVELS.filter(l => l.id <= 14), emoji:"🐣" },
+    { title:"Fler ljud", levels: LEVELS.filter(l => l.id >= 15 && l.id <= 22), emoji:"🌱" },
+    { title:"Alla bokstäver", levels: LEVELS.filter(l => l.id >= 23 && l.id <= 28), emoji:"🔤" },
+    { title:"Läsa ord", levels: LEVELS.filter(l => l.id >= 29 && l.id <= 31), emoji:"📖" },
+    { title:"Avancerat", levels: LEVELS.filter(l => l.id >= 32 && l.id <= 34), emoji:"🚀" },
+    { title:"Specialljud", levels: LEVELS.filter(l => l.id >= 35), emoji:"🔊" },
   ];
 
   return (
@@ -2116,7 +2284,7 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, onUnlockAll }) {
    ───────────────────────────────────────────── */
 
 function levelHasAudio(level) {
-  if (level.type === "intro-letter") {
+  if (level.type === "intro-letter" || level.type === "seek-letter") {
     return hasRecording(level.focus, "letters");
   }
   if (level.letters) {
@@ -2208,6 +2376,7 @@ function App() {
 
     switch (currentLevel.type) {
       case "intro-letter": return <IntroLetterGame {...props} />;
+      case "seek-letter": return <SeekLetterGame {...props} />;
       case "letter-pair": return <LetterPairGame {...props} />;
       case "single-letter": return <SingleLetterGame {...props} />;
       case "word-read": return <WordReadGame {...props} />;
