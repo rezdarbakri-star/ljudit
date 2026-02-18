@@ -7,6 +7,12 @@
   <meta name="description" content="Fonetisk läsapp för barn. Lär dig bokstavsljud steg för steg.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+    :root { --vh: 1vh; }
+    html, body { height: 100%; }
+    body { padding-bottom: env(safe-area-inset-bottom, 0px); }
+    @supports (height: 100dvh) { :root { --vh: 1dvh; } }
+  </style>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -716,62 +722,45 @@ function CelebrationOverlay({ active, onDone }) {
    ───────────────────────────────────────────── */
 
 function ParentTips({ level, onClose }) {
+  const generalTips = [
+    "Börja med att låta barnet lyssna på bokstavsljudet — tryck på lyssna!",
+    "Repetera gärna så barnet får höra det från dig. Säg: \"Den bokstaven säger mmm!\" — LJUD, inte bokstavsnamn.",
+    "Håll själv i mobiltelefonen och vägled barnet genom spelet för bästa inlärning.",
+  ];
+
   const tips = {
     "intro-letter": [
-      "Börja med att låta barnet lyssna på bokstavsljudet — tryck på bokstaven!",
-      "Säg: \"Den där säger mmm!\" — LJUD, inte bokstavsnamn.",
       "I spelet gömmer sig bokstaven bland bilder och andra bokstäver.",
       "Om barnet trycker fel på en annan bokstav hör det vad den säger istället.",
-      "Det blir svårare gradvis — först bland bilder, sen bland fler bokstäver.",
     ],
     "seek-letter": [
       "Nu gömmer sig bokstaven i ett rutnät med kort!",
       "Fråga: \"Var gömmer sig mmm?\" — låt barnet leta!",
-      "Det börjar lätt med 6 kort och blir svårare med 9 och sen 12.",
-      "Bland bilderna finns också andra bokstäver — bra träning!",
     ],
     "letter-pair": [
-      "Säg alltid vad bokstaven GÖR för ljud, inte vad den HETER.",
-      "Tryck på 🔊-knappen för att höra det fonetiska ljudet.",
       "Säg: \"Tryck på bokstaven som säger...\" och gör ljudet.",
-      "Skapa ett belöningssystem! En godisbit, ett russin eller ett mynt per rätt svar.",
-    ],
-    "single-letter": [
-      "Fråga barnet: \"Vad säger den här bokstaven?\"",
-      "Barnet ska göra ljudet – inte säga bokstavens namn.",
-      "Tryck ✅ om barnet gör rätt ljud, ❌ om fel.",
-      "Uppmuntra och var positiv – varje försök räknas!",
     ],
     "word-read": [
       "Visa INTE bilden förrän barnet har ljudat ut ordet.",
-      "Bilden är belöningen – barnet \"avkodar\" ordet genom att läsa.",
-      "Hjälp barnet ljuda bokstav för bokstav om det behövs.",
-      "Orden är valda för att de låter som de stavas fonetiskt.",
+      "Bilden är belöningen — barnet \"avkodar\" ordet genom att läsa.",
     ],
     "blending": [
-      "Nu ska barnet lära sig dra ihop ljuden till ett ord.",
       "Dra bilen sakta över bokstäverna medan ni ljudar.",
-      "Börja långsamt och öka farten successivt.",
       "Målet är att gå från 'S-O-L' till 'Soool' till 'Sol'.",
     ],
     "draw-letter": [
       "Barnet hör ett ljud och ska rita bokstaven som gör det ljudet.",
-      "Det behöver inte vara perfekt – det viktiga är kopplingen ljud → form.",
-      "Bekräfta med ✅ när bokstaven är igenkännbar.",
+      "Det behöver inte vara perfekt — det viktiga är kopplingen ljud → form.",
     ],
     "spell-word": [
       "Barnet hör ett ord och ska klicka på rätt bokstäver i rätt ordning.",
-      "Uppmuntra barnet att ljuda ut ordet först.",
-      "Om det blir fel, hjälp barnet ljuda varje bokstav.",
     ],
     "special-sound": [
       "Dessa bokstäver bildar ett NYTT ljud tillsammans.",
-      "Fokusera på ETT specialljud i taget tills det sitter.",
-      "Dra bokstaverna till rätt plats för att bilda ord.",
     ],
   };
 
-  const levelTips = tips[level?.type] || tips["letter-pair"];
+  const levelTips = tips[level?.type] || [];
 
   return (
     <div style={{
@@ -789,8 +778,8 @@ function ParentTips({ level, onClose }) {
         <div style={{ fontSize:22, fontWeight:800, color:"#2D3436", marginBottom:20, lineHeight:1.3 }}>
           Så hjälper du bäst
         </div>
-        {levelTips.map((tip, i) => (
-          <div key={i} style={{
+        {generalTips.map((tip, i) => (
+          <div key={`g${i}`} style={{
             display:"flex", gap:12, marginBottom:14, alignItems:"flex-start",
           }}>
             <div style={{
@@ -800,6 +789,23 @@ function ParentTips({ level, onClose }) {
               color:"white", fontSize:13, fontWeight:700,
             }}>{i+1}</div>
             <div style={{ fontSize:15, color:"#636E72", lineHeight:1.5, paddingTop:3 }}>{tip}</div>
+          </div>
+        ))}
+        {levelTips.length > 0 && (
+          <div style={{ fontSize:12, fontWeight:700, color:"#B2BEC3", marginTop:16, marginBottom:8, letterSpacing:0.5, textTransform:"uppercase" }}>
+            För den här nivån
+          </div>
+        )}
+        {levelTips.map((tip, i) => (
+          <div key={`l${i}`} style={{
+            display:"flex", gap:12, marginBottom:14, alignItems:"flex-start",
+          }}>
+            <div style={{
+              minWidth:24, height:24, borderRadius:12,
+              background:"#DFE6E9", display:"flex", alignItems:"center",
+              justifyContent:"center", fontSize:12, fontWeight:700, color:"#636E72",
+            }}>•</div>
+            <div style={{ fontSize:14, color:"#636E72", lineHeight:1.5, flex:1 }}>{tip}</div>
           </div>
         ))}
         <button onClick={onClose} style={{
@@ -1019,7 +1025,7 @@ function IntroLetterGame({ level, onComplete, onBack, skipRoundRef }) {
     return (
       <div style={{
         display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-        minHeight:"calc(100vh - 80px)", padding:"24px 20px", textAlign:"center",
+        minHeight:"calc(100dvh - 80px)", padding:"24px 20px 80px", textAlign:"center",
       }}>
         <div style={{ fontSize:12, color:"#B2BEC3", fontStyle:"italic", marginBottom:48 }}>
           Till föräldern: "Vet du vad den här säger? Tryck!"
@@ -1045,7 +1051,7 @@ function IntroLetterGame({ level, onComplete, onBack, skipRoundRef }) {
     return (
       <div style={{
         display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-        minHeight:"calc(100vh - 80px)", padding:"24px 20px", textAlign:"center",
+        minHeight:"calc(100dvh - 80px)", padding:"24px 20px 80px", textAlign:"center",
       }}>
         <div style={{ fontSize:12, color:"#B2BEC3", fontStyle:"italic", marginBottom:40 }}>
           Till föräldern: Säg "{phonetic}!" och tryck "Nu spelar vi"
@@ -1076,7 +1082,7 @@ function IntroLetterGame({ level, onComplete, onBack, skipRoundRef }) {
 
   // ── PLAY ──
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100vh - 80px)", padding:"12px 16px 24px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"12px 16px 80px" }}>
       <CelebrationOverlay active={showCelebration} onDone={handleCelebrationDone} />
       <ProgressBar current={round} total={INTRO_ROUNDS} color={level.color} />
       <div style={{ fontSize:13, color:"#B2BEC3", marginTop:8, fontStyle:"italic" }}>
@@ -1214,7 +1220,7 @@ function SeekLetterGame({ level, onComplete, onBack, skipRoundRef }) {
   const cardH = cols === 4 ? 82 : 100;
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100vh - 80px)", padding:"12px 16px 24px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"12px 16px 80px" }}>
       <CelebrationOverlay active={showCelebration} onDone={handleCelebrationDone} />
       <ProgressBar current={round} total={SEEK_ROUNDS} color={level.color} />
       <div style={{ fontSize:13, color:"#B2BEC3", marginTop:4, fontStyle:"italic" }}>
@@ -1345,7 +1351,7 @@ function LetterPairGame({ level, onComplete, onBack, skipRoundRef }) {
   }, [onComplete]);
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100vh - 80px)", padding:"12px 16px 24px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"12px 16px 80px" }}>
       <CelebrationOverlay active={showCelebration} onDone={handleCelebrationDone} />
       <ProgressBar current={completed} total={total} color={level.color} />
       <div style={{ fontSize:14, color:"#B2BEC3", marginTop:6 }}>
@@ -1423,7 +1429,7 @@ function SingleLetterGame({ level, onComplete, onBack }) {
   if (!current) return null;
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100vh - 80px)", padding:"12px 16px 24px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"12px 16px 80px" }}>
       <CelebrationOverlay active={showCelebration} onDone={handleCelebrationDone} />
       <ProgressBar current={completed} total={total} color={level.color} />
       <div style={{ fontSize:14, color:"#B2BEC3", marginTop:6 }}>
@@ -1600,7 +1606,7 @@ function BlendingGame({ level, onComplete, skipRoundRef }) {
   const activeIdx = Math.min(letters.length - 1, Math.floor(carPos * letters.length));
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100vh - 80px)", padding:"20px 16px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"20px 16px 80px" }}>
       <Confetti active={showConfetti} />
       <ProgressBar current={completed} total={total} color={level.color} />
 
@@ -2196,7 +2202,7 @@ function HomeScreen({ onStart, onStudio, completedLevels, audioReady }) {
    LEVEL SELECT SCREEN
    ───────────────────────────────────────────── */
 
-function LevelSelectScreen({ onSelect, completedLevels, onHome, onUnlockAll }) {
+function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onToggleUnlock }) {
   const categories = [
     { title:"Uthållna ljud", levels: LEVELS.filter(l => l.id <= 14), emoji:"🐣" },
     { title:"Fler ljud", levels: LEVELS.filter(l => l.id >= 15 && l.id <= 28), emoji:"🌱" },
@@ -2216,10 +2222,10 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, onUnlockAll }) {
           alignItems:"center", justifyContent:"center",
         }}>←</button>
         <h2 style={{ fontSize:24, fontWeight:800, color:"#2D3436", margin:0, flex:1 }}>Välj nivå</h2>
-        <button onClick={onUnlockAll} style={{
+        <button onClick={onToggleUnlock} style={{
           padding:"6px 12px", borderRadius:8, border:"1px solid #DFE6E9",
-          background:"white", fontSize:11, color:"#B2BEC3", cursor:"pointer",
-        }}>🔓 Admin</button>
+          background: allUnlocked ? "#E8F8F5" : "white", fontSize:16, cursor:"pointer",
+        }}>{allUnlocked ? "🔓" : "🔒"}</button>
       </div>
 
       {categories.map(cat => (
@@ -2235,10 +2241,8 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, onUnlockAll }) {
               const done = completedLevels.has(level.id);
               const hasAudio = levelHasAudio(level);
               const prevDone = level.id === 1 || completedLevels.has(level.id - 1);
-              const noAudio = !hasAudio;
-              const notReady = hasAudio && !prevDone && !done;
-              const locked = noAudio || notReady;
-              const lockReason = noAudio ? "Ljud saknas" : notReady ? "Slutför föregående nivå först" : "";
+              const locked = allUnlocked ? false : (hasAudio ? (!prevDone && !done) : true);
+              const lockReason = !hasAudio && !allUnlocked ? "Ljud saknas" : locked ? "Slutför föregående nivå först" : "";
               return (
                 <button
                   key={level.id}
@@ -2312,6 +2316,7 @@ function App() {
   const [currentLevel, setCurrentLevel] = useState(null);
   const [completedLevels, setCompletedLevels] = useState(new Set());
   const [showTips, setShowTips] = useState(false);
+  const [allUnlocked, setAllUnlocked] = useState(false);
   const [audioReady, setAudioReady] = useState(false);
 
   // Lock scroll & prevent pull-to-refresh during gameplay
@@ -2392,7 +2397,7 @@ function App() {
 
   return (
     <div style={{
-      minHeight:"100vh",
+      minHeight:"100dvh",
       fontFamily:"'Nunito', 'Segoe UI', system-ui, sans-serif",
       background:"linear-gradient(180deg, #F8F9FA 0%, #E8F4F8 50%, #F0E6FF 100%)",
       position:"relative",
@@ -2481,14 +2486,12 @@ function App() {
           onSelect={startLevel}
           completedLevels={completedLevels}
           onHome={() => setScreen("home")}
-          onUnlockAll={() => {
-            const all = new Set(LEVELS.filter(l => levelHasAudio(l)).map(l => l.id));
-            setCompletedLevels(all);
-          }}
+          allUnlocked={allUnlocked}
+          onToggleUnlock={() => setAllUnlocked(u => !u)}
         />
       )}
       {screen === "playing" && (
-        <div style={{ touchAction:"manipulation", overscrollBehavior:"none", overflow:"auto", height:"calc(100vh - 60px)" }}>
+        <div style={{ touchAction:"manipulation", overscrollBehavior:"none", overflow:"auto", height:"calc(100dvh - 60px)" }}>
           {renderGame()}
         </div>
       )}
