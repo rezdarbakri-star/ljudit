@@ -63,34 +63,170 @@ const PHONETIC_SOUNDS = {
 
 
 const WORD_LEVELS = {
+  // --- NIVÅ 1: Enkla 3-bokstavsord (KVK) ---
   1: [
     { word:"SOL", emoji:"☀️" },
     { word:"RIS", emoji:"🍚" },
     { word:"ROS", emoji:"🌹" },
-    { word:"RÄV", emoji:"🦊" },
-    { word:"HAJ", emoji:"🦈" },
+    { word:"MOS", emoji:"🥣" },
+    { word:"NOS", emoji:"👃" },
     { word:"FOT", emoji:"🦶" },
+    { word:"KOL", emoji:"🪨" },
+    { word:"BOK", emoji:"📖" },
+    { word:"KOK", emoji:"🍳" },
+    { word:"MUR", emoji:"🧱" },
+    { word:"BUR", emoji:"🗄️" },
+    { word:"SUR", emoji:"😠" },
+  ],
+  // --- NIVÅ 2: Fler 3-bokstavsord ---
+  2: [
+    { word:"HAJ", emoji:"🦈" },
+    { word:"RÄV", emoji:"🦊" },
     { word:"GUL", emoji:"💛" },
     { word:"FUL", emoji:"👺" },
     { word:"KUL", emoji:"😄" },
     { word:"JUL", emoji:"🎄" },
     { word:"FIS", emoji:"💨" },
+    { word:"VIS", emoji:"🎵" },
+    { word:"MÅL", emoji:"⚽" },
+    { word:"SÅG", emoji:"🪚" },
+    { word:"BÅT", emoji:"⛵" },
+    { word:"VÅR", emoji:"🌸" },
   ],
-  2: [
+  // --- NIVÅ 3: 4-bokstavsord (enkla) ---
+  3: [
     { word:"GRIS", emoji:"🐷" },
-    { word:"HÄST", emoji:"🐴" },
-    { word:"BLOD", emoji:"🩸" },
-    { word:"SKOG", emoji:"🌲" },
     { word:"FISK", emoji:"🐟" },
     { word:"KATT", emoji:"🐱" },
     { word:"HUND", emoji:"🐶" },
+    { word:"BOLL", emoji:"⚽" },
+    { word:"TALL", emoji:"🌲" },
+    { word:"SALT", emoji:"🧂" },
+    { word:"VARM", emoji:"🌡️" },
+    { word:"KALL", emoji:"🥶" },
+    { word:"SKOG", emoji:"🌲" },
+    { word:"MASK", emoji:"🪱" },
+    { word:"SAND", emoji:"🏖️" },
   ],
-  3: [
+  // --- NIVÅ 4: 4-bokstavsord (svårare) ---
+  4: [
+    { word:"HÄST", emoji:"🐴" },
+    { word:"BLOD", emoji:"🩸" },
+    { word:"TRÄD", emoji:"🌳" },
+    { word:"DÖRR", emoji:"🚪" },
+    { word:"BRÖD", emoji:"🍞" },
+    { word:"STEN", emoji:"🪨" },
+    { word:"VIND", emoji:"💨" },
+    { word:"SNÄLL", emoji:"😊" },
+    { word:"GÅRD", emoji:"🏡" },
+    { word:"STOR", emoji:"🐘" },
+    { word:"BORD", emoji:"🪑" },
+    { word:"STOL", emoji:"💺" },
+  ],
+  // --- NIVÅ 5: 5-bokstavsord ---
+  5: [
     { word:"LEJON", emoji:"🦁" },
     { word:"GRODA", emoji:"🐸" },
     { word:"LAMPA", emoji:"💡" },
     { word:"TIGER", emoji:"🐯" },
     { word:"PANDA", emoji:"🐼" },
+    { word:"GLASS", emoji:"🍦" },
+    { word:"MELON", emoji:"🍈" },
+    { word:"MOROT", emoji:"🥕" },
+    { word:"STUGA", emoji:"🏠" },
+    { word:"DRAKE", emoji:"🐉" },
+    { word:"ÄPPLE", emoji:"🍎" },
+    { word:"BLOMMA", emoji:"🌺" },
+  ],
+  // --- NIVÅ 6: Långa ord ---
+  6: [
+    { word:"ELEFANT", emoji:"🐘" },
+    { word:"KROKODIL", emoji:"🐊" },
+    { word:"TROLLSLÄNDA", emoji:"🪰" },
+    { word:"JORDGUBBE", emoji:"🍓" },
+    { word:"FLYGPLAN", emoji:"✈️" },
+    { word:"DINOSAURIE", emoji:"🦕" },
+    { word:"BLÅBÄR", emoji:"🫐" },
+    { word:"TELEFON", emoji:"📱" },
+    { word:"HELIKOPTER", emoji:"🚁" },
+    { word:"PARAPLY", emoji:"☂️" },
+  ],
+  // --- NIVÅ 7: 2-ords meningar (enkla) ---
+  7: [
+    { words:["EN","SOL"], emoji:"☀️" },
+    { words:["EN","KO"], emoji:"🐄" },
+    { words:["EN","BIL"], emoji:"🚗" },
+    { words:["EN","HAT"], emoji:"🎩" },
+    { words:["EN","MUS"], emoji:"🐭" },
+    { words:["EN","BÅT"], emoji:"⛵" },
+    { words:["EN","KAT"], emoji:"🐱" },
+    { words:["MIN","BOK"], emoji:"📖" },
+    { words:["MIN","FOT"], emoji:"🦶" },
+    { words:["MIN","NOS"], emoji:"👃" },
+  ],
+  // --- NIVÅ 8: 2-ords meningar (mer) ---
+  8: [
+    { words:["RÖD","BIL"], emoji:"🚗" },
+    { words:["GUL","SOL"], emoji:"☀️" },
+    { words:["FIN","ROS"], emoji:"🌹" },
+    { words:["STOR","HUND"], emoji:"🐶" },
+    { words:["LITEN","KATT"], emoji:"🐱" },
+    { words:["VIT","SNÖ"], emoji:"❄️" },
+    { words:["HEJ","DU"], emoji:"👋" },
+    { words:["GOD","MAT"], emoji:"🍽️" },
+    { words:["BLÅ","BOLL"], emoji:"🔵" },
+    { words:["GRÖN","GRODA"], emoji:"🐸" },
+  ],
+  // --- NIVÅ 9: 3-ords meningar ---
+  9: [
+    { words:["JAG","ÄR","FIN"], emoji:"😊" },
+    { words:["EN","RÖD","BIL"], emoji:"🚗" },
+    { words:["JAG","SER","SOL"], emoji:"☀️" },
+    { words:["HAN","HAR","BOLL"], emoji:"⚽" },
+    { words:["HON","ÄR","GLAD"], emoji:"😄" },
+    { words:["EN","STOR","GRIS"], emoji:"🐷" },
+    { words:["VI","ÄR","HÄR"], emoji:"📍" },
+    { words:["JAG","ÄR","SUR"], emoji:"😠" },
+    { words:["DU","ÄR","BRA"], emoji:"⭐" },
+    { words:["EN","FIN","DAG"], emoji:"🌞" },
+  ],
+  // --- NIVÅ 10: 3-ords meningar (svårare) ---
+  10: [
+    { words:["JAG","VILL","LEKA"], emoji:"🎮" },
+    { words:["KOM","HIT","NU"], emoji:"🤸" },
+    { words:["JAG","KAN","LÄSA"], emoji:"📖" },
+    { words:["HAN","ÅT","MAT"], emoji:"🍽️" },
+    { words:["HON","TOG","BOLL"], emoji:"⚽" },
+    { words:["VI","GÅR","HEM"], emoji:"🏠" },
+    { words:["JAG","VILL","HA"], emoji:"🙏" },
+    { words:["DET","ÄR","KALLT"], emoji:"🥶" },
+    { words:["DET","ÄR","VARMT"], emoji:"🌡️" },
+    { words:["JAG","ÄR","TRÖTT"], emoji:"😴" },
+  ],
+  // --- NIVÅ 11: Småsagor 1 (2 meningar) ---
+  11: [
+    { sentences:["EN KATT SAT.", "DEN SÅG EN MUS."], emoji:"🐱" },
+    { sentences:["SOL SKEN.", "JAG VAR GLAD."], emoji:"☀️" },
+    { sentences:["EN HUND LEKTE.", "DEN VAR SNÄLL."], emoji:"🐶" },
+    { sentences:["JAG HAR EN BOLL.", "DEN ÄR RÖD."], emoji:"🔴" },
+    { sentences:["DET ÄR KALLT UTE.", "JAG TAR PÅ MIN MÖSSA."], emoji:"🧣" },
+    { sentences:["EN FISK SIM.", "DEN VAR STOR."], emoji:"🐟" },
+  ],
+  // --- NIVÅ 12: Småsagor 2 (3 meningar) ---
+  12: [
+    { sentences:["EN GRODA SAT PÅ EN STEN.", "DEN SÅG EN FLUGA.", "HAPP! DEN ÅT DEN."], emoji:"🐸" },
+    { sentences:["JAG GÅR TILL SKOLAN.", "JAG HAR MIN BOK.", "JAG KAN LÄSA!"], emoji:"📚" },
+    { sentences:["EN KATT SOVER.", "DEN DRÖMMER OM FISK.", "NÄR DEN VAKNAR VILL DEN LEKA."], emoji:"😺" },
+    { sentences:["DET ÄR VINTER.", "DET SNÖAR UTE.", "VI GÖR EN SNÖGUBBE!"], emoji:"⛄" },
+    { sentences:["EN BIL KÖR FORT.", "DEN ÄR RÖD.", "DEN KÖR HEM."], emoji:"🚗" },
+    { sentences:["JAG HAR EN HUND.", "HAN HETER MAX.", "HAN ÄR MIN BÄSTA VÄN."], emoji:"🐕" },
+  ],
+  // --- NIVÅ 13: Småsagor 3 (längre) ---
+  13: [
+    { sentences:["DET VAR EN LITEN HUND.", "HAN BODDE I EN STUGA.", "EN DAG HITTADE HAN EN BOLL.", "VAD KUL! SA HUNDEN."], emoji:"🐕" },
+    { sentences:["LISA HAR EN KATT.", "KATTEN HETER MIO.", "MIO VILL LEKA HELA DAGEN.", "PÅ KVÄLLEN SOVER MIO I LISAS RUM."], emoji:"🐈" },
+    { sentences:["DET ÄR SOMMAR.", "SOLEN SKINER.", "VI GÅR TILL HAVET.", "VI BADAR I VATTNET.", "VAD KUL!"], emoji:"🏊" },
+    { sentences:["EN LITEN MUS SAT I ETT HÅL.", "DEN VAR RÄDD FÖR KATTEN.", "MEN KATTEN SOVER.", "NU KAN MUSEN LEKA!"], emoji:"🐭" },
   ],
 };
 
@@ -195,9 +331,28 @@ const LEVELS = [
   { id:33, name:"Å, Ä, Ö", sub:"Svenska vokaler", type:"letter-pair", count:2, letters:SWEDISH_EXTRA, icon:"🇸🇪", color:"#0984E3" },
   { id:34, name:"H och J", sub:"Vanliga ljud", type:"letter-pair", count:2, letters:HARD_LETTERS, icon:"⭐", color:"#6C5CE7" },
   // --- Läsa ord ---
-  { id:35, name:"Läsa ord", sub:"Nivå 1", type:"word-read", wordLevel:1, icon:"📝", color:"#FD79A8" },
-  { id:36, name:"Läsa ord", sub:"Nivå 2", type:"word-read", wordLevel:2, icon:"📝", color:"#E84393" },
-  { id:37, name:"Läsa ord", sub:"Nivå 3", type:"word-read", wordLevel:3, icon:"📝", color:"#D63031" },
+  { id:35, name:"Läsa ord", sub:"3 bokstäver (lätt)", type:"word-read", wordLevel:1, icon:"📝", color:"#FD79A8" },
+  { id:36, name:"Läsa ord", sub:"3 bokstäver (mer)", type:"word-read", wordLevel:2, icon:"📝", color:"#F368A0" },
+  { id:37, name:"Läsa ord", sub:"4 bokstäver", type:"word-read", wordLevel:3, icon:"📝", color:"#E84393" },
+  { id:50, name:"Läsa ord", sub:"4 bokstäver (svårare)", type:"word-read", wordLevel:4, icon:"📝", color:"#D63071" },
+  { id:51, name:"Läsa ord", sub:"5 bokstäver", type:"word-read", wordLevel:5, icon:"📝", color:"#C0392B" },
+  { id:52, name:"Läsa ord", sub:"Långa ord", type:"word-read", wordLevel:6, icon:"📝", color:"#A93226" },
+  // --- Meningar ---
+  { id:53, name:"2-ords meningar", sub:"EN SOL, MIN BOK...", type:"sentence-read", wordLevel:7, icon:"💬", color:"#8E44AD" },
+  { id:54, name:"2-ords meningar", sub:"RÖD BIL, FIN ROS...", type:"sentence-read", wordLevel:8, icon:"💬", color:"#7D3C98" },
+  { id:55, name:"3-ords meningar", sub:"JAG ÄR FIN...", type:"sentence-read", wordLevel:9, icon:"💬", color:"#6C3483" },
+  { id:56, name:"3-ords meningar", sub:"JAG VILL LEKA...", type:"sentence-read", wordLevel:10, icon:"💬", color:"#5B2C6F" },
+  // --- Småsagor ---
+  { id:57, name:"Småsagor", sub:"2 meningar", type:"story-read", wordLevel:11, icon:"📚", color:"#1ABC9C" },
+  { id:58, name:"Småsagor", sub:"3 meningar", type:"story-read", wordLevel:12, icon:"📚", color:"#16A085" },
+  { id:59, name:"Småsagor", sub:"Längre sagor", type:"story-read", wordLevel:13, icon:"📚", color:"#148F77" },
+  // --- Bygg ord (skriv-segment) ---
+  { id:60, name:"Bygg ord", sub:"3 bokstäver (lätt)", type:"word-build", buildLevel:1, icon:"🧩", color:"#E67E22" },
+  { id:61, name:"Bygg ord", sub:"3 bokstäver + 1 extra", type:"word-build", buildLevel:2, icon:"🧩", color:"#D35400" },
+  { id:62, name:"Bygg ord", sub:"4 bokstäver", type:"word-build", buildLevel:3, icon:"🧩", color:"#CA6F1E" },
+  { id:63, name:"Bygg ord", sub:"4 bokstäver + 2 extra", type:"word-build", buildLevel:4, icon:"🧩", color:"#BA4A00" },
+  { id:64, name:"Bygg ord", sub:"5 bokstäver + 2 extra", type:"word-build", buildLevel:5, icon:"🧩", color:"#A04000" },
+  { id:65, name:"Bygg ord", sub:"Långa ord + 3 extra", type:"word-build", buildLevel:6, icon:"🧩", color:"#873600" },
   // --- Avancerat ---
   { id:38, name:"Ljuda ut", sub:"Dra ut på orden", type:"blending", icon:"🚗", color:"#00B894" },
   { id:39, name:"Rita bokstäver", sub:"Hör ljud → rita", type:"draw-letter", icon:"✏️", color:"#6C5CE7" },
@@ -256,6 +411,9 @@ const ALL_WORD_KEYS = [
   ...WORD_LEVELS[1].map(w => w.word),
   ...WORD_LEVELS[2].map(w => w.word),
   ...WORD_LEVELS[3].map(w => w.word),
+  ...WORD_LEVELS[4].map(w => w.word),
+  ...WORD_LEVELS[5].map(w => w.word),
+  ...WORD_LEVELS[6].map(w => w.word),
 ];
 const ALL_SPECIAL_KEYS = Object.keys(SPECIAL_SOUNDS);
 
@@ -318,7 +476,30 @@ function getAudioContext() {
   return _audioCtx;
 }
 
+let _lastPlayTime = 0;
+const PLAY_COOLDOWN = 1200; // ms — prevent rapid repeated taps
+
+// Play letters of a word in sequence
+async function playWordLetters(word) {
+  const now = Date.now();
+  if (now - _lastPlayTime < PLAY_COOLDOWN) return;
+  _lastPlayTime = now;
+  const letters = word.split("");
+  for (let i = 0; i < letters.length; i++) {
+    const dataUrl = getRecording(letters[i], "letters");
+    if (dataUrl) {
+      const audio = new Audio(dataUrl);
+      audio.play().catch(() => {});
+      await new Promise(r => setTimeout(r, 500));
+    }
+  }
+}
+
 async function playSound(key, type = "letters") {
+  const now = Date.now();
+  if (now - _lastPlayTime < PLAY_COOLDOWN) return;
+  _lastPlayTime = now;
+
   const dataUrl = getRecording(key, type);
   if (!dataUrl) return;
   try {
@@ -744,6 +925,14 @@ function ParentTips({ level, onClose }) {
       "Visa INTE bilden förrän barnet har ljudat ut ordet.",
       "Bilden är belöningen — barnet \"avkodar\" ordet genom att läsa.",
     ],
+    "sentence-read": [
+      "Låt barnet läsa ett ord i taget och sätta ihop meningen.",
+      "Peka på varje ord medan barnet ljudar ut det.",
+    ],
+    "story-read": [
+      "En mening visas åt gången — barnet läser klart innan nästa visas.",
+      "Uppmuntra barnet att berätta vad som hände i sagan efteråt!",
+    ],
     "blending": [
       "Dra bilen sakta över bokstäverna medan ni ljudar.",
       "Målet är att gå från 'S-O-L' till 'Soool' till 'Sol'.",
@@ -754,6 +943,11 @@ function ParentTips({ level, onClose }) {
     ],
     "spell-word": [
       "Barnet hör ett ord och ska klicka på rätt bokstäver i rätt ordning.",
+    ],
+    "word-build": [
+      "Barnet hör ordet och ska trycka på bokstäverna i rätt ordning.",
+      "Uppmuntra barnet att ljuda ut ordet innan de börjar bygga.",
+      "Extra bokstäver gör det svårare — hjälp barnet att sortera bort dem.",
     ],
     "special-sound": [
       "Dessa bokstäver bildar ett NYTT ljud tillsammans.",
@@ -839,14 +1033,17 @@ function LetterCard({ letter, onClick, size = "large", state = "default", disabl
   };
 
   const [tapped, setTapped] = useState(false);
+  const cooldownRef = useRef(false);
 
   return (
     <button
-      disabled={disabled}
+      disabled={disabled || cooldownRef.current}
       onClick={() => {
-        if (disabled) return;
+        if (disabled || cooldownRef.current) return;
+        cooldownRef.current = true;
         setTapped(true);
         setTimeout(() => setTapped(false), 200);
+        setTimeout(() => { cooldownRef.current = false; }, PLAY_COOLDOWN);
         onClick?.(letter);
       }}
       style={{
@@ -891,10 +1088,12 @@ function SoundButton({ soundKey, type = "letter", label, large = false, color = 
   const [playing, setPlaying] = useState(false);
   return (
     <button
+      disabled={playing}
       onClick={() => {
+        if (playing) return;
         setPlaying(true);
         playSound(soundKey, type);
-        setTimeout(() => setPlaying(false), 600);
+        setTimeout(() => setPlaying(false), PLAY_COOLDOWN);
       }}
       style={{
         display:"flex", alignItems:"center", justifyContent:"center", gap:10,
@@ -1558,16 +1757,413 @@ function WordReadGame({ level, onComplete }) {
 }
 
 /* ─────────────────────────────────────────────
+   GAME: SENTENCE READ
+   ───────────────────────────────────────────── */
+
+function SentenceReadGame({ level, onComplete, skipRoundRef }) {
+  const items = WORD_LEVELS[level.wordLevel] || [];
+  const [pool, setPool] = useState(() => shuffle([...items]));
+  const [revealed, setRevealed] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [completed, setCompleted] = useState(0);
+  const total = items.length;
+  const current = pool[0];
+
+  useEffect(() => {
+    if (skipRoundRef) skipRoundRef.current = () => {
+      const next = pool.slice(1);
+      if (next.length === 0) onComplete();
+      else { setPool(next); setCompleted(c => c + 1); setRevealed(false); }
+    };
+  });
+
+  const handleRead = () => {
+    setRevealed(true);
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 1500);
+  };
+
+  const handleNext = () => {
+    const newPool = pool.slice(1);
+    setPool(newPool);
+    setCompleted(c => c + 1);
+    setRevealed(false);
+    if (newPool.length === 0) {
+      setTimeout(() => onComplete(), 300);
+    }
+  };
+
+  if (!current) return null;
+
+  return (
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"20px 16px 80px" }}>
+      <Confetti active={showConfetti} />
+      <ProgressBar current={completed} total={total} color={level.color} />
+      <div style={{ fontSize:14, color:"#636E72", fontWeight:600, marginBottom:16 }}>
+        Vad står det här?
+      </div>
+      <div style={{ flex:1, display:"flex", alignItems:"center" }}>
+        <div style={{
+          display:"flex", gap:16, flexWrap:"wrap", justifyContent:"center",
+          padding:"24px 20px", background:"white", borderRadius:24,
+          boxShadow:"0 8px 30px rgba(0,0,0,0.08)",
+        }}>
+          {current.words.map((w, i) => (
+            <span key={i} style={{
+              fontSize: current.words.length <= 2 ? 44 : 36,
+              fontWeight:800, color:"#2D3436",
+              fontFamily:"'Nunito', sans-serif",
+            }}>{w}</span>
+          ))}
+        </div>
+      </div>
+      {!revealed ? (
+        <div style={{ textAlign:"center", marginTop:20 }}>
+          <div style={{ fontSize:12, color:"#B2BEC3", marginBottom:12, fontStyle:"italic" }}>
+            Tryck när barnet har läst meningen
+          </div>
+          <button onClick={handleRead} style={{
+            padding:"16px 44px", borderRadius:20, border:"none",
+            background:`linear-gradient(135deg, ${level.color}, ${level.color}CC)`,
+            color:"white", fontSize:18, fontWeight:700, cursor:"pointer",
+            boxShadow:`0 6px 20px ${level.color}44`,
+          }}>
+            Visa belöning! 🎉
+          </button>
+        </div>
+      ) : (
+        <div style={{ textAlign:"center", marginTop:20, animation:"bounceIn 0.5s ease" }}>
+          <div style={{ fontSize:80, marginBottom:8 }}>{current.emoji}</div>
+          <div style={{ fontSize:22, fontWeight:800, color:"#2D3436" }}>{current.words.join(" ")}!</div>
+          <button onClick={handleNext} style={{
+            marginTop:16, padding:"14px 40px", borderRadius:16, border:"none",
+            background:"linear-gradient(135deg,#4ECDC4,#45B7D1)",
+            color:"white", fontSize:16, fontWeight:700, cursor:"pointer",
+          }}>
+            Nästa →
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   GAME: STORY READ
+   ───────────────────────────────────────────── */
+
+function StoryReadGame({ level, onComplete, skipRoundRef }) {
+  const items = WORD_LEVELS[level.wordLevel] || [];
+  const [pool, setPool] = useState(() => shuffle([...items]));
+  const [sentenceIdx, setSentenceIdx] = useState(0);
+  const [allRevealed, setAllRevealed] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [completed, setCompleted] = useState(0);
+  const total = items.length;
+  const current = pool[0];
+
+  useEffect(() => {
+    if (skipRoundRef) skipRoundRef.current = () => {
+      const next = pool.slice(1);
+      if (next.length === 0) onComplete();
+      else { setPool(next); setCompleted(c => c + 1); setSentenceIdx(0); setAllRevealed(false); }
+    };
+  });
+
+  if (!current) return null;
+  const sentences = current.sentences;
+
+  const handleRevealNext = () => {
+    if (sentenceIdx < sentences.length - 1) {
+      setSentenceIdx(s => s + 1);
+    } else {
+      setAllRevealed(true);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 1500);
+    }
+  };
+
+  const handleNextStory = () => {
+    const newPool = pool.slice(1);
+    setPool(newPool);
+    setCompleted(c => c + 1);
+    setSentenceIdx(0);
+    setAllRevealed(false);
+    if (newPool.length === 0) {
+      setTimeout(() => onComplete(), 300);
+    }
+  };
+
+  return (
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"20px 16px 80px" }}>
+      <Confetti active={showConfetti} />
+      <ProgressBar current={completed} total={total} color={level.color} />
+
+      <div style={{ flex:1, display:"flex", alignItems:"center", width:"100%", maxWidth:380 }}>
+        <div style={{
+          width:"100%", padding:"28px 24px", background:"white", borderRadius:24,
+          boxShadow:"0 8px 30px rgba(0,0,0,0.08)",
+        }}>
+          {/* Story emoji */}
+          <div style={{ textAlign:"center", fontSize:56, marginBottom:16 }}>{current.emoji}</div>
+          {/* Sentences - reveal one by one */}
+          {sentences.map((s, i) => (
+            <div key={i} style={{
+              fontSize: sentences.length <= 3 ? 24 : 20,
+              fontWeight:700, color: i <= sentenceIdx ? "#2D3436" : "transparent",
+              fontFamily:"'Nunito', sans-serif",
+              lineHeight:1.6, marginBottom:8,
+              background: i <= sentenceIdx ? "none" : "#F0F0F0",
+              borderRadius:8, padding: i <= sentenceIdx ? 0 : "4px 8px",
+              transition:"all 0.3s ease",
+              minHeight: sentences.length <= 3 ? 38 : 32,
+            }}>
+              {i <= sentenceIdx ? s : "•••"}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {!allRevealed ? (
+        <div style={{ textAlign:"center", marginTop:20 }}>
+          <div style={{ fontSize:12, color:"#B2BEC3", marginBottom:8, fontStyle:"italic" }}>
+            Mening {sentenceIdx + 1} av {sentences.length} — tryck när barnet läst klart
+          </div>
+          <button onClick={handleRevealNext} style={{
+            padding:"16px 44px", borderRadius:20, border:"none",
+            background:`linear-gradient(135deg, ${level.color}, ${level.color}CC)`,
+            color:"white", fontSize:16, fontWeight:700, cursor:"pointer",
+            boxShadow:`0 6px 20px ${level.color}44`,
+          }}>
+            {sentenceIdx < sentences.length - 1 ? "Nästa mening →" : "Klar! 🎉"}
+          </button>
+        </div>
+      ) : (
+        <div style={{ textAlign:"center", marginTop:20, animation:"bounceIn 0.5s ease" }}>
+          <div style={{ fontSize:20, fontWeight:700, color:"#00B894", marginBottom:12 }}>
+            🌟 Hela sagan läst!
+          </div>
+          <button onClick={handleNextStory} style={{
+            padding:"14px 40px", borderRadius:16, border:"none",
+            background:"linear-gradient(135deg,#4ECDC4,#45B7D1)",
+            color:"white", fontSize:16, fontWeight:700, cursor:"pointer",
+          }}>
+            Nästa saga →
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   GAME: WORD BUILD (drag letters to build word)
+   ───────────────────────────────────────────── */
+
+const WORD_BUILD_LEVELS = {
+  // Nivå 1: 3 bokstäver, inga distraktorer
+  1: { words: WORD_LEVELS[1], distractors: 0 },
+  // Nivå 2: 3 bokstäver, 1 distraktor
+  2: { words: WORD_LEVELS[2], distractors: 1 },
+  // Nivå 3: 4 bokstäver, inga distraktorer
+  3: { words: WORD_LEVELS[3], distractors: 0 },
+  // Nivå 4: 4 bokstäver, 2 distraktorer
+  4: { words: WORD_LEVELS[4], distractors: 2 },
+  // Nivå 5: 5 bokstäver, 2 distraktorer
+  5: { words: WORD_LEVELS[5], distractors: 2 },
+  // Nivå 6: Långa ord, 3 distraktorer
+  6: { words: WORD_LEVELS[6], distractors: 3 },
+};
+
+function WordBuildGame({ level, onComplete, skipRoundRef }) {
+  const config = WORD_BUILD_LEVELS[level.buildLevel] || WORD_BUILD_LEVELS[1];
+  const items = config.words || [];
+  const numDistractors = config.distractors || 0;
+  const [pool, setPool] = useState(() => shuffle([...items]).slice(0, 10));
+  const [completed, setCompleted] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [revealed, setRevealed] = useState(false);
+  const [placed, setPlaced] = useState([]);
+  const [feedback, setFeedback] = useState(null);
+  const total = pool.length;
+  const current = pool[0];
+
+  // Build scrambled letter tiles
+  const tiles = useMemo(() => {
+    if (!current) return [];
+    const wordLetters = current.word.split("");
+    const allPool = [...EASY_LETTERS, ...MEDIUM_LETTERS, ...MORE_VOWELS, ...HARD_LETTERS];
+    const extras = [];
+    for (let i = 0; i < numDistractors; i++) {
+      const pick = allPool[Math.floor(Math.random() * allPool.length)];
+      extras.push(pick);
+    }
+    return shuffle([...wordLetters, ...extras]).map((ch, i) => ({ id: i, letter: ch }));
+  }, [current, numDistractors]);
+
+  const [available, setAvailable] = useState(tiles);
+  useEffect(() => { setAvailable(tiles); setPlaced([]); setRevealed(false); }, [tiles]);
+
+  useEffect(() => {
+    if (skipRoundRef) skipRoundRef.current = () => {
+      const next = pool.slice(1);
+      if (next.length === 0) onComplete();
+      else { setPool(next); setCompleted(c => c + 1); }
+    };
+  });
+
+  if (!current) return null;
+  const target = current.word;
+
+  const handleTileTap = (tile) => {
+    if (feedback || revealed) return;
+    const newPlaced = [...placed, tile];
+    const newAvail = available.filter(t => t.id !== tile.id);
+    
+    // Check if this letter is correct at this position
+    if (target[newPlaced.length - 1] !== tile.letter) {
+      setFeedback("wrong");
+      setTimeout(() => {
+        setFeedback(null);
+        // Put tile back
+        setPlaced(placed);
+        setAvailable(available);
+      }, 500);
+      return;
+    }
+
+    setPlaced(newPlaced);
+    setAvailable(newAvail);
+    
+    // Play the letter sound
+    playSound(tile.letter);
+
+    // Check if word complete
+    if (newPlaced.length === target.length) {
+      setTimeout(() => {
+        setRevealed(true);
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 1500);
+      }, 300);
+    }
+  };
+
+  const handleUndo = () => {
+    if (placed.length === 0 || feedback || revealed) return;
+    const last = placed[placed.length - 1];
+    setPlaced(placed.slice(0, -1));
+    setAvailable([...available, last]);
+  };
+
+  const handleNext = () => {
+    const newPool = pool.slice(1);
+    setPool(newPool);
+    setCompleted(c => c + 1);
+    if (newPool.length === 0) {
+      setTimeout(() => onComplete(), 300);
+    }
+  };
+
+  return (
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"16px 16px 80px" }}>
+      <Confetti active={showConfetti} />
+      <ProgressBar current={completed} total={total} color={level.color} />
+      
+      <div style={{ fontSize:14, color:"#636E72", fontWeight:600, marginBottom:8 }}>
+        Bygg ordet! Tryck på bokstäverna i rätt ordning.
+      </div>
+
+      {/* Listen - plays letters in sequence */}
+      <button onClick={() => playWordLetters(target)} style={{
+        display:"flex", alignItems:"center", justifyContent:"center", gap:10,
+        padding:"14px 36px", borderRadius:20, border:"none",
+        background:`linear-gradient(135deg, ${level.color}, ${level.color}dd)`,
+        color:"white", fontSize:18, fontWeight:700, cursor:"pointer",
+        boxShadow:`0 4px 15px ${level.color}44`, fontFamily:"'Nunito', sans-serif",
+      }}>
+        <span style={{ fontSize:24 }}>🔊</span> Hör ordet
+      </button>
+
+      {/* Target slots */}
+      <div style={{ display:"flex", gap:6, marginTop:16, marginBottom:8 }}>
+        {target.split("").map((ch, i) => (
+          <div key={i} style={{
+            width: Math.min(56, 320 / target.length), height: 64, borderRadius:14,
+            border: feedback === "wrong" && i === placed.length
+              ? "3px solid #E17055"
+              : placed[i] ? `3px solid #00B894` : "3px dashed #DFE6E9",
+            background: placed[i] ? "#E8F8F5" : "white",
+            display:"flex", alignItems:"center", justifyContent:"center",
+            fontSize: Math.min(36, 200 / target.length), fontWeight:800,
+            color:"#2D3436", fontFamily:"'Nunito', sans-serif",
+            transition:"all 0.15s ease",
+            boxShadow: placed[i] ? "0 2px 8px rgba(0,184,148,0.2)" : "none",
+          }}>
+            {placed[i]?.letter || ""}
+          </div>
+        ))}
+      </div>
+
+      {/* Emoji reward */}
+      {revealed ? (
+        <div style={{ textAlign:"center", animation:"bounceIn 0.5s ease", margin:"12px 0" }}>
+          <div style={{ fontSize:72 }}>{current.emoji}</div>
+          <div style={{ fontSize:20, fontWeight:800, color:"#2D3436" }}>{target}!</div>
+          <button onClick={handleNext} style={{
+            marginTop:12, padding:"14px 40px", borderRadius:16, border:"none",
+            background:"linear-gradient(135deg,#4ECDC4,#45B7D1)",
+            color:"white", fontSize:16, fontWeight:700, cursor:"pointer",
+          }}>Nästa ord →</button>
+        </div>
+      ) : (
+        <>
+          {/* Available letter tiles */}
+          <div style={{
+            display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center",
+            padding:"16px 8px", marginTop:8,
+            background:"#F8F9FA", borderRadius:20, width:"100%", maxWidth:360,
+          }}>
+            {available.map(tile => (
+              <button key={tile.id} onClick={() => handleTileTap(tile)} style={{
+                width: Math.min(58, 300 / (target.length + numDistractors)),
+                height: 58, borderRadius:14,
+                border:"none", cursor:"pointer",
+                background:"linear-gradient(135deg, #FFFFFF, #F0F0F0)",
+                boxShadow:"0 3px 10px rgba(0,0,0,0.1)",
+                fontSize: Math.min(32, 180 / (target.length + numDistractors)),
+                fontWeight:800, color:"#2D3436",
+                fontFamily:"'Nunito', sans-serif",
+                transition:"transform 0.1s ease",
+              }}>{tile.letter}</button>
+            ))}
+          </div>
+
+          {/* Undo button */}
+          {placed.length > 0 && (
+            <button onClick={handleUndo} style={{
+              marginTop:10, padding:"8px 20px", borderRadius:12,
+              border:"2px solid #DFE6E9", background:"white",
+              fontSize:14, fontWeight:600, color:"#636E72", cursor:"pointer",
+            }}>↩ Ångra</button>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
    GAME: BLENDING (car animation)
    ───────────────────────────────────────────── */
 
 function BlendingGame({ level, onComplete, skipRoundRef }) {
-  const allWords = [...(WORD_LEVELS[1] || []), ...(WORD_LEVELS[2] || [])].slice(0, 8);
+  const allWords = [...(WORD_LEVELS[1] || []), ...(WORD_LEVELS[2] || []), ...(WORD_LEVELS[3] || [])].slice(0, 12);
   const [pool, setPool] = useState(() => shuffle(allWords));
   const [carPos, setCarPos] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [completed, setCompleted] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [revealed, setRevealed] = useState(false);
   const trackRef = useRef(null);
   const current = pool[0];
   const total = allWords.length;
@@ -1578,7 +2174,7 @@ function BlendingGame({ level, onComplete, skipRoundRef }) {
     if (skipRoundRef) skipRoundRef.current = () => {
       const next = pool.slice(1);
       if (next.length === 0) onComplete();
-      else { setPool(next); setCompleted(c => c + 1); setCarPos(0); }
+      else { setPool(next); setCompleted(c => c + 1); setCarPos(0); setRevealed(false); }
     };
   });
 
@@ -1589,13 +2185,18 @@ function BlendingGame({ level, onComplete, skipRoundRef }) {
     setCarPos(x);
   }, [isDragging]);
 
+  const handleReveal = () => {
+    setRevealed(true);
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 1500);
+  };
+
   const handleNext = () => {
     const newPool = pool.slice(1);
     setPool(newPool);
     setCompleted(c => c + 1);
     setCarPos(0);
-    setShowConfetti(true);
-    setTimeout(() => setShowConfetti(false), 1200);
+    setRevealed(false);
     if (newPool.length === 0) {
       setTimeout(() => onComplete(), 400);
     }
@@ -1610,30 +2211,55 @@ function BlendingGame({ level, onComplete, skipRoundRef }) {
       <Confetti active={showConfetti} />
       <ProgressBar current={completed} total={total} color={level.color} />
 
-      {/* Letters - big display at top */}
+      {/* Letters + car area - centered */}
       <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center" }}>
-        <div style={{ display:"flex", gap:8, justifyContent:"center", padding:"20px 10px" }}>
-          {letters.map((ch, i) => (
-            <span key={i} style={{
-              fontSize: 56, fontWeight: 800,
-              color: i === activeIdx ? "#E17055" : "#2D3436",
-              transform: i === activeIdx ? "scale(1.3)" : "scale(1)",
-              transition: "all 0.15s ease",
-              fontFamily: "'Nunito', sans-serif",
-            }}>{ch}</span>
-          ))}
+        <div style={{ position:"relative", padding:"0 10px" }}>
+          {/* Car above letters */}
+          <div style={{ position:"relative", height:48, marginBottom:4 }}>
+            <div style={{
+              position:"absolute",
+              left: `calc(${carPos * 100}% - 20px)`,
+              top: 0,
+              fontSize: 40,
+              transition: isDragging ? "none" : "left 0.3s ease",
+              pointerEvents:"none",
+              filter:"drop-shadow(0 2px 4px rgba(0,0,0,0.2))",
+            }}>🚗</div>
+          </div>
+          {/* Road line */}
+          <div style={{ height:3, background:"#DFE6E9", borderRadius:2, marginBottom:8 }} />
+          {/* Letters row */}
+          <div style={{ display:"flex", gap:8, justifyContent:"center" }}>
+            {letters.map((ch, i) => (
+              <span key={i} style={{
+                fontSize: 56, fontWeight: 800,
+                color: i === activeIdx ? "#E17055" : "#2D3436",
+                transform: i === activeIdx ? "scale(1.3)" : "scale(1)",
+                transition: "all 0.15s ease",
+                fontFamily: "'Nunito', sans-serif",
+                minWidth: 44, textAlign:"center",
+              }}>{ch}</span>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Emoji hint */}
-      <div style={{ fontSize:48, marginBottom:16 }}>{current.emoji}</div>
+      {/* Emoji reward or reveal button */}
+      {revealed ? (
+        <div style={{ textAlign:"center", animation:"bounceIn 0.5s ease", marginBottom:12 }}>
+          <div style={{ fontSize:72 }}>{current.emoji}</div>
+          <div style={{ fontSize:20, fontWeight:800, color:"#2D3436", marginTop:4 }}>{current.word}!</div>
+        </div>
+      ) : (
+        <div style={{ fontSize:48, marginBottom:12, opacity:0.15 }}>❓</div>
+      )}
 
       {/* Drag track - thumb zone at bottom */}
-      <div style={{ width:"100%", maxWidth:340, position:"relative", padding:"20px 0", marginBottom:8 }}>
+      <div style={{ width:"100%", maxWidth:340, position:"relative", padding:"10px 0", marginBottom:8 }}>
         <div
           ref={trackRef}
           style={{
-            width:"100%", height:60, background:"#F0F0F0", borderRadius:30,
+            width:"100%", height:56, background:"#F0F0F0", borderRadius:28,
             position:"relative", touchAction:"none", userSelect:"none",
             boxShadow:"inset 0 2px 8px rgba(0,0,0,0.08)",
           }}
@@ -1645,38 +2271,47 @@ function BlendingGame({ level, onComplete, skipRoundRef }) {
           onTouchMove={(e) => handleMove(e.touches[0].clientX)}
           onTouchEnd={() => setIsDragging(false)}
         >
-          {/* Road markers */}
-          <div style={{ position:"absolute", top:"50%", left:16, right:16, height:4, background:"#DFE6E9", borderRadius:2, transform:"translateY(-50%)" }} />
-          {/* Car on track */}
+          {/* Drag handle */}
           <div style={{
             position:"absolute",
-            left:`calc(${carPos * 100}% - 20px)`,
+            left:`calc(${carPos * 100}% - 24px)`,
             top:"50%", transform:"translateY(-50%)",
-            fontSize: 36,
+            width:48, height:48, borderRadius:24,
+            background:"white", boxShadow:"0 2px 10px rgba(0,0,0,0.15)",
+            display:"flex", alignItems:"center", justifyContent:"center",
+            fontSize:20, pointerEvents:"none",
             transition: isDragging ? "none" : "left 0.3s ease",
-            pointerEvents:"none",
-            filter:"drop-shadow(0 2px 4px rgba(0,0,0,0.2))",
-          }}>🚗</div>
+          }}>↔</div>
         </div>
         <div style={{ fontSize:12, color:"#B2BEC3", textAlign:"center", marginTop:6, fontStyle:"italic" }}>
-          Dra bilen och ljuda ut bokstäverna!
+          👆 Dra hit och dit för att ljuda ut!
         </div>
       </div>
 
       {/* Action buttons - bottom */}
       <div style={{ display:"flex", gap:8, marginBottom:8 }}>
-        <button onClick={() => { if (hasRecording(letters[activeIdx], "letters")) playSound(letters[activeIdx]); }} style={{
-          padding:"10px 20px", borderRadius:14, border:"2px solid #DFE6E9",
-          background:"white", fontSize:14, fontWeight:600, cursor:"pointer",
-          color:"#636E72", fontFamily:"'Nunito', sans-serif",
-        }}>
-          🔊 Hör bokstaven
-        </button>
-        <button onClick={handleNext} style={{
-          padding:"10px 24px", borderRadius:14, border:"none",
-          background:"linear-gradient(135deg,#00B894,#00CEC9)",
-          color:"white", fontSize:14, fontWeight:700, cursor:"pointer",
-        }}>Klar ✓</button>
+        {!revealed ? (
+          <>
+            <button onClick={() => { if (hasRecording(letters[activeIdx], "letters")) playSound(letters[activeIdx]); }} style={{
+              padding:"10px 20px", borderRadius:14, border:"2px solid #DFE6E9",
+              background:"white", fontSize:14, fontWeight:600, cursor:"pointer",
+              color:"#636E72", fontFamily:"'Nunito', sans-serif",
+            }}>
+              🔊 Hör bokstaven
+            </button>
+            <button onClick={handleReveal} style={{
+              padding:"10px 24px", borderRadius:14, border:"none",
+              background:`linear-gradient(135deg, ${level.color}, ${level.color}CC)`,
+              color:"white", fontSize:14, fontWeight:700, cursor:"pointer",
+            }}>Visa belöning! 🎉</button>
+          </>
+        ) : (
+          <button onClick={handleNext} style={{
+            padding:"12px 36px", borderRadius:14, border:"none",
+            background:"linear-gradient(135deg,#4ECDC4,#45B7D1)",
+            color:"white", fontSize:16, fontWeight:700, cursor:"pointer",
+          }}>Nästa ord →</button>
+        )}
       </div>
     </div>
   );
@@ -1686,16 +2321,25 @@ function BlendingGame({ level, onComplete, skipRoundRef }) {
    GAME: DRAW LETTER
    ───────────────────────────────────────────── */
 
-function DrawLetterGame({ level, onComplete }) {
+function DrawLetterGame({ level, onComplete, skipRoundRef }) {
   const allLetters = [...EASY_LETTERS, ...MEDIUM_LETTERS];
   const [pool, setPool] = useState(() => shuffle(allLetters));
   const [completed, setCompleted] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showGuide, setShowGuide] = useState(true);
   const canvasRef = useRef(null);
   const drawingRef = useRef(false);
   const lastPosRef = useRef(null);
   const current = pool[0];
   const total = allLetters.length;
+
+  useEffect(() => {
+    if (skipRoundRef) skipRoundRef.current = () => {
+      const next = pool.slice(1);
+      if (next.length === 0) onComplete();
+      else { setPool(next); setCompleted(c => c + 1); clearCanvas(); setShowGuide(true); }
+    };
+  });
 
   const clearCanvas = () => {
     const ctx = canvasRef.current?.getContext("2d");
@@ -1717,6 +2361,7 @@ function DrawLetterGame({ level, onComplete }) {
     e.preventDefault();
     drawingRef.current = true;
     lastPosRef.current = getPos(e);
+    if (showGuide) setShowGuide(false);
   };
 
   const draw = (e) => {
@@ -1747,35 +2392,50 @@ function DrawLetterGame({ level, onComplete }) {
         setPool(newPool);
         setCompleted(c => c + 1);
         clearCanvas();
+        setShowGuide(true);
         if (newPool.length === 0) {
           setTimeout(() => onComplete(), 400);
         }
       }, 1000);
     } else {
       clearCanvas();
+      setShowGuide(true);
     }
   };
 
   if (!current) return null;
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:20, padding:"20px 16px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"12px 16px 80px" }}>
       <Confetti active={showConfetti} />
       <ProgressBar current={completed} total={total} color={level.color} />
-      <div style={{ fontSize:16, color:"#636E72", fontWeight:600 }}>
-        Hör ljudet – rita bokstaven!
+      <div style={{ fontSize:14, color:"#636E72", fontWeight:600, marginBottom:8 }}>
+        Rita bokstaven som gör det här ljudet:
       </div>
-      <SoundButton soundKey={current} type="letters" label={`Spela ljud`} large color={level.color} />
+      <SoundButton soundKey={current} type="letters" label={`🔊 Lyssna`} large color={level.color} />
       <div style={{
         position:"relative", background:"white", borderRadius:20,
-        boxShadow:"0 4px 20px rgba(0,0,0,0.08)", overflow:"hidden",
+        boxShadow:"0 4px 20px rgba(0,0,0,0.08)", overflow:"hidden", marginTop:12,
       }}>
+        {/* Ghost letter guide */}
+        <div style={{
+          position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center",
+          pointerEvents:"none", zIndex:0,
+        }}>
+          <span style={{
+            fontSize: 180, fontWeight: 800, color: "#F0F0F0",
+            fontFamily: "'Nunito', sans-serif",
+            opacity: showGuide ? 0.6 : 0.15,
+            transition: "opacity 0.3s ease",
+            userSelect: "none",
+          }}>{current}</span>
+        </div>
         <canvas
           ref={canvasRef}
           width={300} height={300}
           style={{
             width:300, height:300, display:"block", touchAction:"none",
-            cursor:"crosshair",
+            cursor:"crosshair", position:"relative", zIndex:1,
           }}
           onMouseDown={startDraw}
           onMouseMove={draw}
@@ -1785,32 +2445,29 @@ function DrawLetterGame({ level, onComplete }) {
           onTouchMove={draw}
           onTouchEnd={stopDraw}
         />
-        {/* Grid lines for guidance */}
-        <div style={{
-          position:"absolute", inset:0, pointerEvents:"none",
-          borderBottom:"2px dashed #EEE",
-          display:"flex", alignItems:"center", justifyContent:"center",
-        }}>
-          <div style={{ width:"80%", height:2, background:"#F0F0F0", position:"absolute", top:"50%" }} />
-        </div>
       </div>
-      <div style={{ display:"flex", gap:12 }}>
-        <button onClick={clearCanvas} style={{
-          padding:"12px 24px", borderRadius:14, border:"2px solid #DFE6E9",
+      <div style={{ display:"flex", gap:8, marginTop:12 }}>
+        <button onClick={() => { clearCanvas(); setShowGuide(true); }} style={{
+          padding:"10px 20px", borderRadius:14, border:"2px solid #DFE6E9",
           background:"white", fontSize:14, fontWeight:600, cursor:"pointer", color:"#636E72",
         }}>🗑️ Rensa</button>
+        <button onClick={() => setShowGuide(g => !g)} style={{
+          padding:"10px 20px", borderRadius:14, border:"2px solid #DFE6E9",
+          background: showGuide ? "#FFF3E0" : "white", fontSize:14, fontWeight:600, cursor:"pointer", color:"#636E72",
+        }}>{showGuide ? "👁️ Dölj" : "👁️ Visa"}</button>
+      </div>
+      <div style={{ display:"flex", gap:8, marginTop:8 }}>
         <button onClick={() => handleResult(true)} style={{
-          padding:"12px 24px", borderRadius:14, border:"none",
+          padding:"12px 28px", borderRadius:14, border:"none",
           background:"linear-gradient(135deg,#00B894,#00CEC9)",
-          color:"white", fontSize:14, fontWeight:600, cursor:"pointer",
+          color:"white", fontSize:14, fontWeight:700, cursor:"pointer",
         }}>✅ Rätt</button>
         <button onClick={() => handleResult(false)} style={{
-          padding:"12px 24px", borderRadius:14, border:"none",
+          padding:"12px 28px", borderRadius:14, border:"none",
           background:"linear-gradient(135deg,#E17055,#D63031)",
-          color:"white", fontSize:14, fontWeight:600, cursor:"pointer",
+          color:"white", fontSize:14, fontWeight:700, cursor:"pointer",
         }}>❌ Försök igen</button>
       </div>
-      <div style={{ fontSize:14, color:"#B2BEC3" }}>{completed} av {total} klara</div>
     </div>
   );
 }
@@ -1820,7 +2477,7 @@ function DrawLetterGame({ level, onComplete }) {
    ───────────────────────────────────────────── */
 
 function SpellWordGame({ level, onComplete }) {
-  const words = [...(WORD_LEVELS[1] || [])].slice(0, 8);
+  const words = [...(WORD_LEVELS[1] || []), ...(WORD_LEVELS[2] || [])].slice(0, 10);
   const [pool, setPool] = useState(() => shuffle(words));
   const [input, setInput] = useState([]);
   const [completed, setCompleted] = useState(0);
@@ -2203,15 +2860,44 @@ function HomeScreen({ onStart, onStudio, completedLevels, audioReady }) {
    ───────────────────────────────────────────── */
 
 function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onToggleUnlock }) {
-  const categories = [
-    { title:"Uthållna ljud", levels: LEVELS.filter(l => l.id <= 14), emoji:"🐣" },
-    { title:"Fler ljud", levels: LEVELS.filter(l => l.id >= 15 && l.id <= 28), emoji:"🌱" },
-    { title:"Alla bokstäver", levels: LEVELS.filter(l => l.id >= 29 && l.id <= 34), emoji:"🔤" },
-    { title:"Läsa ord", levels: LEVELS.filter(l => l.id >= 35 && l.id <= 37), emoji:"📖" },
-    { title:"Avancerat", levels: LEVELS.filter(l => l.id >= 38 && l.id <= 40), emoji:"🚀" },
-    { title:"Specialljud", levels: LEVELS.filter(l => l.id >= 41 && l.id <= 44), emoji:"🔊" },
-    { title:"Bonus", levels: LEVELS.filter(l => l.id >= 45), emoji:"🏆" },
+  const sections = [
+    { title:"Lär dig bokstäver", emoji:"🔤", desc:"Börja här!", subs:[
+      { title:"Uthållna ljud", levels: LEVELS.filter(l => l.id <= 14), emoji:"🐣" },
+      { title:"Fler ljud", levels: LEVELS.filter(l => l.id >= 15 && l.id <= 28), emoji:"🌱" },
+      { title:"Alla bokstäver", levels: LEVELS.filter(l => l.id >= 29 && l.id <= 34), emoji:"⭐" },
+    ]},
+    { title:"Läsa", emoji:"📖", desc:"Ord, meningar och sagor", subs:[
+      { title:"Läsa ord", levels: LEVELS.filter(l => l.id >= 35 && l.id <= 52), emoji:"📝" },
+      { title:"Meningar", levels: LEVELS.filter(l => l.id >= 53 && l.id <= 56), emoji:"💬" },
+      { title:"Småsagor", levels: LEVELS.filter(l => l.id >= 57 && l.id <= 59), emoji:"📚" },
+    ]},
+    { title:"Skriva", emoji:"✏️", desc:"Bygg och skriv", subs:[
+      { title:"Bygg ord", levels: LEVELS.filter(l => l.id >= 60 && l.id <= 65), emoji:"🧩" },
+      { title:"Rita bokstäver", levels: LEVELS.filter(l => l.id === 39), emoji:"✏️" },
+      { title:"Stava ord", levels: LEVELS.filter(l => l.id === 40), emoji:"🔠" },
+    ]},
+    { title:"Övrigt", emoji:"🎯", desc:"Ljudning, specialljud & bonus", subs:[
+      { title:"Ljuda ut", levels: LEVELS.filter(l => l.id === 38), emoji:"🚗" },
+      { title:"Specialljud", levels: LEVELS.filter(l => l.id >= 41 && l.id <= 44), emoji:"🔊" },
+      { title:"Bonus", levels: LEVELS.filter(l => l.id >= 45), emoji:"🏆" },
+    ]},
   ];
+
+  // Find first section/sub with incomplete levels
+  let defaultSection = 0;
+  let defaultSub = 0;
+  let found = false;
+  for (let si = 0; si < sections.length && !found; si++) {
+    for (let ci = 0; ci < sections[si].subs.length && !found; ci++) {
+      if (sections[si].subs[ci].levels.some(l => !completedLevels.has(l.id))) {
+        defaultSection = si;
+        defaultSub = ci;
+        found = true;
+      }
+    }
+  }
+  const [openSection, setOpenSection] = useState(defaultSection);
+  const [openSub, setOpenSub] = useState(defaultSub);
 
   return (
     <div style={{ padding:"20px 16px", maxWidth:420, margin:"0 auto" }}>
@@ -2228,19 +2914,70 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onT
         }}>{allUnlocked ? "🔓" : "🔒"}</button>
       </div>
 
-      {categories.map(cat => (
-        <div key={cat.title} style={{ marginBottom:28 }}>
-          <div style={{
-            fontSize:13, fontWeight:700, color:"#B2BEC3",
-            textTransform:"uppercase", letterSpacing:1.5, marginBottom:10,
-          }}>
-            {cat.emoji} {cat.title}
-          </div>
-          <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-            {cat.levels.map(level => {
+      {sections.map((section, secIdx) => {
+        const secOpen = openSection === secIdx;
+        const allLevels = section.subs.flatMap(s => s.levels);
+        const secDone = allLevels.filter(l => completedLevels.has(l.id)).length;
+        const secTotal = allLevels.length;
+        const secAllDone = secDone === secTotal;
+        return (
+        <div key={section.title} style={{ marginBottom:10 }}>
+          {/* Section header */}
+          <button
+            onClick={() => { setOpenSection(secOpen ? -1 : secIdx); setOpenSub(secOpen ? -1 : 0); }}
+            style={{
+              width:"100%", display:"flex", alignItems:"center", gap:12,
+              padding:"16px 16px", borderRadius:18, border:"none", cursor:"pointer",
+              background: secAllDone ? "#E8F8F5" : secOpen ? "white" : "#F8F9FA",
+              boxShadow: secOpen ? "0 4px 16px rgba(0,0,0,0.08)" : "0 2px 8px rgba(0,0,0,0.03)",
+              textAlign:"left", transition:"all 0.15s ease",
+            }}
+          >
+            <span style={{ fontSize:28 }}>{section.emoji}</span>
+            <div style={{ flex:1 }}>
+              <div style={{ fontSize:17, fontWeight:800, color:"#2D3436" }}>{section.title}</div>
+              <div style={{ fontSize:12, color:"#B2BEC3", fontWeight:500 }}>
+                {section.desc} · {secDone}/{secTotal} klara
+              </div>
+            </div>
+            {secAllDone && <span style={{ fontSize:18 }}>✅</span>}
+            <span style={{ fontSize:16, color:"#B2BEC3", transition:"transform 0.2s", transform: secOpen ? "rotate(90deg)" : "rotate(0)" }}>›</span>
+          </button>
+
+          {/* Sub-categories */}
+          {secOpen && (
+          <div style={{ marginTop:6, paddingLeft:8, paddingRight:4 }}>
+            {section.subs.map((sub, subIdx) => {
+              const subOpen = openSub === subIdx;
+              const subDone = sub.levels.filter(l => completedLevels.has(l.id)).length;
+              const subAllDone = subDone === sub.levels.length;
+              return (
+              <div key={sub.title} style={{ marginBottom:4 }}>
+                <button
+                  onClick={() => setOpenSub(subOpen ? -1 : subIdx)}
+                  style={{
+                    width:"100%", display:"flex", alignItems:"center", gap:8,
+                    padding:"10px 12px", borderRadius:12, border:"none", cursor:"pointer",
+                    background: subAllDone ? "#F0FFF0" : subOpen ? "#F8F9FA" : "transparent",
+                    textAlign:"left", transition:"all 0.1s ease",
+                  }}
+                >
+                  <span style={{ fontSize:16 }}>{sub.emoji}</span>
+                  <div style={{ flex:1 }}>
+                    <div style={{ fontSize:14, fontWeight:700, color:"#2D3436" }}>{sub.title}</div>
+                  </div>
+                  <span style={{ fontSize:11, color:"#B2BEC3", fontWeight:500 }}>{subDone}/{sub.levels.length}</span>
+                  {subAllDone && <span style={{ fontSize:13 }}>✅</span>}
+                  <span style={{ fontSize:12, color:"#DFE6E9", transition:"transform 0.2s", transform: subOpen ? "rotate(90deg)" : "rotate(0)" }}>›</span>
+                </button>
+                {subOpen && (
+                <div style={{ display:"flex", flexDirection:"column", gap:6, marginTop:4, paddingLeft:8, paddingRight:2 }}>
+                  {sub.levels.map(level => {
               const done = completedLevels.has(level.id);
               const hasAudio = levelHasAudio(level);
-              const prevDone = level.id === 1 || completedLevels.has(level.id - 1);
+              const levelIdx = LEVELS.findIndex(l => l.id === level.id);
+              const prevLevel = levelIdx > 0 ? LEVELS[levelIdx - 1] : null;
+              const prevDone = !prevLevel || completedLevels.has(prevLevel.id);
               const locked = allUnlocked ? false : (hasAudio ? (!prevDone && !done) : true);
               const lockReason = !hasAudio && !allUnlocked ? "Ljud saknas" : locked ? "Slutför föregående nivå först" : "";
               return (
@@ -2279,9 +3016,16 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onT
                 </button>
               );
             })}
+                </div>
+                )}
+              </div>
+              );
+            })}
           </div>
+          )}
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -2297,7 +3041,7 @@ function levelHasAudio(level) {
   if (level.letters) {
     return level.letters.every(l => hasRecording(l, "letters"));
   }
-  if (level.type === "word-read") {
+  if (level.type === "word-read" || level.type === "sentence-read" || level.type === "story-read" || level.type === "word-build") {
     return true; // Words use letter sounds when available, works without full coverage
   }
   if (level.type === "special-sound") {
@@ -2387,6 +3131,9 @@ function App() {
       case "letter-pair": return <LetterPairGame {...props} />;
       case "single-letter": return <SingleLetterGame {...props} />;
       case "word-read": return <WordReadGame {...props} />;
+      case "sentence-read": return <SentenceReadGame {...props} />;
+      case "story-read": return <StoryReadGame {...props} />;
+      case "word-build": return <WordBuildGame {...props} />;
       case "blending": return <BlendingGame {...props} />;
       case "draw-letter": return <DrawLetterGame {...props} />;
       case "spell-word": return <SpellWordGame {...props} />;
