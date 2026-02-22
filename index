@@ -2885,13 +2885,14 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onT
 
   // Find first section/sub with incomplete levels
   let defaultSection = 0;
-  let defaultSub = -1;
-  outer: for (let si = 0; si < sections.length; si++) {
-    for (let ci = 0; ci < sections[si].subs.length; ci++) {
+  let defaultSub = 0;
+  let found = false;
+  for (let si = 0; si < sections.length && !found; si++) {
+    for (let ci = 0; ci < sections[si].subs.length && !found; ci++) {
       if (sections[si].subs[ci].levels.some(l => !completedLevels.has(l.id))) {
         defaultSection = si;
         defaultSub = ci;
-        break outer;
+        found = true;
       }
     }
   }
@@ -2974,7 +2975,9 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onT
                   {sub.levels.map(level => {
               const done = completedLevels.has(level.id);
               const hasAudio = levelHasAudio(level);
-              const prevDone = level.id === 1 || completedLevels.has(level.id - 1);
+              const levelIdx = LEVELS.findIndex(l => l.id === level.id);
+              const prevLevel = levelIdx > 0 ? LEVELS[levelIdx - 1] : null;
+              const prevDone = !prevLevel || completedLevels.has(prevLevel.id);
               const locked = allUnlocked ? false : (hasAudio ? (!prevDone && !done) : true);
               const lockReason = !hasAudio && !allUnlocked ? "Ljud saknas" : locked ? "Slutför föregående nivå först" : "";
               return (
