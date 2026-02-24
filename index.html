@@ -3513,6 +3513,103 @@ function OnboardingScreen({ onDone }) {
 }
 
 /* ─────────────────────────────────────────────
+   LOGIN SCREEN
+   ───────────────────────────────────────────── */
+
+function LoginScreen({ onEmail, onGuest, error, loading }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isRegister, setIsRegister] = useState(false);
+
+  const handleSubmit = () => {
+    if (!email.trim() || !password.trim()) return;
+    onEmail(email.trim(), password, isRegister);
+  };
+
+  return (
+    <div style={{
+      minHeight:"100dvh", display:"flex", flexDirection:"column",
+      alignItems:"center", justifyContent:"center", padding:"24px 20px",
+      background:"linear-gradient(135deg, #E8F8F5 0%, #D4EFDF 50%, #FADBD8 100%)",
+    }}>
+      <div style={{ fontSize:48, marginBottom:8 }}>📖</div>
+      <h1 style={{ fontSize:32, fontWeight:900, color:"#2D3436", margin:"0 0 4px 0" }}>Ljudit</h1>
+      <p style={{ fontSize:15, color:"#636E72", margin:"0 0 32px 0" }}>Lär ditt barn att läsa!</p>
+
+      <div style={{
+        background:"white", borderRadius:24, padding:"28px 24px",
+        maxWidth:340, width:"100%", boxShadow:"0 8px 30px rgba(0,0,0,0.08)",
+      }}>
+        <h2 style={{ fontSize:18, fontWeight:800, color:"#2D3436", margin:"0 0 20px 0", textAlign:"center" }}>
+          {isRegister ? "Skapa konto" : "Logga in"}
+        </h2>
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          style={{
+            width:"100%", padding:"14px 16px", borderRadius:14,
+            border:"2px solid #EEE", fontSize:16, marginBottom:10,
+            outline:"none", boxSizing:"border-box",
+          }}
+          onFocus={e => e.target.style.borderColor = "#4ECDC4"}
+          onBlur={e => e.target.style.borderColor = "#EEE"}
+        />
+        <input
+          type="password"
+          placeholder="Lösenord"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && handleSubmit()}
+          style={{
+            width:"100%", padding:"14px 16px", borderRadius:14,
+            border:"2px solid #EEE", fontSize:16, marginBottom:6,
+            outline:"none", boxSizing:"border-box",
+          }}
+          onFocus={e => e.target.style.borderColor = "#4ECDC4"}
+          onBlur={e => e.target.style.borderColor = "#EEE"}
+        />
+
+        {error && (
+          <div style={{ fontSize:13, color:"#E17055", textAlign:"center", padding:"6px 0" }}>{error}</div>
+        )}
+
+        <button onClick={handleSubmit} disabled={loading} style={{
+          width:"100%", padding:"14px", borderRadius:14, border:"none",
+          background:"linear-gradient(135deg, #4ECDC4, #45B7D1)",
+          color:"white", fontSize:16, fontWeight:700, cursor:"pointer",
+          marginTop:10, opacity: loading ? 0.6 : 1,
+        }}>
+          {loading ? "..." : isRegister ? "Skapa konto" : "Logga in"}
+        </button>
+
+        <button onClick={() => { setIsRegister(!isRegister); }} style={{
+          width:"100%", padding:"10px", border:"none", background:"none",
+          color:"#45B7D1", fontSize:14, fontWeight:600, cursor:"pointer", marginTop:4,
+        }}>
+          {isRegister ? "Har redan konto? Logga in" : "Inget konto? Skapa ett"}
+        </button>
+      </div>
+
+      <button onClick={onGuest} disabled={loading} style={{
+        marginTop:20, padding:"14px 36px", borderRadius:14,
+        border:"2px solid #DFE6E9", background:"white",
+        color:"#636E72", fontSize:15, fontWeight:600, cursor:"pointer",
+        opacity: loading ? 0.6 : 1,
+      }}>
+        Fortsätt som gäst
+      </button>
+
+      <p style={{ fontSize:12, color:"#B2BEC3", marginTop:12, textAlign:"center", maxWidth:280 }}>
+        Som gäst sparas din progress bara på denna enhet
+      </p>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
    MAIN APP
    ───────────────────────────────────────────── */
 
@@ -3533,32 +3630,61 @@ function App() {
   const [allUnlocked, setAllUnlocked] = useState(false);
   const [audioReady, setAudioReady] = useState(false);
   const firebaseUidRef = useRef(null);
+  const [authReady, setAuthReady] = useState(false);
+  const [authUser, setAuthUser] = useState(null);
+  const [authError, setAuthError] = useState("");
+  const [authLoading, setAuthLoading] = useState(false);
 
-  // Firebase: anonymous sign-in + sync progress
+  // Firebase: listen for auth state
   useEffect(() => {
-    if (typeof firebase === "undefined") return;
-    const auth = firebase.auth();
-    const db = firebase.database();
-
-    auth.signInAnonymously().catch(e => console.warn("Auth failed:", e));
-
-    const unsub = auth.onAuthStateChanged(user => {
-      if (!user) return;
-      firebaseUidRef.current = user.uid;
-      const ref = db.ref("users/" + user.uid + "/progress");
-      ref.once("value").then(snap => {
-        const val = snap.val();
-        if (val && Array.isArray(val)) {
-          setCompletedLevels(prev => {
-            const merged = new Set([...prev, ...val]);
-            try { localStorage.setItem("ljudit_progress", JSON.stringify([...merged])); } catch(e) {}
-            return merged;
-          });
-        }
-      }).catch(e => console.warn("DB read failed:", e));
+    if (typeof firebase === "undefined") { setAuthReady(true); return; }
+    const unsub = firebase.auth().onAuthStateChanged(user => {
+      setAuthUser(user || null);
+      if (user) {
+        firebaseUidRef.current = user.uid;
+        const ref = firebase.database().ref("users/" + user.uid + "/progress");
+        ref.once("value").then(snap => {
+          const val = snap.val();
+          if (val && Array.isArray(val)) {
+            setCompletedLevels(prev => {
+              const merged = new Set([...prev, ...val]);
+              try { localStorage.setItem("ljudit_progress", JSON.stringify([...merged])); } catch(e) {}
+              return merged;
+            });
+          }
+        }).catch(() => {});
+      }
+      setAuthReady(true);
     });
     return () => unsub();
   }, []);
+
+  const handleEmailLogin = (email, password, isRegister) => {
+    if (typeof firebase === "undefined") return;
+    setAuthLoading(true);
+    setAuthError("");
+    const auth = firebase.auth();
+    const fn = isRegister
+      ? auth.createUserWithEmailAndPassword(email, password)
+      : auth.signInWithEmailAndPassword(email, password);
+    fn.then(() => setAuthLoading(false))
+      .catch(e => {
+        setAuthLoading(false);
+        if (e.code === "auth/user-not-found" || e.code === "auth/invalid-credential") setAuthError("Fel email eller lösenord");
+        else if (e.code === "auth/email-already-in-use") setAuthError("Kontot finns redan – logga in istället");
+        else if (e.code === "auth/weak-password") setAuthError("Lösenordet måste vara minst 6 tecken");
+        else if (e.code === "auth/invalid-email") setAuthError("Ogiltig emailadress");
+        else setAuthError(e.message);
+      });
+  };
+
+  const handleGuestLogin = () => {
+    if (typeof firebase === "undefined") return;
+    setAuthLoading(true);
+    firebase.auth().signInAnonymously()
+      .then(() => setAuthLoading(false))
+      .catch(() => setAuthLoading(false));
+  };
 
   // Lock scroll & prevent pull-to-refresh during gameplay
   useEffect(() => {
@@ -3647,6 +3773,28 @@ function App() {
       default: return <div>Okänd nivåtyp</div>;
     }
   };
+
+  // Show login screen if not authenticated
+  if (authReady && !authUser && typeof firebase !== "undefined") {
+    return <LoginScreen
+      onEmail={handleEmailLogin}
+      onGuest={handleGuestLogin}
+      error={authError}
+      loading={authLoading}
+    />;
+  }
+
+  // Show loading while checking auth
+  if (!authReady && typeof firebase !== "undefined") {
+    return (
+      <div style={{
+        minHeight:"100dvh", display:"flex", alignItems:"center", justifyContent:"center",
+        background:"linear-gradient(135deg, #E8F8F5 0%, #D4EFDF 50%, #FADBD8 100%)",
+      }}>
+        <div style={{ fontSize:48 }}>📖</div>
+      </div>
+    );
+  }
 
   return (
     <div style={{
