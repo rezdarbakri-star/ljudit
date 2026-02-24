@@ -3530,11 +3530,15 @@ function LoginScreen({ onEmail, onGuest, error, loading }) {
     <div style={{
       minHeight:"100dvh", display:"flex", flexDirection:"column",
       alignItems:"center", justifyContent:"center", padding:"24px 20px",
-      background:"linear-gradient(135deg, #E8F8F5 0%, #D4EFDF 50%, #FADBD8 100%)",
+      background:"linear-gradient(180deg, #F8F9FA 0%, #E8F4F8 50%, #F0E6FF 100%)",
+      fontFamily:"'Nunito', 'Segoe UI', system-ui, sans-serif",
+      maxWidth:480, margin:"0 auto",
     }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');`}</style>
+
       <div style={{ fontSize:48, marginBottom:8 }}>📖</div>
       <h1 style={{ fontSize:32, fontWeight:900, color:"#2D3436", margin:"0 0 4px 0" }}>Ljudit</h1>
-      <p style={{ fontSize:15, color:"#636E72", margin:"0 0 32px 0" }}>Lär ditt barn att läsa!</p>
+      <p style={{ fontSize:15, color:"#636E72", margin:"0 0 32px 0", fontWeight:600 }}>Lär ditt barn att läsa!</p>
 
       <div style={{
         background:"white", borderRadius:24, padding:"28px 24px",
@@ -3552,7 +3556,7 @@ function LoginScreen({ onEmail, onGuest, error, loading }) {
           style={{
             width:"100%", padding:"14px 16px", borderRadius:14,
             border:"2px solid #EEE", fontSize:16, marginBottom:10,
-            outline:"none", boxSizing:"border-box",
+            outline:"none", boxSizing:"border-box", fontFamily:"inherit",
           }}
           onFocus={e => e.target.style.borderColor = "#4ECDC4"}
           onBlur={e => e.target.style.borderColor = "#EEE"}
@@ -3566,21 +3570,22 @@ function LoginScreen({ onEmail, onGuest, error, loading }) {
           style={{
             width:"100%", padding:"14px 16px", borderRadius:14,
             border:"2px solid #EEE", fontSize:16, marginBottom:6,
-            outline:"none", boxSizing:"border-box",
+            outline:"none", boxSizing:"border-box", fontFamily:"inherit",
           }}
           onFocus={e => e.target.style.borderColor = "#4ECDC4"}
           onBlur={e => e.target.style.borderColor = "#EEE"}
         />
 
         {error && (
-          <div style={{ fontSize:13, color:"#E17055", textAlign:"center", padding:"6px 0" }}>{error}</div>
+          <div style={{ fontSize:13, color:"#E17055", textAlign:"center", padding:"6px 0", fontWeight:600 }}>{error}</div>
         )}
 
         <button onClick={handleSubmit} disabled={loading} style={{
           width:"100%", padding:"14px", borderRadius:14, border:"none",
           background:"linear-gradient(135deg, #4ECDC4, #45B7D1)",
           color:"white", fontSize:16, fontWeight:700, cursor:"pointer",
-          marginTop:10, opacity: loading ? 0.6 : 1,
+          marginTop:10, opacity: loading ? 0.6 : 1, fontFamily:"inherit",
+          boxShadow:"0 4px 15px rgba(78,205,196,0.3)",
         }}>
           {loading ? "..." : isRegister ? "Skapa konto" : "Logga in"}
         </button>
@@ -3588,6 +3593,7 @@ function LoginScreen({ onEmail, onGuest, error, loading }) {
         <button onClick={() => { setIsRegister(!isRegister); }} style={{
           width:"100%", padding:"10px", border:"none", background:"none",
           color:"#45B7D1", fontSize:14, fontWeight:600, cursor:"pointer", marginTop:4,
+          fontFamily:"inherit",
         }}>
           {isRegister ? "Har redan konto? Logga in" : "Inget konto? Skapa ett"}
         </button>
@@ -3597,12 +3603,13 @@ function LoginScreen({ onEmail, onGuest, error, loading }) {
         marginTop:20, padding:"14px 36px", borderRadius:14,
         border:"2px solid #DFE6E9", background:"white",
         color:"#636E72", fontSize:15, fontWeight:600, cursor:"pointer",
-        opacity: loading ? 0.6 : 1,
+        opacity: loading ? 0.6 : 1, fontFamily:"inherit",
+        boxShadow:"0 2px 10px rgba(0,0,0,0.04)",
       }}>
         Fortsätt som gäst
       </button>
 
-      <p style={{ fontSize:12, color:"#B2BEC3", marginTop:12, textAlign:"center", maxWidth:280 }}>
+      <p style={{ fontSize:12, color:"#B2BEC3", marginTop:12, textAlign:"center", maxWidth:280, fontWeight:500 }}>
         Som gäst sparas din progress bara på denna enhet
       </p>
     </div>
@@ -3774,8 +3781,8 @@ function App() {
     }
   };
 
-  // Show login screen if not authenticated
-  if (authReady && !authUser && typeof firebase !== "undefined") {
+  // Show login screen if not authenticated (but after onboarding)
+  if (screen !== "onboarding" && authReady && !authUser && typeof firebase !== "undefined") {
     return <LoginScreen
       onEmail={handleEmailLogin}
       onGuest={handleGuestLogin}
@@ -3784,13 +3791,15 @@ function App() {
     />;
   }
 
-  // Show loading while checking auth
-  if (!authReady && typeof firebase !== "undefined") {
+  // Show loading while checking auth (but not during onboarding)
+  if (screen !== "onboarding" && !authReady && typeof firebase !== "undefined") {
     return (
       <div style={{
         minHeight:"100dvh", display:"flex", alignItems:"center", justifyContent:"center",
-        background:"linear-gradient(135deg, #E8F8F5 0%, #D4EFDF 50%, #FADBD8 100%)",
+        background:"linear-gradient(180deg, #F8F9FA 0%, #E8F4F8 50%, #F0E6FF 100%)",
+        fontFamily:"'Nunito', 'Segoe UI', system-ui, sans-serif",
       }}>
+        <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');`}</style>
         <div style={{ fontSize:48 }}>📖</div>
       </div>
     );
