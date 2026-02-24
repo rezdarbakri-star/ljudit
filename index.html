@@ -542,7 +542,7 @@ function getAudioContext() {
 }
 
 let _lastPlayTime = 0;
-const PLAY_COOLDOWN = 1200; // ms — prevent rapid repeated taps
+const PLAY_COOLDOWN = 400; // ms — prevent rapid repeated taps
 
 // Play letters of a word in sequence
 async function playWordLetters(word) {
@@ -2909,7 +2909,7 @@ function HomeScreen({ onStart, onStudio, completedLevels, audioReady }) {
         background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",
         WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
       }}>
-        Ljuda
+        Ljudit
       </h1>
       <p style={{ fontSize:16, color:"#636E72", margin:0, maxWidth:300, lineHeight:1.6 }}>
         Lär dig läsa steg för steg – med fonetiska ljud, ord och belöningar!
@@ -3395,7 +3395,7 @@ function OnboardingScreen({ onDone }) {
       <div style={{ position:"absolute", inset:0, background:"radial-gradient(circle at 70% 60%, rgba(255,255,255,0.1) 0%, transparent 50%)" }} />
       <div style={{ fontSize:56, marginBottom:16, position:"relative" }}>❤️</div>
       <div style={{ fontSize:28, fontWeight:900, marginBottom:16, position:"relative" }}>Tillsammans</div>
-      <p style={{ fontSize:16, fontWeight:600, opacity:0.92, lineHeight:1.7, maxWidth:340, margin:"0 auto", position:"relative" }}>Ljuda är till för att hjälpa <em>dig</em> – ett verktyg för dig att öva tillsammans med ditt barn. Barnet lär sig bäst när ni gör det ihop och barnet får både höra och se hur ljuden formas från din mun. 5–10 minuter åt gången räcker.</p>
+      <p style={{ fontSize:16, fontWeight:600, opacity:0.92, lineHeight:1.7, maxWidth:340, margin:"0 auto", position:"relative" }}>Ljudit är till för att hjälpa <em>dig</em> – ett verktyg för dig att öva tillsammans med ditt barn. Barnet lär sig bäst när ni gör det ihop och barnet får både höra och se hur ljuden formas från din mun. 5–10 minuter åt gången räcker.</p>
       <button onClick={onDone} style={{
         padding:"18px 52px", borderRadius:20, border:"none",
         background:"white", color:"#4ECDC4",
