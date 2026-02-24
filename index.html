@@ -2911,7 +2911,8 @@ function HomeScreen({ onStart, onStudio, onOnboarding, completedLevels, audioRea
   return (
     <div style={{
       display:"flex", flexDirection:"column", alignItems:"center",
-      gap:24, padding:"40px 20px", textAlign:"center", position:"relative",
+      justifyContent:"center", padding:"20px 20px", textAlign:"center",
+      position:"relative", height:"100dvh", overflow:"hidden", boxSizing:"border-box",
     }}>
       <button onClick={onOnboarding} style={{
         position:"absolute", top:16, right:16,
@@ -2919,39 +2920,45 @@ function HomeScreen({ onStart, onStudio, onOnboarding, completedLevels, audioRea
         background:"white", fontSize:16, cursor:"pointer", display:"flex",
         alignItems:"center", justifyContent:"center", color:"#B2BEC3",
       }}>❓</button>
-      <div style={{ fontSize:60, cursor:"default", userSelect:"none" }} onClick={handleLogoTap}>📖</div>
+      <div style={{ fontSize:52, cursor:"default", userSelect:"none" }} onClick={handleLogoTap}>📖</div>
       <h1 style={{
-        fontSize:36, fontWeight:900, color:"#2D3436",
-        margin:0, lineHeight:1.2,
+        fontSize:32, fontWeight:900, color:"#2D3436",
+        margin:"4px 0 0 0", lineHeight:1.2,
         background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",
         WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
       }}>
         Ljudit
       </h1>
-      <p style={{ fontSize:16, color:"#636E72", margin:0, maxWidth:300, lineHeight:1.6 }}>
+      <p style={{ fontSize:15, color:"#636E72", margin:"4px 0 0 0", maxWidth:300, lineHeight:1.5 }}>
         Lär ditt barn att läsa!
       </p>
       {totalCompleted > 0 && (
         <div style={{
-          padding:"10px 20px", borderRadius:12,
+          padding:"8px 16px", borderRadius:12, marginTop:10,
           background:"linear-gradient(135deg,#FFEAA7,#FDCB6E)",
-          fontSize:14, fontWeight:700, color:"#2D3436",
+          fontSize:13, fontWeight:700, color:"#2D3436",
         }}>
           ⭐ {totalCompleted} av {LEVELS.length} nivåer klara
         </div>
       )}
 
       <div style={{
-          padding:"14px 20px", borderRadius:14,
-          background:"#F0F3F8", border:"2px solid #DFE6E9",
-          fontSize:13, color:"#636E72", maxWidth:320, lineHeight:1.6,
-        }}>
-          💬 Under utveckling – funktioner kan saknas eller ändras. Hittar du ett fel eller har förslag? Skriv till <strong>rezdar.bakri@gmail.com</strong>
+        marginTop:14, padding:14, borderRadius:16,
+        background:"rgba(255,255,255,0.7)", maxWidth:320, width:"100%",
+        textAlign:"left",
+      }}>
+        <div style={{ fontSize:13, fontWeight:700, color:"#E17055", marginBottom:4 }}>
+          👨‍👩‍👧 Till föräldrar:
         </div>
+        <div style={{ fontSize:12, color:"#636E72", lineHeight:1.6 }}>
+          Säg alltid bokstavens <strong>ljud</strong>, inte dess namn. "B" säger "b", inte "be".
+          Tryck på 🔊 för att höra rätt uttal.
+        </div>
+      </div>
 
       <button onClick={onStart} style={{
-        width:"100%", maxWidth:320,
-        padding:"18px 48px", borderRadius:20, border:"none",
+        width:"100%", maxWidth:320, marginTop:14,
+        padding:"16px 48px", borderRadius:20, border:"none",
         background:"linear-gradient(135deg, #4ECDC4, #45B7D1)",
         color:"white", fontSize:18, fontWeight:700, cursor:"pointer",
         boxShadow:"0 8px 30px rgba(78,205,196,0.4)",
@@ -2960,19 +2967,12 @@ function HomeScreen({ onStart, onStudio, onOnboarding, completedLevels, audioRea
       </button>
 
       <div style={{
-        marginTop:12, padding:20, borderRadius:20,
-        background:"rgba(255,255,255,0.7)", maxWidth:340,
-        textAlign:"left",
-      }}>
-        <div style={{ fontSize:14, fontWeight:700, color:"#E17055", marginBottom:8 }}>
-          👨‍👩‍👧 Till föräldrar:
+          marginTop:12, padding:"10px 16px", borderRadius:12,
+          background:"#F0F3F8", border:"1px solid #E8ECF0",
+          fontSize:11, color:"#95A5A6", maxWidth:320, lineHeight:1.5, width:"100%",
+        }}>
+          💬 Under utveckling – funktioner kan saknas eller ändras. Hittar du ett fel eller har förslag? Skriv till <strong>rezdar.bakri@gmail.com</strong>
         </div>
-        <div style={{ fontSize:13, color:"#636E72", lineHeight:1.7 }}>
-          Säg alltid bokstavens <strong>ljud</strong>, inte dess namn. "B" säger "b", inte "be".
-          Skapa belöningssystem – godis, russin eller mynt per rätt svar!
-          Tryck på 🔊 för att höra rätt uttal.
-        </div>
-      </div>
 
     </div>
   );
@@ -3154,8 +3154,8 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onT
           const levelIdx = LEVELS.findIndex(l => l.id === level.id);
           const prevLevel = levelIdx > 0 ? LEVELS[levelIdx - 1] : null;
           const prevDone = !prevLevel || completedLevels.has(prevLevel.id);
-          const locked = allUnlocked ? false : (hasAudio ? (!prevDone && !done) : true);
-          const lockReason = !hasAudio && !allUnlocked ? "Ljud saknas" : locked ? "Slutför föregående nivå först" : "";
+          const locked = allUnlocked ? false : (!prevDone && !done);
+          const lockReason = locked ? "Slutför föregående nivå först" : "";
           return (
             <button
               key={level.id}
@@ -3392,6 +3392,7 @@ function OnboardingScreen({ onDone }) {
 
     if (step === 2) return (
       <div style={sty.card}>
+        <button onClick={() => playSound("SOL", "words")} style={{ display:"flex", alignItems:"center", gap:8, padding:"12px 28px", borderRadius:14, border:"none", background:"linear-gradient(135deg, #6C5CE7, #A29BFE)", color:"white", fontFamily:"'Nunito',sans-serif", fontSize:15, fontWeight:800, cursor:"pointer", boxShadow:"0 4px 16px rgba(108,92,231,0.3)" }}>🔊 Hör ordet</button>
         <div style={{ display:"flex", gap:10 }}>
           {wordTarget.map((_, i) => (
             <div key={i} style={{ width:56, height:62, borderRadius:14, border:wordPlaced[i] ? "3px solid #6C5CE7" : "3px dashed #DFE6E9", background:wordPlaced[i] ? "#EDE7F6" : "#F8F9FA", display:"flex", alignItems:"center", justifyContent:"center", fontSize:30, fontWeight:800, transition:"all 0.2s ease" }}>
@@ -3400,7 +3401,6 @@ function OnboardingScreen({ onDone }) {
           ))}
         </div>
         {wordDone && <div style={{ fontSize:40, animation:"bounceIn 0.4s ease forwards" }}>☀️</div>}
-        <button onClick={() => playSound("SOL", "words")} style={{ display:"flex", alignItems:"center", gap:8, padding:"12px 28px", borderRadius:14, border:"none", background:"linear-gradient(135deg, #6C5CE7, #A29BFE)", color:"white", fontFamily:"'Nunito',sans-serif", fontSize:15, fontWeight:800, cursor:"pointer", boxShadow:"0 4px 16px rgba(108,92,231,0.3)" }}>🔊 Hör ordet</button>
         <div style={{ display:"flex", gap:12 }}>
           {tileOrder.map((letter, i) => (
             <button key={i} onClick={() => handleTile(letter, i)} disabled={usedTiles[i]} style={{
