@@ -120,6 +120,7 @@ var EMBEDDED_WORD_AUDIO = {
   <script type="text/babel">
     const { useState, useEffect, useCallback, useRef, useMemo } = React;
 
+
 /* ─────────────────────────────────────────────
    DATA & CONFIGURATION
    ───────────────────────────────────────────── */
@@ -3157,12 +3158,298 @@ function levelHasAudio(level) {
   return true;
 }
 
+
+/* ─────────────────────────────────────────────
+   ONBOARDING SCREEN (SLIDES)
+   ───────────────────────────────────────────── */
+
+function OnboardingScreen({ onDone }) {
+  const [step, setStep] = useState(0);
+
+  // Step 1 state
+  const [hint1Done, setHint1Done] = useState(false);
+  const [wave1, setWave1] = useState(false);
+  const [why1, setWhy1] = useState(false);
+
+  // Step 2 state
+  const [findSolved, setFindSolved] = useState(false);
+  const [findWrong, setFindWrong] = useState(null);
+  const [why2, setWhy2] = useState(false);
+
+  // Step 3 state
+  const [wordPlaced, setWordPlaced] = useState([]);
+  const [wordDone, setWordDone] = useState(false);
+  const [usedTiles, setUsedTiles] = useState({});
+  const [why3, setWhy3] = useState(false);
+
+  // Step 4 state
+  const [levelsAnimated, setLevelsAnimated] = useState(false);
+
+  const wordTarget = ["S","O","L"];
+  const wordFmt = ["S","o","l"];
+  const tileOrder = ["L","S","O"];
+
+  const findItems = useMemo(() => {
+    const items = ["\u{1F431}","M","\u{1F31F}","\u{1F388}","S","\u{1F436}"];
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    return items;
+  }, []);
+
+  // Animate levels when reaching step 4
+  useEffect(() => {
+    if (step === 3) {
+      setTimeout(() => setLevelsAnimated(true), 400);
+    }
+  }, [step]);
+
+  const canAdvance = () => {
+    if (step === 0) return hint1Done;
+    if (step === 1) return findSolved;
+    if (step === 2) return wordDone;
+    return true;
+  };
+
+  const next = () => {
+    if (step < 4) setStep(step + 1);
+    else onDone();
+  };
+
+  const playLetter = () => {
+    playSound("M");
+    setWave1(true);
+    setTimeout(() => setWave1(false), 1200);
+    if (!hint1Done) {
+      setHint1Done(true);
+      setTimeout(() => setWhy1(true), 600);
+    }
+  };
+
+  const handleFind = (item, idx) => {
+    if (findSolved) return;
+    if (item === "M") {
+      setFindSolved(true);
+      playSound("M");
+      setTimeout(() => setWhy2(true), 600);
+    } else {
+      setFindWrong(idx);
+      setTimeout(() => setFindWrong(null), 400);
+    }
+  };
+
+  const handleTile = (letter, tileIdx) => {
+    const nextIdx = wordPlaced.length;
+    if (nextIdx >= wordTarget.length) return;
+    if (letter !== wordTarget[nextIdx]) return;
+    playSound(letter);
+    const newPlaced = [...wordPlaced, letter];
+    setWordPlaced(newPlaced);
+    setUsedTiles(prev => ({...prev, [tileIdx]: true}));
+    if (newPlaced.length === wordTarget.length) {
+      setTimeout(() => {
+        playSound("SOL", "words");
+        setWordDone(true);
+        setTimeout(() => setWhy3(true), 600);
+      }, 900);
+    }
+  };
+
+  const levels = [
+    { icon: "\u{1F524}", text: "Bokstavsljud", bg: "#E8F8F5", color: "#4ECDC4" },
+    { icon: "\u{1F50D}", text: "Hitta bokstaven", bg: "#FFEEF0", color: "#FF6B6B" },
+    { icon: "\u{1F4D6}", text: "Läsa ord", bg: "#F0EEFF", color: "#A29BFE" },
+    { icon: "\u{1F9E9}", text: "Pussla ord", bg: "#FFF8E1", color: "#FDCB6E" },
+    { icon: "\u{1F4AC}", text: "Meningar", bg: "#E8F8F5", color: "#00B894" },
+    { icon: "\u{1F4DA}", text: "Berättelser", bg: "#F0EEFF", color: "#6C5CE7" },
+  ];
+
+  const stepTags = ["#4ECDC4","#FF9800","#6C5CE7","#2196F3","#E74C8C"];
+  const stepTitles = ["Tryck på bokstaven!", "Hitta bokstaven!", "Bygg ord!", "Allt öppnas stegvis", "Tillsammans"];
+  const stepDescs = [
+    "Barnet upptäcker att de märkliga figurerna gör unika ljud!",
+    "Barnet lär sig urskilja och komma ihåg bokstävernas utseende!",
+    "Barnet upptäcker att de märkliga ljuden faktiskt bygger ord!",
+    "Varje nivå bygger vidare på den förra – från enskilda ljud till hela berättelser.",
+    "",
+  ];
+
+  const sty = {
+    card: { background:"white", borderRadius:20, padding:"16px 16px", boxShadow:"0 4px 20px rgba(0,0,0,0.06)", display:"flex", flexDirection:"column", alignItems:"center", gap:10, width:"100%" },
+    hint: (done) => ({ fontSize:13, fontWeight:700, color:done?"#00B894":"#B2BEC3", animation:done?"none":"pulse 1.5s ease-in-out infinite" }),
+    whyBox: (show) => ({ width:"100%", opacity:show?1:0, transform:show?"translateY(0)":"translateY(4px)", transition:"all 0.4s ease", maxHeight:show?200:0, overflow:"hidden", marginTop:show?10:0 }),
+    whyInner: { background:"linear-gradient(135deg, #FFF9E6, #FFF3CD)", borderLeft:"4px solid #FDCB6E", borderRadius:"0 14px 14px 0", padding:"10px 14px" },
+    whyTitle: { fontSize:13, fontWeight:800, color:"#E17055", marginBottom:4, display:"flex", alignItems:"center", gap:6 },
+    whyP: { fontSize:13, color:"#636E72", lineHeight:1.4, fontWeight:500, margin:0 },
+  };
+
+  const renderStep = () => {
+    if (step === 0) return (
+      <div style={sty.card}>
+        <div style={{ fontSize:18, fontWeight:800, color:"#4ECDC4", opacity:wave1?1:0, transform:wave1?"translateY(0)":"translateY(4px)", transition:"all 0.3s ease", height:24 }}>🔊 "mmm"</div>
+        <div onClick={playLetter} style={{ width:100, height:100, borderRadius:24, background:"linear-gradient(135deg, #E8F8F5, #D4EFDF)", display:"flex", alignItems:"baseline", justifyContent:"center", gap:5, cursor:"pointer", boxShadow:"0 4px 16px rgba(78,205,196,0.2)" }}>
+          <span style={{ fontSize:48, fontWeight:900, color:"#2D3436" }}>M</span>
+          <span style={{ fontSize:28, fontWeight:700, color:"#00B894" }}>m</span>
+        </div>
+        <div style={sty.hint(hint1Done)}>{hint1Done ? "✅ Precis så!" : "👆 Testa! Tryck på bokstaven"}</div>
+        <div style={sty.whyBox(why1)}>
+          <div style={sty.whyInner}>
+            <div style={sty.whyTitle}>💡 Varför vi gör detta</div>
+            <p style={sty.whyP}>Barn som lär sig bokstavens <strong>ljud</strong> istället för dess namn knäcker läskoden snabbare. "Mmm" går att ljuda ihop till ord – "em" gör det inte.</p>
+          </div>
+        </div>
+      </div>
+    );
+
+    if (step === 1) return (
+      <div style={sty.card}>
+        <div style={{ fontSize:18, fontWeight:800, color:findSolved?"white":"#E17055", background:findSolved?"#00B894":"#FFF3E0", padding:"8px 22px", borderRadius:12, transition:"all 0.3s ease" }}>{findSolved ? "✅ Rätt!" : <>Hitta: <strong>M m</strong></>}</div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12, maxWidth:260 }}>
+          {findItems.map((item, i) => (
+            <div key={i} onClick={() => handleFind(item, i)} style={{
+              width:64, height:64, borderRadius:16,
+              background: item === "M" && findSolved ? "#00B894" : "#F8F9FA",
+              border: `3px solid ${findWrong === i ? "#E17055" : (item === "M" && findSolved ? "#00B894" : "#DFE6E9")}`,
+              display:"flex", alignItems:"center", justifyContent:"center",
+              fontSize: item === "M" && findSolved ? 20 : 32, fontWeight: item === "M" && findSolved ? 900 : 400,
+              color: item === "M" && findSolved ? "white" : undefined,
+              cursor:"pointer", transition:"all 0.2s ease",
+              transform: item === "M" && findSolved ? "scale(1.1)" : "none",
+            }}>{item === "M" && findSolved ? "M m" : item}</div>
+          ))}
+        </div>
+        <div style={sty.hint(findSolved)}>{findSolved ? "✅ Bra jobbat!" : "👆 Tryck på M"}</div>
+        <div style={sty.whyBox(why2)}>
+          <div style={sty.whyInner}>
+            <div style={sty.whyTitle}>💡 Varför vi gör detta</div>
+            <p style={sty.whyP}>Barnet lär sig <strong>urskilja och associera</strong> bokstavens form – att plocka ut den bland andra symboler. Den förmågan är grunden för att kunna läsa text.</p>
+          </div>
+        </div>
+      </div>
+    );
+
+    if (step === 2) return (
+      <div style={sty.card}>
+        <button onClick={() => playSound("SOL", "words")} style={{ display:"flex", alignItems:"center", gap:8, padding:"10px 22px", borderRadius:14, border:"none", background:"linear-gradient(135deg, #6C5CE7, #A29BFE)", color:"white", fontFamily:"'Nunito',sans-serif", fontSize:15, fontWeight:800, cursor:"pointer", boxShadow:"0 4px 16px rgba(108,92,231,0.3)" }}>🔊 Hör ordet</button>
+        <div style={{ display:"flex", gap:8 }}>
+          {wordTarget.map((_, i) => (
+            <div key={i} style={{ width:48, height:52, borderRadius:12, border:wordPlaced[i] ? "3px solid #6C5CE7" : "3px dashed #DFE6E9", background:wordPlaced[i] ? "#EDE7F6" : "#F8F9FA", display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, fontWeight:800, transition:"all 0.2s ease" }}>
+              {wordPlaced[i] ? wordFmt[i] : ""}
+            </div>
+          ))}
+        </div>
+        {wordDone && <div style={{ fontSize:40, animation:"bounceIn 0.4s ease forwards" }}>☀️</div>}
+        <div style={{ display:"flex", gap:10 }}>
+          {tileOrder.map((letter, i) => (
+            <button key={i} onClick={() => handleTile(letter, i)} disabled={usedTiles[i]} style={{
+              width:48, height:48, borderRadius:12, border:"2px solid #DFE6E9",
+              background:"white", fontFamily:"'Nunito',sans-serif", fontSize:24, fontWeight:800,
+              cursor:usedTiles[i]?"default":"pointer", color:"#2D3436",
+              opacity:usedTiles[i]?0.25:1, boxShadow:"0 3px 8px rgba(0,0,0,0.06)",
+            }}>{letter}</button>
+          ))}
+        </div>
+        <div style={sty.whyBox(why3)}>
+          <div style={sty.whyInner}>
+            <div style={sty.whyTitle}>💡 Varför vi gör detta</div>
+            <p style={sty.whyP}>När barnet upptäcker att de enskilda ljuden tillsammans kan bilda ord har barnet börjat sin läsresa. Nu blir läsningen ett spännande pussel att lösa – och barnet vill fortsätta på egen hand. Grattis!</p>
+          </div>
+        </div>
+      </div>
+    );
+
+    if (step === 3) return (
+      <div style={sty.card}>
+        <div style={{ width:"100%", display:"flex", flexDirection:"column", gap:5 }}>
+          {levels.map((l, i) => (
+            <div key={i} style={{
+              display:"flex", alignItems:"center", gap:12,
+              background: levelsAnimated ? "white" : "#F8F9FA",
+              padding:"9px 14px", borderRadius:12,
+              transition: `all 0.4s ease ${0.2 + i * 0.3}s`,
+              boxShadow: levelsAnimated ? "0 2px 10px rgba(0,0,0,0.05)" : "none",
+            }}>
+              <div style={{ width:32, height:32, borderRadius:9, display:"flex", alignItems:"center", justifyContent:"center", fontSize:15, background:l.bg, color:l.color }}>{l.icon}</div>
+              <div style={{ fontSize:13, fontWeight:700 }}>{l.text}</div>
+              <div style={{ marginLeft:"auto", fontSize:16, transition:`all 0.3s ease ${0.2 + i * 0.3}s` }}>{levelsAnimated ? "✅" : "🔒"}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ ...sty.whyBox(true), opacity:1, maxHeight:"none", marginTop:10 }}>
+          <div style={sty.whyInner}>
+            <div style={sty.whyTitle}>💡 Varför vi gör detta</div>
+            <p style={sty.whyP}>Varje nivå bygger på det som redan känns lätt, så nästa steg alltid känns naturligt och roligt. Barn lär sig bäst i sin egen takt, drivna av nyfikenhet! När lusten finns sköter lärandet sig självt.</p>
+          </div>
+        </div>
+      </div>
+    );
+
+    // Step 5: Together
+    return null;
+  };
+
+  // Step 5 is full-screen ending
+  if (step === 4) return (
+    <div style={{ minHeight:"100dvh", display:"flex", flexDirection:"column", justifyContent:"center", alignItems:"center", background:"linear-gradient(155deg, #4ECDC4 0%, #45B7D1 50%, #6C5CE7 100%)", padding:"48px 24px", textAlign:"center", color:"white", position:"relative", overflow:"hidden", fontFamily:"'Nunito',sans-serif" }}>
+      <div style={{ position:"absolute", inset:0, background:"radial-gradient(circle at 70% 60%, rgba(255,255,255,0.1) 0%, transparent 50%)" }} />
+      <div style={{ fontSize:56, marginBottom:16, position:"relative" }}>❤️</div>
+      <div style={{ fontSize:28, fontWeight:900, marginBottom:16, position:"relative" }}>Tillsammans</div>
+      <p style={{ fontSize:16, fontWeight:600, opacity:0.92, lineHeight:1.7, maxWidth:340, margin:"0 auto", position:"relative" }}>Ljuda är till för att hjälpa <em>dig</em> – ett verktyg för dig att öva tillsammans med ditt barn. Barnet lär sig bäst när ni gör det ihop och barnet får både höra och se hur ljuden formas från din mun. 5–10 minuter åt gången räcker.</p>
+      <button onClick={onDone} style={{
+        padding:"18px 52px", borderRadius:20, border:"none",
+        background:"white", color:"#4ECDC4",
+        fontFamily:"'Nunito',sans-serif", fontSize:20, fontWeight:900,
+        cursor:"pointer", boxShadow:"0 6px 24px rgba(0,0,0,0.15)",
+        marginTop:32, position:"relative",
+      }}>Börja →</button>
+    </div>
+  );
+
+  return (
+    <div style={{ height:"100dvh", display:"flex", flexDirection:"column", fontFamily:"'Nunito',sans-serif", background:"#F0F3F8", color:"#2D3436", overflow:"hidden" }}>
+
+      {/* Progress dots */}
+      <div style={{ display:"flex", justifyContent:"center", gap:8, padding:"12px 20px 0" }}>
+        {[0,1,2,3,4].map(i => (
+          <div key={i} style={{
+            width: i === step ? 24 : 8, height:8, borderRadius:4,
+            background: i === step ? stepTags[i] : (i < step ? "#00B894" : "#DFE6E9"),
+            transition:"all 0.3s ease",
+          }} />
+        ))}
+      </div>
+
+      {/* Content */}
+      <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"12px 20px 8px", maxWidth:440, margin:"0 auto", width:"100%", minHeight:0 }}>
+        <div style={{ display:"inline-block", fontSize:12, fontWeight:800, color:"white", padding:"4px 12px", borderRadius:20, letterSpacing:0.5, marginBottom:8, background:stepTags[step] }}>STEG {step + 1}</div>
+        <div style={{ fontSize:22, fontWeight:900, lineHeight:1.2, marginBottom:4, textAlign:"center" }}>{stepTitles[step]}</div>
+        <div style={{ fontSize:14, color:"#636E72", fontWeight:600, lineHeight:1.4, marginBottom:12, textAlign:"center" }}>{stepDescs[step]}</div>
+        {renderStep()}
+      </div>
+
+      {/* Next button */}
+      <div style={{ padding:"8px 20px 24px", maxWidth:440, margin:"0 auto", width:"100%", flexShrink:0 }}>
+        <button onClick={next} disabled={!canAdvance()} style={{
+          width:"100%", padding:"14px", borderRadius:16, border:"none",
+          background: canAdvance() ? "linear-gradient(135deg, #4ECDC4, #45B7D1)" : "#DFE6E9",
+          color: canAdvance() ? "white" : "#B2BEC3",
+          fontFamily:"'Nunito',sans-serif", fontSize:18, fontWeight:800,
+          cursor: canAdvance() ? "pointer" : "default",
+          boxShadow: canAdvance() ? "0 4px 16px rgba(78,205,196,0.3)" : "none",
+          transition:"all 0.3s ease",
+        }}>Nästa →</button>
+      </div>
+    </div>
+  );
+}
+
 /* ─────────────────────────────────────────────
    MAIN APP
    ───────────────────────────────────────────── */
 
 function App() {
-  const [screen, setScreen] = useState("home"); // home, studio, levels, playing, complete
+  const [screen, setScreen] = useState("onboarding");
   const [currentLevel, setCurrentLevel] = useState(null);
   const [completedLevels, setCompletedLevels] = useState(new Set());
   const [showTips, setShowTips] = useState(false);
@@ -3320,6 +3607,12 @@ function App() {
       )}
 
       {/* Screens */}
+      {screen === "onboarding" && (
+        <OnboardingScreen onDone={() => {
+          try { localStorage.setItem("ljuda_onboarded", "1"); } catch(e) {}
+          setScreen("home");
+        }} />
+      )}
       {screen === "home" && (
         <HomeScreen
           onStart={() => setScreen("levels")}
@@ -3361,6 +3654,7 @@ function App() {
     </div>
   );
 }
+
 
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
