@@ -2135,6 +2135,7 @@ function WordBuildGame({ level, onComplete, skipRoundRef }) {
       setTimeout(() => {
         setRevealed(true);
         setShowConfetti(true);
+        playSound(target, "words");
         setTimeout(() => setShowConfetti(false), 1500);
       }, 300);
     }
@@ -2618,6 +2619,7 @@ function SpellWordGame({ level, onComplete }) {
     if (newInput.length === targetWord.length) {
       setFeedback("correct");
       setShowConfetti(true);
+      playSound(targetWord, "words");
       setTimeout(() => {
         setShowConfetti(false);
         const newPool = pool.slice(1);
