@@ -16,6 +16,21 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey: "AIzaSyBOtsr0CmdvzcVr_hUcszPprgHCEBqu9-g",
+      authDomain: "ljudit-695c6.firebaseapp.com",
+      databaseURL: "https://ljudit-695c6-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "ljudit-695c6",
+      storageBucket: "ljudit-695c6.firebasestorage.app",
+      messagingSenderId: "655165273998",
+      appId: "1:655165273998:web:e8ec8c899ead805a0856df",
+      measurementId: "G-0Q81J47FXL"
+    });
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 </head>
 <body>
@@ -512,20 +527,24 @@ function saveRecording(key, type, dataUrl) {
   saveAudioType(type);
 }
 
+// Safe references to embedded audio (may not exist in artifact/preview mode)
+const _EA = (typeof EMBEDDED_AUDIO !== "undefined") ? EMBEDDED_AUDIO : {};
+const _EWA = (typeof EMBEDDED_WORD_AUDIO !== "undefined") ? EMBEDDED_WORD_AUDIO : {};
+
 function getRecording(key, type) {
   // User recordings override embedded
   if (audioStore[type]?.[key]) return audioStore[type][key];
   // Fall back to embedded audio for letters
-  if (type === "letters" && EMBEDDED_AUDIO[key]) return EMBEDDED_AUDIO[key];
+  if (type === "letters" && _EA[key]) return _EA[key];
   // Fall back to embedded word audio
-  if (type === "words" && EMBEDDED_WORD_AUDIO[key]) return EMBEDDED_WORD_AUDIO[key];
+  if (type === "words" && _EWA[key]) return _EWA[key];
   return null;
 }
 
 function hasRecording(key, type) {
   if (audioStore[type]?.[key]) return true;
-  if (type === "letters" && EMBEDDED_AUDIO[key]) return true;
-  if (type === "words" && EMBEDDED_WORD_AUDIO[key]) return true;
+  if (type === "letters" && _EA[key]) return true;
+  if (type === "words" && _EWA[key]) return true;
   return false;
 }
 
@@ -598,7 +617,7 @@ async function playSound(key, type = "letters") {
 function getRecordedCount(type) {
   const storeKeys = Object.keys(audioStore[type] || {});
   if (type === "letters") {
-    const embeddedKeys = Object.keys(EMBEDDED_AUDIO);
+    const embeddedKeys = Object.keys(_EA);
     const allKeys = new Set([...storeKeys, ...embeddedKeys]);
     return allKeys.size;
   }
@@ -860,9 +879,9 @@ function RecordingStudio({ onComplete, onBack }) {
               </div>
 
               {/* Status */}
-              <div style={{ fontSize: has && tab === "letters" && EMBEDDED_AUDIO[key] && !audioStore[tab]?.[key] ? 9 : 20, width:36, textAlign:"center", color:"#00B894", fontWeight:700 }}>
+              <div style={{ fontSize: has && tab === "letters" && _EA[key] && !audioStore[tab]?.[key] ? 9 : 20, width:36, textAlign:"center", color:"#00B894", fontWeight:700 }}>
                 {has
-                  ? (tab === "letters" && EMBEDDED_AUDIO[key] && !audioStore[tab]?.[key]
+                  ? (tab === "letters" && _EA[key] && !audioStore[tab]?.[key]
                     ? "inbyggd"
                     : "✅")
                   : "⬜"}
@@ -2138,7 +2157,7 @@ function WordBuildGame({ level, onComplete, skipRoundRef }) {
         setShowConfetti(true);
         playSound(target, "words");
         setTimeout(() => setShowConfetti(false), 1500);
-      }, 300);
+      }, 500);
     }
   };
 
@@ -2620,7 +2639,7 @@ function SpellWordGame({ level, onComplete }) {
     if (newInput.length === targetWord.length) {
       setFeedback("correct");
       setShowConfetti(true);
-      playSound(targetWord, "words");
+      setTimeout(() => playSound(targetWord, "words"), 500);
       setTimeout(() => {
         setShowConfetti(false);
         const newPool = pool.slice(1);
@@ -2880,7 +2899,7 @@ function LevelCompleteScreen({ level, onNext, onMenu }) {
    HOME SCREEN
    ───────────────────────────────────────────── */
 
-function HomeScreen({ onStart, onStudio, completedLevels, audioReady }) {
+function HomeScreen({ onStart, onStudio, onOnboarding, completedLevels, audioReady }) {
   const totalCompleted = completedLevels.size;
   const tapCountRef = useRef(0);
   const tapTimerRef = useRef(null);
@@ -2900,8 +2919,14 @@ function HomeScreen({ onStart, onStudio, completedLevels, audioReady }) {
   return (
     <div style={{
       display:"flex", flexDirection:"column", alignItems:"center",
-      gap:24, padding:"40px 20px", textAlign:"center",
+      gap:24, padding:"40px 20px", textAlign:"center", position:"relative",
     }}>
+      <button onClick={onOnboarding} style={{
+        position:"absolute", top:16, right:16,
+        width:36, height:36, borderRadius:18, border:"2px solid #DFE6E9",
+        background:"white", fontSize:16, cursor:"pointer", display:"flex",
+        alignItems:"center", justifyContent:"center", color:"#B2BEC3",
+      }}>❓</button>
       <div style={{ fontSize:60, cursor:"default", userSelect:"none" }} onClick={handleLogoTap}>📖</div>
       <h1 style={{
         fontSize:36, fontWeight:900, color:"#2D3436",
@@ -2924,15 +2949,13 @@ function HomeScreen({ onStart, onStudio, completedLevels, audioReady }) {
         </div>
       )}
 
-      {!audioReady && (
-        <div style={{
+      <div style={{
           padding:"14px 20px", borderRadius:14,
-          background:"#FFF3E0", border:"2px solid #FFB74D",
-          fontSize:13, color:"#E65100", maxWidth:320, lineHeight:1.5,
+          background:"#F0F3F8", border:"2px solid #DFE6E9",
+          fontSize:13, color:"#636E72", maxWidth:320, lineHeight:1.6,
         }}>
-          ⏳ Ljuden har inte laddats in ännu. Appen fungerar bäst med inspelade ljud.
+          💬 Under utveckling – funktioner kan saknas eller ändras. Hittar du ett fel eller har förslag? Skriv till <strong>rezdar.bakri@gmail.com</strong>
         </div>
-      )}
 
       <button onClick={onStart} style={{
         width:"100%", maxWidth:320,
@@ -2958,6 +2981,7 @@ function HomeScreen({ onStart, onStudio, completedLevels, audioReady }) {
           Tryck på 🔊 för att höra rätt uttal.
         </div>
       </div>
+
     </div>
   );
 }
@@ -2968,45 +2992,47 @@ function HomeScreen({ onStart, onStudio, completedLevels, audioReady }) {
 
 function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onToggleUnlock }) {
   const sections = [
-    { title:"Lär dig bokstäver", emoji:"🔤", desc:"Börja här!", subs:[
-      { title:"Uthållna ljud", levels: LEVELS.filter(l => l.id <= 14), emoji:"🐣" },
-      { title:"Fler ljud", levels: LEVELS.filter(l => l.id >= 15 && l.id <= 28), emoji:"🌱" },
-      { title:"Alla bokstäver", levels: LEVELS.filter(l => l.id >= 29 && l.id <= 34), emoji:"⭐" },
+    { title:"Bokstäver", emoji:"🔤", desc:"Lär dig bokstavsljuden", color:"#4ECDC4", subs:[
+      { title:"Uthållna ljud", levels: LEVELS.filter(l => l.id <= 14), emoji:"🐣", color:"#4ECDC4" },
+      { title:"Fler ljud", levels: LEVELS.filter(l => l.id >= 15 && l.id <= 28), emoji:"🌱", color:"#00B894" },
+      { title:"Alla bokstäver", levels: LEVELS.filter(l => l.id >= 29 && l.id <= 34), emoji:"⭐", color:"#FDCB6E" },
     ]},
-    { title:"Läsa", emoji:"📖", desc:"Ord, meningar och sagor", subs:[
-      { title:"Läsa ord", levels: LEVELS.filter(l => l.id >= 35 && l.id <= 52), emoji:"📝" },
-      { title:"Meningar", levels: LEVELS.filter(l => l.id >= 53 && l.id <= 56), emoji:"💬" },
-      { title:"Småsagor", levels: LEVELS.filter(l => l.id >= 57 && l.id <= 59), emoji:"📚" },
+    { title:"Läsa", emoji:"📖", desc:"Ord, meningar och sagor", color:"#A29BFE", subs:[
+      { title:"Läsa ord", levels: LEVELS.filter(l => l.id >= 35 && l.id <= 52), emoji:"📝", color:"#6C5CE7" },
+      { title:"Meningar", levels: LEVELS.filter(l => l.id >= 53 && l.id <= 56), emoji:"💬", color:"#A29BFE" },
+      { title:"Småsagor", levels: LEVELS.filter(l => l.id >= 57 && l.id <= 59), emoji:"📚", color:"#74B9FF" },
     ]},
-    { title:"Skriva", emoji:"✏️", desc:"Bygg och skriv", subs:[
-      { title:"Bygg ord", levels: LEVELS.filter(l => l.id >= 60 && l.id <= 65), emoji:"🧩" },
-      { title:"Rita bokstäver", levels: LEVELS.filter(l => l.id === 39), emoji:"✏️" },
-      { title:"Stava ord", levels: LEVELS.filter(l => l.id === 40), emoji:"🔠" },
+    { title:"Skriva", emoji:"✏️", desc:"Bygg, stava och rita", color:"#FF9800", subs:[
+      { title:"Bygg ord", levels: LEVELS.filter(l => l.id >= 60 && l.id <= 65), emoji:"🧩", color:"#FF9800" },
+      { title:"Rita bokstäver", levels: LEVELS.filter(l => l.id === 39), emoji:"✏️", color:"#E17055" },
+      { title:"Stava ord", levels: LEVELS.filter(l => l.id === 40), emoji:"🔠", color:"#FDCB6E" },
     ]},
-    { title:"Övrigt", emoji:"🎯", desc:"Ljudning, specialljud & bonus", subs:[
-      { title:"Ljuda ut", levels: LEVELS.filter(l => l.id === 38), emoji:"🚗" },
-      { title:"Specialljud", levels: LEVELS.filter(l => l.id >= 41 && l.id <= 44), emoji:"🔊" },
-      { title:"Bonus", levels: LEVELS.filter(l => l.id >= 45), emoji:"🏆" },
+    { title:"Övrigt", emoji:"🎯", desc:"Ljudning, specialljud & bonus", color:"#E17055", subs:[
+      { title:"Ljuda ut", levels: LEVELS.filter(l => l.id === 38), emoji:"🚗", color:"#00B894" },
+      { title:"Specialljud", levels: LEVELS.filter(l => l.id >= 41 && l.id <= 44), emoji:"🔊", color:"#6C5CE7" },
+      { title:"Bonus", levels: LEVELS.filter(l => l.id >= 45), emoji:"🏆", color:"#FDCB6E" },
     ]},
   ];
 
-  // Find first section/sub with incomplete levels
-  let defaultSection = 0;
-  let defaultSub = 0;
-  let found = false;
-  for (let si = 0; si < sections.length && !found; si++) {
-    for (let ci = 0; ci < sections[si].subs.length && !found; ci++) {
-      if (sections[si].subs[ci].levels.some(l => !completedLevels.has(l.id))) {
-        defaultSection = si;
-        defaultSub = ci;
-        found = true;
-      }
-    }
-  }
-  const [openSection, setOpenSection] = useState(defaultSection);
-  const [openSub, setOpenSub] = useState(defaultSub);
+  const [view, setView] = useState("sections"); // sections | subs | levels
+  const [activeSec, setActiveSec] = useState(0);
+  const [activeSub, setActiveSub] = useState(0);
 
-  return (
+  const goSubs = (secIdx) => { setActiveSec(secIdx); setView("subs"); };
+  const goLevels = (subIdx) => { setActiveSub(subIdx); setView("levels"); };
+  const goBack = () => {
+    if (view === "levels") setView("subs");
+    else if (view === "subs") setView("sections");
+    else onHome();
+  };
+
+  const sec = sections[activeSec];
+  const sub = sec?.subs?.[activeSub];
+
+  const countDone = (lvls) => lvls.filter(l => completedLevels.has(l.id)).length;
+
+  // ── SECTIONS VIEW ──
+  if (view === "sections") return (
     <div style={{ padding:"20px 16px", maxWidth:420, margin:"0 auto" }}>
       <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24 }}>
         <button onClick={onHome} style={{
@@ -3014,128 +3040,158 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onT
           background:"white", fontSize:18, cursor:"pointer", display:"flex",
           alignItems:"center", justifyContent:"center",
         }}>←</button>
-        <h2 style={{ fontSize:24, fontWeight:800, color:"#2D3436", margin:0, flex:1 }}>Välj nivå</h2>
+        <h2 style={{ fontSize:22, fontWeight:800, color:"#2D3436", margin:0, flex:1 }}>Välj kategori</h2>
         <button onClick={onToggleUnlock} style={{
           padding:"6px 12px", borderRadius:8, border:"1px solid #DFE6E9",
           background: allUnlocked ? "#E8F8F5" : "white", fontSize:16, cursor:"pointer",
         }}>{allUnlocked ? "🔓" : "🔒"}</button>
       </div>
 
-      {sections.map((section, secIdx) => {
-        const secOpen = openSection === secIdx;
-        const allLevels = section.subs.flatMap(s => s.levels);
-        const secDone = allLevels.filter(l => completedLevels.has(l.id)).length;
-        const secTotal = allLevels.length;
-        const secAllDone = secDone === secTotal;
-        return (
-        <div key={section.title} style={{ marginBottom:10 }}>
-          {/* Section header */}
-          <button
-            onClick={() => { setOpenSection(secOpen ? -1 : secIdx); setOpenSub(secOpen ? -1 : 0); }}
-            style={{
-              width:"100%", display:"flex", alignItems:"center", gap:12,
-              padding:"16px 16px", borderRadius:18, border:"none", cursor:"pointer",
-              background: secAllDone ? "#E8F8F5" : secOpen ? "white" : "#F8F9FA",
-              boxShadow: secOpen ? "0 4px 16px rgba(0,0,0,0.08)" : "0 2px 8px rgba(0,0,0,0.03)",
+      <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+        {sections.map((s, i) => {
+          const allLvls = s.subs.flatMap(sub => sub.levels);
+          const done = countDone(allLvls);
+          const total = allLvls.length;
+          const pct = total > 0 ? (done / total) * 100 : 0;
+          return (
+            <button key={i} onClick={() => goSubs(i)} style={{
+              display:"flex", alignItems:"center", gap:16,
+              padding:"20px 20px", borderRadius:20, border:"none", cursor:"pointer",
+              background:"white", boxShadow:"0 4px 16px rgba(0,0,0,0.06)",
               textAlign:"left", transition:"all 0.15s ease",
-            }}
-          >
-            <span style={{ fontSize:28 }}>{section.emoji}</span>
-            <div style={{ flex:1 }}>
-              <div style={{ fontSize:17, fontWeight:800, color:"#2D3436" }}>{section.title}</div>
-              <div style={{ fontSize:12, color:"#B2BEC3", fontWeight:500 }}>
-                {section.desc} · {secDone}/{secTotal} klara
-              </div>
-            </div>
-            {secAllDone && <span style={{ fontSize:18 }}>✅</span>}
-            <span style={{ fontSize:16, color:"#B2BEC3", transition:"transform 0.2s", transform: secOpen ? "rotate(90deg)" : "rotate(0)" }}>›</span>
-          </button>
-
-          {/* Sub-categories */}
-          {secOpen && (
-          <div style={{ marginTop:6, paddingLeft:8, paddingRight:4 }}>
-            {section.subs.map((sub, subIdx) => {
-              const subOpen = openSub === subIdx;
-              const subDone = sub.levels.filter(l => completedLevels.has(l.id)).length;
-              const subAllDone = subDone === sub.levels.length;
-              return (
-              <div key={sub.title} style={{ marginBottom:4 }}>
-                <button
-                  onClick={() => setOpenSub(subOpen ? -1 : subIdx)}
-                  style={{
-                    width:"100%", display:"flex", alignItems:"center", gap:8,
-                    padding:"10px 12px", borderRadius:12, border:"none", cursor:"pointer",
-                    background: subAllDone ? "#F0FFF0" : subOpen ? "#F8F9FA" : "transparent",
-                    textAlign:"left", transition:"all 0.1s ease",
-                  }}
-                >
-                  <span style={{ fontSize:16 }}>{sub.emoji}</span>
-                  <div style={{ flex:1 }}>
-                    <div style={{ fontSize:14, fontWeight:700, color:"#2D3436" }}>{sub.title}</div>
-                  </div>
-                  <span style={{ fontSize:11, color:"#B2BEC3", fontWeight:500 }}>{subDone}/{sub.levels.length}</span>
-                  {subAllDone && <span style={{ fontSize:13 }}>✅</span>}
-                  <span style={{ fontSize:12, color:"#DFE6E9", transition:"transform 0.2s", transform: subOpen ? "rotate(90deg)" : "rotate(0)" }}>›</span>
-                </button>
-                {subOpen && (
-                <div style={{ display:"flex", flexDirection:"column", gap:6, marginTop:4, paddingLeft:8, paddingRight:2 }}>
-                  {sub.levels.map(level => {
-              const done = completedLevels.has(level.id);
-              const hasAudio = levelHasAudio(level);
-              const levelIdx = LEVELS.findIndex(l => l.id === level.id);
-              const prevLevel = levelIdx > 0 ? LEVELS[levelIdx - 1] : null;
-              const prevDone = !prevLevel || completedLevels.has(prevLevel.id);
-              const locked = allUnlocked ? false : (hasAudio ? (!prevDone && !done) : true);
-              const lockReason = !hasAudio && !allUnlocked ? "Ljud saknas" : locked ? "Slutför föregående nivå först" : "";
-              return (
-                <button
-                  key={level.id}
-                  onClick={() => !locked && onSelect(level)}
-                  disabled={locked}
-                  style={{
-                    display:"flex", alignItems:"center", gap:14,
-                    padding:"14px 16px", borderRadius:16,
-                    border: locked ? "2px solid #EEE" : done ? `2px solid ${level.color}` : "2px solid #EEE",
-                    background: locked ? "#F8F9FA" : done ? `${level.color}11` : "white",
-                    cursor: locked ? "default" : "pointer", textAlign:"left",
-                    transition:"all 0.15s ease",
-                    opacity: locked ? 0.5 : 1,
-                    boxShadow: done ? `0 2px 10px ${level.color}22` : "0 2px 8px rgba(0,0,0,0.04)",
-                  }}
-                >
-                  <div style={{
-                    width:44, height:44, borderRadius:14,
-                    background: locked
-                      ? "linear-gradient(135deg, #B2BEC3, #DFE6E9)"
-                      : `linear-gradient(135deg, ${level.color}, ${level.color}BB)`,
-                    display:"flex", alignItems:"center", justifyContent:"center",
-                    fontSize:22, flexShrink:0,
-                  }}>
-                    {locked ? "🔒" : done ? "✅" : level.icon}
-                  </div>
-                  <div style={{ flex:1 }}>
-                    <div style={{ fontSize:15, fontWeight:700, color: locked ? "#B2BEC3" : "#2D3436" }}>{level.name}</div>
-                    <div style={{ fontSize:12, color:"#B2BEC3", fontWeight:500 }}>
-                      {locked ? lockReason : level.sub}
-                    </div>
-                  </div>
-                  <div style={{ fontSize:18, color:"#DFE6E9" }}>{locked ? "" : "›"}</div>
-                </button>
-              );
-            })}
+            }}>
+              <div style={{
+                width:56, height:56, borderRadius:16,
+                background:`linear-gradient(135deg, ${s.color}22, ${s.color}44)`,
+                display:"flex", alignItems:"center", justifyContent:"center", fontSize:28, flexShrink:0,
+              }}>{s.emoji}</div>
+              <div style={{ flex:1 }}>
+                <div style={{ fontSize:18, fontWeight:800, color:"#2D3436" }}>{s.title}</div>
+                <div style={{ fontSize:13, color:"#636E72", fontWeight:500, marginTop:2 }}>{s.desc}</div>
+                <div style={{ marginTop:8, height:6, borderRadius:3, background:"#F0F3F8", overflow:"hidden" }}>
+                  <div style={{ width:`${pct}%`, height:"100%", borderRadius:3, background:s.color, transition:"width 0.3s ease" }} />
                 </div>
-                )}
+                <div style={{ fontSize:11, color:"#B2BEC3", fontWeight:600, marginTop:4 }}>{done}/{total} klara</div>
               </div>
-              );
-            })}
-          </div>
-          )}
-        </div>
-        );
-      })}
+              <span style={{ fontSize:20, color:"#DFE6E9" }}>›</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  // ── SUBS VIEW ──
+  if (view === "subs") return (
+    <div style={{ padding:"20px 16px", maxWidth:420, margin:"0 auto" }}>
+      <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24 }}>
+        <button onClick={goBack} style={{
+          width:40, height:40, borderRadius:12, border:"2px solid #DFE6E9",
+          background:"white", fontSize:18, cursor:"pointer", display:"flex",
+          alignItems:"center", justifyContent:"center",
+        }}>←</button>
+        <div style={{ fontSize:24 }}>{sec.emoji}</div>
+        <h2 style={{ fontSize:22, fontWeight:800, color:"#2D3436", margin:0, flex:1 }}>{sec.title}</h2>
+      </div>
+
+      <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+        {sec.subs.map((s, i) => {
+          const done = countDone(s.levels);
+          const total = s.levels.length;
+          const pct = total > 0 ? (done / total) * 100 : 0;
+          const allDone = done === total;
+          return (
+            <button key={i} onClick={() => goLevels(i)} style={{
+              display:"flex", alignItems:"center", gap:16,
+              padding:"18px 18px", borderRadius:18, border:"none", cursor:"pointer",
+              background: allDone ? "#F0FFF4" : "white",
+              boxShadow:"0 3px 12px rgba(0,0,0,0.05)",
+              textAlign:"left", transition:"all 0.15s ease",
+            }}>
+              <div style={{
+                width:48, height:48, borderRadius:14,
+                background:`linear-gradient(135deg, ${s.color}22, ${s.color}44)`,
+                display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, flexShrink:0,
+              }}>{s.emoji}</div>
+              <div style={{ flex:1 }}>
+                <div style={{ fontSize:16, fontWeight:800, color:"#2D3436" }}>{s.title}</div>
+                <div style={{ marginTop:6, height:5, borderRadius:3, background:"#F0F3F8", overflow:"hidden" }}>
+                  <div style={{ width:`${pct}%`, height:"100%", borderRadius:3, background:s.color, transition:"width 0.3s ease" }} />
+                </div>
+                <div style={{ fontSize:11, color:"#B2BEC3", fontWeight:600, marginTop:3 }}>{done}/{total} klara</div>
+              </div>
+              {allDone && <span style={{ fontSize:18 }}>✅</span>}
+              <span style={{ fontSize:18, color:"#DFE6E9" }}>›</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  // ── LEVELS VIEW ──
+  return (
+    <div style={{ padding:"20px 16px", maxWidth:420, margin:"0 auto" }}>
+      <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24 }}>
+        <button onClick={goBack} style={{
+          width:40, height:40, borderRadius:12, border:"2px solid #DFE6E9",
+          background:"white", fontSize:18, cursor:"pointer", display:"flex",
+          alignItems:"center", justifyContent:"center",
+        }}>←</button>
+        <div style={{ fontSize:20 }}>{sub.emoji}</div>
+        <h2 style={{ fontSize:20, fontWeight:800, color:"#2D3436", margin:0, flex:1 }}>{sub.title}</h2>
+      </div>
+
+      <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+        {sub.levels.map(level => {
+          const done = completedLevels.has(level.id);
+          const hasAudio = levelHasAudio(level);
+          const levelIdx = LEVELS.findIndex(l => l.id === level.id);
+          const prevLevel = levelIdx > 0 ? LEVELS[levelIdx - 1] : null;
+          const prevDone = !prevLevel || completedLevels.has(prevLevel.id);
+          const locked = allUnlocked ? false : (hasAudio ? (!prevDone && !done) : true);
+          const lockReason = !hasAudio && !allUnlocked ? "Ljud saknas" : locked ? "Slutför föregående nivå först" : "";
+          return (
+            <button
+              key={level.id}
+              onClick={() => !locked && onSelect(level)}
+              disabled={locked}
+              style={{
+                display:"flex", alignItems:"center", gap:14,
+                padding:"14px 16px", borderRadius:16,
+                border: done ? `2px solid ${level.color}` : "2px solid #EEE",
+                background: locked ? "#F8F9FA" : done ? `${level.color}11` : "white",
+                cursor: locked ? "default" : "pointer", textAlign:"left",
+                transition:"all 0.15s ease",
+                opacity: locked ? 0.5 : 1,
+                boxShadow: done ? `0 2px 10px ${level.color}22` : "0 2px 8px rgba(0,0,0,0.04)",
+              }}
+            >
+              <div style={{
+                width:44, height:44, borderRadius:14,
+                background: locked
+                  ? "linear-gradient(135deg, #B2BEC3, #DFE6E9)"
+                  : `linear-gradient(135deg, ${level.color}, ${level.color}BB)`,
+                display:"flex", alignItems:"center", justifyContent:"center",
+                fontSize:22, flexShrink:0,
+              }}>
+                {locked ? "🔒" : done ? "✅" : level.icon}
+              </div>
+              <div style={{ flex:1 }}>
+                <div style={{ fontSize:15, fontWeight:700, color: locked ? "#B2BEC3" : "#2D3436" }}>{level.name}</div>
+                <div style={{ fontSize:12, color:"#B2BEC3", fontWeight:500 }}>
+                  {locked ? lockReason : level.sub}
+                </div>
+              </div>
+              <div style={{ fontSize:18, color:"#DFE6E9" }}>{locked ? "" : "›"}</div>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
+
 
 /* ─────────────────────────────────────────────
    LEVEL AUDIO CHECK
@@ -3276,7 +3332,7 @@ function OnboardingScreen({ onDone }) {
   ];
 
   const sty = {
-    card: { background:"white", borderRadius:20, padding:"16px 16px", boxShadow:"0 4px 20px rgba(0,0,0,0.06)", display:"flex", flexDirection:"column", alignItems:"center", gap:10, width:"100%" },
+    card: { background:"white", borderRadius:20, padding:"16px 16px", boxShadow:"0 4px 20px rgba(0,0,0,0.06)", display:"flex", flexDirection:"column", alignItems:"center", gap:10, width:"100%", flex:1, justifyContent:"center" },
     hint: (done) => ({ fontSize:13, fontWeight:700, color:done?"#00B894":"#B2BEC3", animation:done?"none":"pulse 1.5s ease-in-out infinite" }),
     whyBox: (show) => ({ width:"100%", opacity:show?1:0, transform:show?"translateY(0)":"translateY(4px)", transition:"all 0.4s ease", maxHeight:show?200:0, overflow:"hidden", marginTop:show?10:0 }),
     whyInner: { background:"linear-gradient(135deg, #FFF9E6, #FFF3CD)", borderLeft:"4px solid #FDCB6E", borderRadius:"0 14px 14px 0", padding:"10px 14px" },
@@ -3331,20 +3387,20 @@ function OnboardingScreen({ onDone }) {
 
     if (step === 2) return (
       <div style={sty.card}>
-        <button onClick={() => playSound("SOL", "words")} style={{ display:"flex", alignItems:"center", gap:8, padding:"10px 22px", borderRadius:14, border:"none", background:"linear-gradient(135deg, #6C5CE7, #A29BFE)", color:"white", fontFamily:"'Nunito',sans-serif", fontSize:15, fontWeight:800, cursor:"pointer", boxShadow:"0 4px 16px rgba(108,92,231,0.3)" }}>🔊 Hör ordet</button>
-        <div style={{ display:"flex", gap:8 }}>
+        <div style={{ display:"flex", gap:10 }}>
           {wordTarget.map((_, i) => (
-            <div key={i} style={{ width:48, height:52, borderRadius:12, border:wordPlaced[i] ? "3px solid #6C5CE7" : "3px dashed #DFE6E9", background:wordPlaced[i] ? "#EDE7F6" : "#F8F9FA", display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, fontWeight:800, transition:"all 0.2s ease" }}>
+            <div key={i} style={{ width:56, height:62, borderRadius:14, border:wordPlaced[i] ? "3px solid #6C5CE7" : "3px dashed #DFE6E9", background:wordPlaced[i] ? "#EDE7F6" : "#F8F9FA", display:"flex", alignItems:"center", justifyContent:"center", fontSize:30, fontWeight:800, transition:"all 0.2s ease" }}>
               {wordPlaced[i] ? wordFmt[i] : ""}
             </div>
           ))}
         </div>
         {wordDone && <div style={{ fontSize:40, animation:"bounceIn 0.4s ease forwards" }}>☀️</div>}
-        <div style={{ display:"flex", gap:10 }}>
+        <button onClick={() => playSound("SOL", "words")} style={{ display:"flex", alignItems:"center", gap:8, padding:"12px 28px", borderRadius:14, border:"none", background:"linear-gradient(135deg, #6C5CE7, #A29BFE)", color:"white", fontFamily:"'Nunito',sans-serif", fontSize:15, fontWeight:800, cursor:"pointer", boxShadow:"0 4px 16px rgba(108,92,231,0.3)" }}>🔊 Hör ordet</button>
+        <div style={{ display:"flex", gap:12 }}>
           {tileOrder.map((letter, i) => (
             <button key={i} onClick={() => handleTile(letter, i)} disabled={usedTiles[i]} style={{
-              width:48, height:48, borderRadius:12, border:"2px solid #DFE6E9",
-              background:"white", fontFamily:"'Nunito',sans-serif", fontSize:24, fontWeight:800,
+              width:64, height:64, borderRadius:16, border:"2px solid #DFE6E9",
+              background:"white", fontFamily:"'Nunito',sans-serif", fontSize:28, fontWeight:800,
               cursor:usedTiles[i]?"default":"pointer", color:"#2D3436",
               opacity:usedTiles[i]?0.25:1, boxShadow:"0 3px 8px rgba(0,0,0,0.06)",
             }}>{letter}</button>
@@ -3409,15 +3465,22 @@ function OnboardingScreen({ onDone }) {
   return (
     <div style={{ height:"100dvh", display:"flex", flexDirection:"column", fontFamily:"'Nunito',sans-serif", background:"#F0F3F8", color:"#2D3436", overflow:"hidden" }}>
 
-      {/* Progress dots */}
-      <div style={{ display:"flex", justifyContent:"center", gap:8, padding:"12px 20px 0" }}>
-        {[0,1,2,3,4].map(i => (
-          <div key={i} style={{
-            width: i === step ? 24 : 8, height:8, borderRadius:4,
-            background: i === step ? stepTags[i] : (i < step ? "#00B894" : "#DFE6E9"),
-            transition:"all 0.3s ease",
-          }} />
-        ))}
+      {/* Progress dots + skip */}
+      <div style={{ display:"flex", alignItems:"center", padding:"12px 20px 0" }}>
+        <div style={{ flex:1, display:"flex", justifyContent:"center", gap:8 }}>
+          {[0,1,2,3,4].map(i => (
+            <div key={i} style={{
+              width: i === step ? 24 : 8, height:8, borderRadius:4,
+              background: i === step ? stepTags[i] : (i < step ? "#00B894" : "#DFE6E9"),
+              transition:"all 0.3s ease",
+            }} />
+          ))}
+        </div>
+        <button onClick={onDone} style={{
+          background:"none", border:"none", fontSize:13, fontWeight:700,
+          color:"#B2BEC3", cursor:"pointer", fontFamily:"'Nunito',sans-serif",
+          padding:"4px 8px",
+        }}>Hoppa över</button>
       </div>
 
       {/* Content */}
@@ -3449,12 +3512,48 @@ function OnboardingScreen({ onDone }) {
    ───────────────────────────────────────────── */
 
 function App() {
-  const [screen, setScreen] = useState("onboarding");
+  const [screen, setScreen] = useState(() => {
+    try { if (!localStorage.getItem("ljudit_onboarded")) return "onboarding"; } catch(e) {}
+    return "home";
+  });
   const [currentLevel, setCurrentLevel] = useState(null);
-  const [completedLevels, setCompletedLevels] = useState(new Set());
+  const [completedLevels, setCompletedLevels] = useState(() => {
+    try {
+      const saved = localStorage.getItem("ljudit_progress");
+      if (saved) return new Set(JSON.parse(saved));
+    } catch(e) {}
+    return new Set();
+  });
   const [showTips, setShowTips] = useState(false);
   const [allUnlocked, setAllUnlocked] = useState(false);
   const [audioReady, setAudioReady] = useState(false);
+  const firebaseUidRef = useRef(null);
+
+  // Firebase: anonymous sign-in + sync progress
+  useEffect(() => {
+    if (typeof firebase === "undefined") return;
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    auth.signInAnonymously().catch(e => console.warn("Auth failed:", e));
+
+    const unsub = auth.onAuthStateChanged(user => {
+      if (!user) return;
+      firebaseUidRef.current = user.uid;
+      const ref = db.ref("users/" + user.uid + "/progress");
+      ref.once("value").then(snap => {
+        const val = snap.val();
+        if (val && Array.isArray(val)) {
+          setCompletedLevels(prev => {
+            const merged = new Set([...prev, ...val]);
+            try { localStorage.setItem("ljudit_progress", JSON.stringify([...merged])); } catch(e) {}
+            return merged;
+          });
+        }
+      }).catch(e => console.warn("DB read failed:", e));
+    });
+    return () => unsub();
+  }, []);
 
   // Lock scroll & prevent pull-to-refresh during gameplay
   useEffect(() => {
@@ -3493,7 +3592,16 @@ function App() {
   };
 
   const handleComplete = () => {
-    setCompletedLevels(prev => new Set([...prev, currentLevel.id]));
+    setCompletedLevels(prev => {
+      const next = new Set([...prev, currentLevel.id]);
+      const arr = [...next];
+      try { localStorage.setItem("ljudit_progress", JSON.stringify(arr)); } catch(e) {}
+      // Save to Firebase
+      if (firebaseUidRef.current && typeof firebase !== "undefined") {
+        firebase.database().ref("users/" + firebaseUidRef.current + "/progress").set(arr).catch(() => {});
+      }
+      return next;
+    });
     setScreen("complete");
   };
 
@@ -3609,7 +3717,7 @@ function App() {
       {/* Screens */}
       {screen === "onboarding" && (
         <OnboardingScreen onDone={() => {
-          try { localStorage.setItem("ljuda_onboarded", "1"); } catch(e) {}
+          try { localStorage.setItem("ljudit_onboarded", "1"); } catch(e) {}
           setScreen("home");
         }} />
       )}
@@ -3617,6 +3725,7 @@ function App() {
         <HomeScreen
           onStart={() => setScreen("levels")}
           onStudio={() => setScreen("studio")}
+          onOnboarding={() => setScreen("onboarding")}
           completedLevels={completedLevels}
           audioReady={audioReady}
         />
