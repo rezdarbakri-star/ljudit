@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Ljuda – Lär dig läsa</title>
+  <title>Ljudit – Lär ditt barn att läsa!</title>
   <meta name="description" content="Fonetisk läsapp för barn. Lär dig bokstavsljud steg för steg.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -207,13 +207,9 @@ const WORD_LEVELS = {
   3: [
     { word:"GRIS", emoji:"🐷" },
     { word:"FISK", emoji:"🐟" },
-    { word:"KATT", emoji:"🐱" },
     { word:"HUND", emoji:"🐶" },
-    { word:"BOLL", emoji:"⚽" },
-    { word:"TALL", emoji:"🌲" },
     { word:"SALT", emoji:"🧂" },
     { word:"VARM", emoji:"🌡️" },
-    { word:"KALL", emoji:"🥶" },
     { word:"SKOG", emoji:"🌲" },
     { word:"MASK", emoji:"🪱" },
     { word:"SAND", emoji:"🏖️" },
@@ -223,11 +219,9 @@ const WORD_LEVELS = {
     { word:"HÄST", emoji:"🐴" },
     { word:"BLOD", emoji:"🩸" },
     { word:"TRÄD", emoji:"🌳" },
-    { word:"DÖRR", emoji:"🚪" },
     { word:"BRÖD", emoji:"🍞" },
     { word:"STEN", emoji:"🪨" },
     { word:"VIND", emoji:"💨" },
-    { word:"SNÄLL", emoji:"😊" },
     { word:"STOR", emoji:"🐘" },
     { word:"STOL", emoji:"💺" },
   ],
@@ -242,8 +236,6 @@ const WORD_LEVELS = {
     { word:"MOROT", emoji:"🥕" },
     { word:"STUGA", emoji:"🏠" },
     { word:"DRAKE", emoji:"🐉" },
-    { word:"ÄPPLE", emoji:"🍎" },
-    { word:"BLOMMA", emoji:"🌺" },
   ],
   // --- NIVÅ 6: Långa ord ---
   6: [
@@ -312,7 +304,7 @@ const WORD_LEVELS = {
   11: [
     { sentences:["EN KATT SAT.", "DEN SÅG EN MUS."], emoji:"🐱" },
     { sentences:["DET VAR SOL.", "JAG VAR GLAD."], emoji:"☀️" },
-    { sentences:["EN HUND LEKTE.", "DEN VAR SNÄLL."], emoji:"🐶" },
+    { sentences:["EN HUND LEKTE.", "DEN VAR GLAD."], emoji:"🐶" },
     { sentences:["JAG HAR EN BOLL.", "DEN ÄR RÖD."], emoji:"🔴" },
     { sentences:["DET ÄR KALLT UTE.", "JAG TAR PÅ MIN MÖSSA."], emoji:"🧣" },
     { sentences:["EN FISK SIM.", "DEN VAR STOR."], emoji:"🐟" },
@@ -2937,7 +2929,7 @@ function HomeScreen({ onStart, onStudio, onOnboarding, completedLevels, audioRea
         Ljudit
       </h1>
       <p style={{ fontSize:16, color:"#636E72", margin:0, maxWidth:300, lineHeight:1.6 }}>
-        Lär dig läsa steg för steg – med fonetiska ljud, ord och belöningar!
+        Lär ditt barn att läsa!
       </p>
       {totalCompleted > 0 && (
         <div style={{
@@ -3004,13 +2996,13 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onT
     ]},
     { title:"Skriva", emoji:"✏️", desc:"Bygg, stava och rita", color:"#FF9800", subs:[
       { title:"Bygg ord", levels: LEVELS.filter(l => l.id >= 60 && l.id <= 65), emoji:"🧩", color:"#FF9800" },
-      { title:"Rita bokstäver", levels: LEVELS.filter(l => l.id === 39), emoji:"✏️", color:"#E17055" },
-      { title:"Stava ord", levels: LEVELS.filter(l => l.id === 40), emoji:"🔠", color:"#FDCB6E" },
+      { title:"Rita bokstäver", levels: LEVELS.filter(l => l.id === 39), emoji:"✏️", color:"#E17055", comingSoon:true },
+      { title:"Stava ord", levels: LEVELS.filter(l => l.id === 40), emoji:"🔠", color:"#FDCB6E", comingSoon:true },
     ]},
     { title:"Övrigt", emoji:"🎯", desc:"Ljudning, specialljud & bonus", color:"#E17055", subs:[
-      { title:"Ljuda ut", levels: LEVELS.filter(l => l.id === 38), emoji:"🚗", color:"#00B894" },
-      { title:"Specialljud", levels: LEVELS.filter(l => l.id >= 41 && l.id <= 44), emoji:"🔊", color:"#6C5CE7" },
-      { title:"Bonus", levels: LEVELS.filter(l => l.id >= 45), emoji:"🏆", color:"#FDCB6E" },
+      { title:"Ljuda ut", levels: LEVELS.filter(l => l.id === 38), emoji:"🚗", color:"#00B894", comingSoon:true },
+      { title:"Specialljud", levels: LEVELS.filter(l => l.id >= 41 && l.id <= 44), emoji:"🔊", color:"#6C5CE7", comingSoon:true },
+      { title:"Bonus", levels: LEVELS.filter(l => l.id >= 45), emoji:"🏆", color:"#FDCB6E", comingSoon:true },
     ]},
   ];
 
@@ -3053,27 +3045,33 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onT
           const done = countDone(allLvls);
           const total = allLvls.length;
           const pct = total > 0 ? (done / total) * 100 : 0;
+          const allComingSoon = s.subs.every(sub => sub.comingSoon);
+          const sectionLocked = allComingSoon;
           return (
-            <button key={i} onClick={() => goSubs(i)} style={{
+            <button key={i} onClick={() => !sectionLocked && goSubs(i)} style={{
               display:"flex", alignItems:"center", gap:16,
-              padding:"20px 20px", borderRadius:20, border:"none", cursor:"pointer",
-              background:"white", boxShadow:"0 4px 16px rgba(0,0,0,0.06)",
+              padding:"20px 20px", borderRadius:20, border:"none", cursor: sectionLocked ? "default" : "pointer",
+              background: sectionLocked ? "#F8F9FA" : "white",
+              boxShadow: sectionLocked ? "none" : "0 4px 16px rgba(0,0,0,0.06)",
               textAlign:"left", transition:"all 0.15s ease",
+              opacity: sectionLocked ? 0.45 : 1,
             }}>
               <div style={{
                 width:56, height:56, borderRadius:16,
-                background:`linear-gradient(135deg, ${s.color}22, ${s.color}44)`,
+                background: sectionLocked ? "#EEE" : `linear-gradient(135deg, ${s.color}22, ${s.color}44)`,
                 display:"flex", alignItems:"center", justifyContent:"center", fontSize:28, flexShrink:0,
-              }}>{s.emoji}</div>
+              }}>{sectionLocked ? "🔒" : s.emoji}</div>
               <div style={{ flex:1 }}>
-                <div style={{ fontSize:18, fontWeight:800, color:"#2D3436" }}>{s.title}</div>
-                <div style={{ fontSize:13, color:"#636E72", fontWeight:500, marginTop:2 }}>{s.desc}</div>
-                <div style={{ marginTop:8, height:6, borderRadius:3, background:"#F0F3F8", overflow:"hidden" }}>
-                  <div style={{ width:`${pct}%`, height:"100%", borderRadius:3, background:s.color, transition:"width 0.3s ease" }} />
-                </div>
-                <div style={{ fontSize:11, color:"#B2BEC3", fontWeight:600, marginTop:4 }}>{done}/{total} klara</div>
+                <div style={{ fontSize:18, fontWeight:800, color: sectionLocked ? "#B2BEC3" : "#2D3436" }}>{s.title}</div>
+                <div style={{ fontSize:13, color: sectionLocked ? "#B2BEC3" : "#636E72", fontWeight:500, marginTop:2 }}>{sectionLocked ? "Kommer snart" : s.desc}</div>
+                {!sectionLocked && (<>
+                  <div style={{ marginTop:8, height:6, borderRadius:3, background:"#F0F3F8", overflow:"hidden" }}>
+                    <div style={{ width:`${pct}%`, height:"100%", borderRadius:3, background:s.color, transition:"width 0.3s ease" }} />
+                  </div>
+                  <div style={{ fontSize:11, color:"#B2BEC3", fontWeight:600, marginTop:4 }}>{done}/{total} klara</div>
+                </>)}
               </div>
-              <span style={{ fontSize:20, color:"#DFE6E9" }}>›</span>
+              {!sectionLocked && <span style={{ fontSize:20, color:"#DFE6E9" }}>›</span>}
             </button>
           );
         })}
@@ -3100,28 +3098,35 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onT
           const total = s.levels.length;
           const pct = total > 0 ? (done / total) * 100 : 0;
           const allDone = done === total;
+          const subLocked = s.comingSoon;
           return (
-            <button key={i} onClick={() => goLevels(i)} style={{
+            <button key={i} onClick={() => !subLocked && goLevels(i)} style={{
               display:"flex", alignItems:"center", gap:16,
-              padding:"18px 18px", borderRadius:18, border:"none", cursor:"pointer",
-              background: allDone ? "#F0FFF4" : "white",
-              boxShadow:"0 3px 12px rgba(0,0,0,0.05)",
+              padding:"18px 18px", borderRadius:18, border:"none",
+              cursor: subLocked ? "default" : "pointer",
+              background: subLocked ? "#F8F9FA" : allDone ? "#F0FFF4" : "white",
+              boxShadow: subLocked ? "none" : "0 3px 12px rgba(0,0,0,0.05)",
               textAlign:"left", transition:"all 0.15s ease",
+              opacity: subLocked ? 0.45 : 1,
             }}>
               <div style={{
                 width:48, height:48, borderRadius:14,
-                background:`linear-gradient(135deg, ${s.color}22, ${s.color}44)`,
+                background: subLocked ? "#EEE" : `linear-gradient(135deg, ${s.color}22, ${s.color}44)`,
                 display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, flexShrink:0,
-              }}>{s.emoji}</div>
+              }}>{subLocked ? "🔒" : s.emoji}</div>
               <div style={{ flex:1 }}>
-                <div style={{ fontSize:16, fontWeight:800, color:"#2D3436" }}>{s.title}</div>
-                <div style={{ marginTop:6, height:5, borderRadius:3, background:"#F0F3F8", overflow:"hidden" }}>
-                  <div style={{ width:`${pct}%`, height:"100%", borderRadius:3, background:s.color, transition:"width 0.3s ease" }} />
-                </div>
-                <div style={{ fontSize:11, color:"#B2BEC3", fontWeight:600, marginTop:3 }}>{done}/{total} klara</div>
+                <div style={{ fontSize:16, fontWeight:800, color: subLocked ? "#B2BEC3" : "#2D3436" }}>{s.title}</div>
+                {subLocked ? (
+                  <div style={{ fontSize:12, color:"#B2BEC3", fontWeight:500, marginTop:3 }}>Kommer snart</div>
+                ) : (<>
+                  <div style={{ marginTop:6, height:5, borderRadius:3, background:"#F0F3F8", overflow:"hidden" }}>
+                    <div style={{ width:`${pct}%`, height:"100%", borderRadius:3, background:s.color, transition:"width 0.3s ease" }} />
+                  </div>
+                  <div style={{ fontSize:11, color:"#B2BEC3", fontWeight:600, marginTop:3 }}>{done}/{total} klara</div>
+                </>)}
               </div>
-              {allDone && <span style={{ fontSize:18 }}>✅</span>}
-              <span style={{ fontSize:18, color:"#DFE6E9" }}>›</span>
+              {allDone && !subLocked && <span style={{ fontSize:18 }}>✅</span>}
+              {!subLocked && <span style={{ fontSize:18, color:"#DFE6E9" }}>›</span>}
             </button>
           );
         })}
