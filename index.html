@@ -593,7 +593,7 @@ function MascotBubble({ mood, text, size, direction, children }) {
   const s = Math.max(size || 40, 40);
   const content = children || text;
   return (
-    <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+    <div style={{ display:"flex", alignItems:"center", gap:8, justifyContent:"center" }}>
       <div style={{ flexShrink:0 }}>
         <MascotImg mood={mood || "happy"} size={s} />
       </div>
@@ -695,7 +695,7 @@ function shuffle(arr) {
 // Format word: "SOL" → "Sol", "HÄST" → "Häst"  
 function fmtWord(w) {
   if (!w) return "";
-  return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+  return w.toLowerCase();
 }
 
 // Format sentence: "EN KATT SAT." → "En katt sat."
@@ -1389,7 +1389,7 @@ function IntroLetterGame({ level, onComplete, onBack, skipRoundRef }) {
     return (
       <div style={{
         display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-        minHeight:"calc(100dvh - 80px)", padding:"24px 20px 80px", textAlign:"center",
+        minHeight:"calc(100dvh - 80px)", padding:"24px 20px 20px", textAlign:"center",
       }}>
         <MascotBubble mood="excited" size={50}>Tryck på bokstaven<br/>och <span style={{background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>säg ljudet</span> för ditt barn!</MascotBubble>
         <div style={{ height:24 }} />
@@ -1404,7 +1404,7 @@ function IntroLetterGame({ level, onComplete, onBack, skipRoundRef }) {
         >
           <LetterPair letter={focus} size={70} subSize={42} color="white" subColor="rgba(255,255,255,0.6)" />
         </div>
-        <div style={{ fontSize:13, color:"#B2BEC3", marginTop:24 }}>👆 Tryck på bokstaven</div>
+        <div style={{ height:16 }} />
       </div>
     );
   }
@@ -1413,38 +1413,45 @@ function IntroLetterGame({ level, onComplete, onBack, skipRoundRef }) {
   if (phase === "listen") {
     return (
       <div style={{
-        display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-        minHeight:"calc(100dvh - 80px)", padding:"24px 20px 80px", textAlign:"center",
+        display:"flex", flexDirection:"column", alignItems:"center",
+        height:"calc(100dvh - 80px)", padding:"24px 20px 0", textAlign:"center",
       }}>
-        <MascotBubble mood="happy" size={50}>Säg: "<span style={{background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Det där är {phonetic}!</span>" för ditt barn<br/>och tryck "Nu spelar vi"</MascotBubble>
-        <div style={{ height:20 }} />
-        <div style={{
-          width:160, height:160, borderRadius:36,
-          background:`linear-gradient(135deg, ${level.color}, ${level.color}BB)`,
-          display:"flex", alignItems:"center", justifyContent:"center",
-          color:"white",
-          boxShadow:`0 8px 30px ${level.color}44`, marginBottom:16, cursor:"pointer",
-        }}
-          onClick={() => playSound(focus)}
-        >
-          <LetterPair letter={focus} size={70} subSize={42} color="white" subColor="rgba(255,255,255,0.6)" />
+        {/* Middle – centered content */}
+        <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", minHeight:0 }}>
+          <MascotBubble mood="happy" size={50}>Säg: "<span style={{background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Det där är {phonetic}!</span>" för ditt barn<br/>och tryck "Nu spelar vi"</MascotBubble>
+          <div style={{ height:20 }} />
+          <div style={{
+            width:160, height:160, borderRadius:36,
+            background:`linear-gradient(135deg, ${level.color}, ${level.color}BB)`,
+            display:"flex", alignItems:"center", justifyContent:"center",
+            color:"white",
+            boxShadow:`0 8px 30px ${level.color}44`, cursor:"pointer",
+          }}
+            onClick={() => playSound(focus)}
+          >
+            <LetterPair letter={focus} size={70} subSize={42} color="white" subColor="rgba(255,255,255,0.6)" />
+          </div>
+          <div style={{ fontSize:13, color:"#B2BEC3", marginTop:16 }}>👆 Tryck för att lyssna igen</div>
         </div>
-        <div style={{ fontSize:13, color:"#B2BEC3", marginBottom:20 }}>👆 Tryck för att lyssna igen</div>
-        <button onClick={() => setPhase("play")} style={{
-          padding:"18px 48px", borderRadius:20, border:"none",
-          background:`linear-gradient(135deg, ${level.color}, ${level.color}DD)`,
-          fontSize:18, fontWeight:700, color:"white", cursor:"pointer",
-          boxShadow:`0 4px 15px ${level.color}44`,
-        }}>
-          Nu spelar vi! 🎮
-        </button>
+
+        {/* Bottom – action button */}
+        <div style={{ flexShrink:0, padding:"10px 0 20px" }}>
+          <button onClick={() => setPhase("play")} style={{
+            padding:"18px 48px", borderRadius:20, border:"none",
+            background:`linear-gradient(135deg, ${level.color}, ${level.color}DD)`,
+            fontSize:18, fontWeight:700, color:"white", cursor:"pointer",
+            boxShadow:`0 4px 15px ${level.color}44`,
+          }}>
+            Nu spelar vi! 🎮
+          </button>
+        </div>
       </div>
     );
   }
 
   // ── PLAY ──
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"12px 16px 80px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", height:"calc(100dvh - 80px)", padding:"12px 16px 0" }}>
       <CelebrationOverlay active={showCelebration} onDone={handleCelebrationDone} />
       <ProgressBar current={round} total={INTRO_ROUNDS} color={level.color} />
       <div style={{ marginTop:8 }}>
@@ -1482,7 +1489,7 @@ function IntroLetterGame({ level, onComplete, onBack, skipRoundRef }) {
         </div>
       </div>
 
-      <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:8, paddingBottom:8 }}>
+      <div style={{ flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", gap:8, padding:"10px 0 20px" }}>
         <SoundButton soundKey={focus} type="letters" label="Lyssna 🔊" large color={level.color} />
       </div>
     </div>
@@ -1582,7 +1589,7 @@ function SeekLetterGame({ level, onComplete, onBack, skipRoundRef }) {
   const cardH = cols === 4 ? 82 : 100;
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"12px 16px 80px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", height:"calc(100dvh - 80px)", padding:"12px 16px 0" }}>
       <CelebrationOverlay active={showCelebration} onDone={handleCelebrationDone} />
       <ProgressBar current={round} total={SEEK_ROUNDS} color={level.color} />
       <div style={{ marginTop:4 }}>
@@ -1633,7 +1640,7 @@ function SeekLetterGame({ level, onComplete, onBack, skipRoundRef }) {
                 {foundTarget ? (
                   <LetterPair letter={focus} size={36} subSize={22} color="white" subColor="rgba(255,255,255,0.6)" />
                 ) : item.type === "letter" ? (
-                  <LetterPair letter={item.value} size={28} subSize={18} color={item.color} subColor={item.color + "88"} />
+                  <LetterPair letter={item.value} size={32} subSize={20} color="#2D3436" subColor="#B2BEC3" />
                 ) : (
                   item.value
                 )}
@@ -1644,7 +1651,7 @@ function SeekLetterGame({ level, onComplete, onBack, skipRoundRef }) {
       </div>
 
       {/* Sound button - thumb zone */}
-      <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:8, paddingBottom:8 }}>
+      <div style={{ flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", gap:8, padding:"10px 0 20px" }}>
         <SoundButton soundKey={focus} type="letters" label="Lyssna 🔊" large color={level.color} />
       </div>
     </div>
@@ -1715,7 +1722,7 @@ function LetterPairGame({ level, onComplete, onBack, skipRoundRef }) {
   }, [onComplete]);
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"12px 16px 80px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", height:"calc(100dvh - 80px)", padding:"12px 16px 0" }}>
       <CelebrationOverlay active={showCelebration} onDone={handleCelebrationDone} />
       <ProgressBar current={completed} total={total} color={level.color} />
       <div style={{ fontSize:14, color:"#B2BEC3", marginTop:6 }}>
@@ -1743,8 +1750,8 @@ function LetterPairGame({ level, onComplete, onBack, skipRoundRef }) {
       </div>
 
       {/* Sound button - thumb zone at bottom */}
-      <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:8, paddingBottom:8 }}>
-        <MascotBubble mood="happy" text="Fråga ditt barn: vilken bokstav säger så här?" size={36} />
+      <div style={{ flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", gap:8, padding:"10px 0 20px" }}>
+        <MascotBubble mood="happy" size={36}>Fråga ditt barn:<br/>vilken bokstav säger så här?</MascotBubble>
         <SoundButton soundKey={target} type="letters" label="Lyssna 🔊" large color={level.color} />
       </div>
     </div>
@@ -1791,18 +1798,13 @@ function SingleLetterGame({ level, onComplete, onBack }) {
   if (!current) return null;
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"12px 16px 80px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", height:"calc(100dvh - 80px)", padding:"12px 16px 0" }}>
       <CelebrationOverlay active={showCelebration} onDone={handleCelebrationDone} />
       <ProgressBar current={completed} total={total} color={level.color} />
-      <div style={{ fontSize:14, color:"#B2BEC3", marginTop:6 }}>
-        {completed} av {total}
-      </div>
+      <MascotBubble mood="happy" size={36}>Fråga ditt barn:<br/><span style={{background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>vad säger den här bokstaven?</span></MascotBubble>
 
       {/* Letter card - centered */}
       <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:12 }}>
-        <div style={{ fontSize:15, color:"#636E72", fontWeight:600 }}>
-          Vad säger den här bokstaven?
-        </div>
         <LetterCard letter={current} size="large" onClick={() => playSound(current)} />
         {showAnswer && (
           <div style={{
@@ -1816,7 +1818,7 @@ function SingleLetterGame({ level, onComplete, onBack }) {
       </div>
 
       {/* Thumb zone - sound + parent controls */}
-      <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:12, paddingBottom:8, width:"100%" }}>
+      <div style={{ flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", gap:12, padding:"10px 0 20px", width:"100%" }}>
         <SoundButton soundKey={current} type="letters" label="Hör ljudet 🔊" color="#636E72" />
         <div style={{ fontSize:13, color:"#B2BEC3" }}>Förälder: Svarade barnet rätt?</div>
         <div style={{ display:"flex", gap:16 }}>
@@ -1849,6 +1851,8 @@ function WordReadGame({ level, onComplete }) {
   const total = words.length;
   const current = pool[0];
 
+  const [transitioning, setTransitioning] = useState(false);
+
   const handleRead = () => {
     setRevealed(true);
     setShowConfetti(true);
@@ -1856,65 +1860,85 @@ function WordReadGame({ level, onComplete }) {
   };
 
   const handleNext = () => {
-    const newPool = pool.slice(1);
-    setPool(newPool);
-    setCompleted(c => c + 1);
-    setRevealed(false);
-    if (newPool.length === 0) {
-      setTimeout(() => onComplete(), 300);
-    }
+    setTransitioning(true);
+    setTimeout(() => {
+      const newPool = pool.slice(1);
+      setPool(newPool);
+      setCompleted(c => c + 1);
+      setRevealed(false);
+      if (newPool.length === 0) {
+        setTimeout(() => onComplete(), 300);
+      }
+      setTimeout(() => setTransitioning(false), 50);
+    }, 300);
   };
 
   if (!current) return null;
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:24, padding:"20px 16px" }}>
-      <Confetti active={showConfetti} />
-      <ProgressBar current={completed} total={total} color={level.color} />
-      <div style={{ fontSize:16, color:"#636E72", fontWeight:600 }}>
-        Vad står det här?
+    <div style={{ display:"flex", flexDirection:"column", height:"calc(100dvh - 80px)", padding:"0 16px",
+      opacity: transitioning ? 0 : 1, transition:"opacity 0.25s ease" }}>
+      {/* Top */}
+      <div style={{ flexShrink:0, paddingTop:12 }}>
+        <Confetti active={showConfetti} />
+        <ProgressBar current={completed} total={total} color={level.color} />
+        <MascotBubble mood="happy" size={36}>Peka på ordet och fråga:<br/><span style={{background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>vad står det här?</span></MascotBubble>
       </div>
-      <div style={{
-        display:"flex", gap:4, padding:"20px 32px",
-        background:"white", borderRadius:24,
-        boxShadow:"0 8px 30px rgba(0,0,0,0.08)",
-      }}>
-        {fmtWord(current.word).split("").map((ch, i) => (
-          <span key={i} style={{
-            fontSize:52, fontWeight:800, color:"#2D3436",
-            fontFamily:"'Nunito', sans-serif",
-            letterSpacing:4,
-          }}>{ch}</span>
-        ))}
-      </div>
-      {!revealed ? (
-        <div style={{ textAlign:"center" }}>
-          <div style={{ fontSize:13, color:"#B2BEC3", marginBottom:12 }}>
-            Förälder: Tryck när barnet har läst rätt
-          </div>
-          <button onClick={handleRead} style={{
-            padding:"18px 48px", borderRadius:20, border:"none",
-            background:`linear-gradient(135deg, ${level.color}, ${level.color}CC)`,
-            color:"white", fontSize:18, fontWeight:700, cursor:"pointer",
-            boxShadow:`0 6px 20px ${level.color}44`,
-          }}>
-            Visa belöning! 🎉
-          </button>
+
+      {/* Top half – card centered */}
+      <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", minHeight:0 }}>
+        <div style={{
+          display:"flex", gap:4, padding:"20px 32px",
+          background:"white", borderRadius:24,
+          boxShadow:"0 8px 30px rgba(0,0,0,0.08)",
+        }}>
+          {fmtWord(current.word).split("").map((ch, i) => (
+            <span key={i} style={{
+              fontSize:52, fontWeight:800, color:"#2D3436",
+              fontFamily:"'Nunito', sans-serif",
+              letterSpacing:4,
+            }}>{ch}</span>
+          ))}
         </div>
-      ) : (
-        <div style={{ textAlign:"center", animation:"bounceIn 0.5s ease" }}>
-          <div style={{ fontSize:100, marginBottom:8 }}>{current.emoji}</div>
-          <div style={{ fontSize:24, fontWeight:800, color:"#2D3436" }}>{fmtWord(current.word)}!</div>
+      </div>
+
+      {/* Bottom half – emoji reveal zone (same size, card doesn't move) */}
+      <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", minHeight:0 }}>
+        {revealed && (
+          <div style={{ textAlign:"center", animation:"bounceIn 0.5s ease" }}>
+            <div style={{ fontSize:100, marginBottom:8 }}>{current.emoji}</div>
+            <div style={{ fontSize:24, fontWeight:800, color:"#2D3436" }}>{fmtWord(current.word)}!</div>
+          </div>
+        )}
+      </div>
+
+      {/* Bottom – action button anchored */}
+      <div style={{ flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", gap:8, padding:"10px 0 20px" }}>
+        {!revealed ? (
+          <>
+            <div style={{ fontSize:13, color:"#B2BEC3" }}>
+              Förälder: Tryck när barnet har läst rätt
+            </div>
+            <button onClick={handleRead} style={{
+              padding:"18px 48px", borderRadius:20, border:"none",
+              background:`linear-gradient(135deg, ${level.color}, ${level.color}CC)`,
+              color:"white", fontSize:18, fontWeight:700, cursor:"pointer",
+              boxShadow:`0 6px 20px ${level.color}44`,
+            }}>
+              Visa belöning! 🎉
+            </button>
+          </>
+        ) : (
           <button onClick={handleNext} style={{
-            marginTop:16, padding:"14px 40px", borderRadius:16, border:"none",
+            padding:"14px 40px", borderRadius:16, border:"none",
             background:"linear-gradient(135deg,#4ECDC4,#45B7D1)",
             color:"white", fontSize:16, fontWeight:700, cursor:"pointer",
           }}>
             Nästa ord →
           </button>
-        </div>
-      )}
-      <div style={{ fontSize:14, color:"#B2BEC3" }}>{completed} av {total} klara</div>
+        )}
+        <div style={{ fontSize:14, color:"#B2BEC3" }}>{completed} av {total} klara</div>
+      </div>
     </div>
   );
 }
@@ -1940,6 +1964,8 @@ function SentenceReadGame({ level, onComplete, skipRoundRef }) {
     };
   });
 
+  const [transitioning, setTransitioning] = useState(false);
+
   const handleRead = () => {
     setRevealed(true);
     setShowConfetti(true);
@@ -1947,25 +1973,33 @@ function SentenceReadGame({ level, onComplete, skipRoundRef }) {
   };
 
   const handleNext = () => {
-    const newPool = pool.slice(1);
-    setPool(newPool);
-    setCompleted(c => c + 1);
-    setRevealed(false);
-    if (newPool.length === 0) {
-      setTimeout(() => onComplete(), 300);
-    }
+    setTransitioning(true);
+    setTimeout(() => {
+      const newPool = pool.slice(1);
+      setPool(newPool);
+      setCompleted(c => c + 1);
+      setRevealed(false);
+      if (newPool.length === 0) {
+        setTimeout(() => onComplete(), 300);
+      }
+      setTimeout(() => setTransitioning(false), 50);
+    }, 300);
   };
 
   if (!current) return null;
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"20px 16px 80px" }}>
-      <Confetti active={showConfetti} />
-      <ProgressBar current={completed} total={total} color={level.color} />
-      <div style={{ fontSize:14, color:"#636E72", fontWeight:600, marginBottom:16 }}>
-        Vad står det här?
+    <div style={{ display:"flex", flexDirection:"column", height:"calc(100dvh - 80px)", padding:"0 16px",
+      opacity: transitioning ? 0 : 1, transition:"opacity 0.25s ease" }}>
+      {/* Top */}
+      <div style={{ flexShrink:0, paddingTop:12 }}>
+        <Confetti active={showConfetti} />
+        <ProgressBar current={completed} total={total} color={level.color} />
+        <MascotBubble mood="happy" size={36}>Låt ditt barn försöka<br/><span style={{background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>läsa meningen!</span></MascotBubble>
       </div>
-      <div style={{ flex:1, display:"flex", alignItems:"center" }}>
+
+      {/* Top half – sentence card centered */}
+      <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", minHeight:0 }}>
         <div style={{
           display:"flex", gap:16, flexWrap:"wrap", justifyContent:"center",
           padding:"24px 20px", background:"white", borderRadius:24,
@@ -1980,33 +2014,43 @@ function SentenceReadGame({ level, onComplete, skipRoundRef }) {
           ))}
         </div>
       </div>
-      {!revealed ? (
-        <div style={{ textAlign:"center", marginTop:20 }}>
-          <div style={{ fontSize:12, color:"#B2BEC3", marginBottom:12, fontStyle:"italic" }}>
-            Tryck när barnet har läst meningen
+
+      {/* Bottom half – emoji reveal zone */}
+      <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", minHeight:0 }}>
+        {revealed && (
+          <div style={{ textAlign:"center", animation:"bounceIn 0.5s ease" }}>
+            <div style={{ fontSize:80, marginBottom:8 }}>{current.emoji}</div>
+            <div style={{ fontSize:22, fontWeight:800, color:"#2D3436" }}>{current.words.map((w,i) => i === 0 ? fmtWord(w) : w.toLowerCase()).join(" ")}!</div>
           </div>
-          <button onClick={handleRead} style={{
-            padding:"16px 44px", borderRadius:20, border:"none",
-            background:`linear-gradient(135deg, ${level.color}, ${level.color}CC)`,
-            color:"white", fontSize:18, fontWeight:700, cursor:"pointer",
-            boxShadow:`0 6px 20px ${level.color}44`,
-          }}>
-            Visa belöning! 🎉
-          </button>
-        </div>
-      ) : (
-        <div style={{ textAlign:"center", marginTop:20, animation:"bounceIn 0.5s ease" }}>
-          <div style={{ fontSize:80, marginBottom:8 }}>{current.emoji}</div>
-          <div style={{ fontSize:22, fontWeight:800, color:"#2D3436" }}>{current.words.map((w,i) => i === 0 ? fmtWord(w) : w.toLowerCase()).join(" ")}!</div>
+        )}
+      </div>
+
+      {/* Bottom – action button anchored */}
+      <div style={{ flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", gap:8, padding:"10px 0 20px" }}>
+        {!revealed ? (
+          <>
+            <div style={{ fontSize:12, color:"#B2BEC3", fontStyle:"italic" }}>
+              Tryck när barnet har läst meningen
+            </div>
+            <button onClick={handleRead} style={{
+              padding:"16px 44px", borderRadius:20, border:"none",
+              background:`linear-gradient(135deg, ${level.color}, ${level.color}CC)`,
+              color:"white", fontSize:18, fontWeight:700, cursor:"pointer",
+              boxShadow:`0 6px 20px ${level.color}44`,
+            }}>
+              Visa belöning! 🎉
+            </button>
+          </>
+        ) : (
           <button onClick={handleNext} style={{
-            marginTop:16, padding:"14px 40px", borderRadius:16, border:"none",
+            padding:"14px 40px", borderRadius:16, border:"none",
             background:"linear-gradient(135deg,#4ECDC4,#45B7D1)",
             color:"white", fontSize:16, fontWeight:700, cursor:"pointer",
           }}>
             Nästa →
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
@@ -2022,6 +2066,7 @@ function StoryReadGame({ level, onComplete, skipRoundRef }) {
   const [allRevealed, setAllRevealed] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [completed, setCompleted] = useState(0);
+  const [transitioning, setTransitioning] = useState(false);
   const total = items.length;
   const current = pool[0];
 
@@ -2047,20 +2092,26 @@ function StoryReadGame({ level, onComplete, skipRoundRef }) {
   };
 
   const handleNextStory = () => {
-    const newPool = pool.slice(1);
-    setPool(newPool);
-    setCompleted(c => c + 1);
-    setSentenceIdx(0);
-    setAllRevealed(false);
-    if (newPool.length === 0) {
-      setTimeout(() => onComplete(), 300);
-    }
+    setTransitioning(true);
+    setTimeout(() => {
+      const newPool = pool.slice(1);
+      setPool(newPool);
+      setCompleted(c => c + 1);
+      setSentenceIdx(0);
+      setAllRevealed(false);
+      if (newPool.length === 0) {
+        setTimeout(() => onComplete(), 300);
+      }
+      setTimeout(() => setTransitioning(false), 50);
+    }, 300);
   };
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"20px 16px 80px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", height:"calc(100dvh - 80px)", padding:"20px 16px 0",
+      opacity: transitioning ? 0 : 1, transition:"opacity 0.25s ease" }}>
       <Confetti active={showConfetti} />
       <ProgressBar current={completed} total={total} color={level.color} />
+      <MascotBubble mood="happy" size={36}>Läs berättelsen <span style={{background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>tillsammans</span><br/>med ditt barn!</MascotBubble>
 
       <div style={{ flex:1, display:"flex", alignItems:"center", width:"100%", maxWidth:380 }}>
         <div style={{
@@ -2088,7 +2139,7 @@ function StoryReadGame({ level, onComplete, skipRoundRef }) {
       </div>
 
       {!allRevealed ? (
-        <div style={{ textAlign:"center", marginTop:20 }}>
+        <div style={{ flexShrink:0, textAlign:"center", padding:"10px 0 20px" }}>
           <div style={{ fontSize:12, color:"#B2BEC3", marginBottom:8, fontStyle:"italic" }}>
             Mening {sentenceIdx + 1} av {sentences.length} — tryck när barnet läst klart
           </div>
@@ -2102,7 +2153,7 @@ function StoryReadGame({ level, onComplete, skipRoundRef }) {
           </button>
         </div>
       ) : (
-        <div style={{ textAlign:"center", marginTop:20, animation:"bounceIn 0.5s ease" }}>
+        <div style={{ flexShrink:0, textAlign:"center", padding:"10px 0 20px", animation:"bounceIn 0.5s ease" }}>
           <div style={{ fontSize:20, fontWeight:700, color:"#00B894", marginBottom:12 }}>
             🌟 Hela sagan läst!
           </div>
@@ -2148,6 +2199,7 @@ function WordBuildGame({ level, onComplete, skipRoundRef }) {
   const [revealed, setRevealed] = useState(false);
   const [placed, setPlaced] = useState([]);
   const [feedback, setFeedback] = useState(null);
+  const [transitioning, setTransitioning] = useState(false);
   const total = pool.length;
   const current = pool[0];
 
@@ -2165,7 +2217,8 @@ function WordBuildGame({ level, onComplete, skipRoundRef }) {
   }, [current, numDistractors]);
 
   const [available, setAvailable] = useState(tiles);
-  useEffect(() => { setAvailable(tiles); setPlaced([]); setRevealed(false); }, [tiles]);
+  const [usedIds, setUsedIds] = useState(new Set());
+  useEffect(() => { setAvailable(tiles); setPlaced([]); setUsedIds(new Set()); setRevealed(false); }, [tiles]);
 
   useEffect(() => {
     if (skipRoundRef) skipRoundRef.current = () => {
@@ -2179,24 +2232,20 @@ function WordBuildGame({ level, onComplete, skipRoundRef }) {
   const target = current.word;
 
   const handleTileTap = (tile) => {
-    if (feedback || revealed) return;
+    if (feedback || revealed || usedIds.has(tile.id)) return;
     const newPlaced = [...placed, tile];
-    const newAvail = available.filter(t => t.id !== tile.id);
     
     // Check if this letter is correct at this position
     if (target[newPlaced.length - 1] !== tile.letter) {
       setFeedback("wrong");
       setTimeout(() => {
         setFeedback(null);
-        // Put tile back
-        setPlaced(placed);
-        setAvailable(available);
       }, 500);
       return;
     }
 
     setPlaced(newPlaced);
-    setAvailable(newAvail);
+    setUsedIds(new Set([...usedIds, tile.id]));
     
     // Play the letter sound
     playSound(tile.letter);
@@ -2208,7 +2257,7 @@ function WordBuildGame({ level, onComplete, skipRoundRef }) {
         setShowConfetti(true);
         playSound(target, "words");
         setTimeout(() => setShowConfetti(false), 1500);
-      }, 500);
+      }, 800);
     }
   };
 
@@ -2216,99 +2265,128 @@ function WordBuildGame({ level, onComplete, skipRoundRef }) {
     if (placed.length === 0 || feedback || revealed) return;
     const last = placed[placed.length - 1];
     setPlaced(placed.slice(0, -1));
-    setAvailable([...available, last]);
+    const newUsed = new Set(usedIds);
+    newUsed.delete(last.id);
+    setUsedIds(newUsed);
   };
 
   const handleNext = () => {
-    const newPool = pool.slice(1);
-    setPool(newPool);
-    setCompleted(c => c + 1);
-    if (newPool.length === 0) {
-      setTimeout(() => onComplete(), 300);
-    }
+    setTransitioning(true);
+    setTimeout(() => {
+      const newPool = pool.slice(1);
+      setPool(newPool);
+      setCompleted(c => c + 1);
+      if (newPool.length === 0) {
+        setTimeout(() => onComplete(), 300);
+      }
+      setTimeout(() => setTransitioning(false), 50);
+    }, 300);
   };
 
+  const totalTiles = tiles.length;
+
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"16px 16px 0" }}>
-      <Confetti active={showConfetti} />
-      <ProgressBar current={completed} total={total} color={level.color} />
-      
-      <div style={{ fontSize:14, color:"#636E72", fontWeight:600, marginBottom:8 }}>
-        Bygg ordet! Tryck på bokstäverna i rätt ordning.
+    <div style={{ display:"flex", flexDirection:"column", height:"calc(100dvh - 80px)", padding:"0 16px",
+      opacity: transitioning ? 0 : 1, transition:"opacity 0.25s ease" }}>
+      {/* ── 1. PROGRESS ── */}
+      <div style={{ flexShrink:0, paddingTop:8 }}>
+        <Confetti active={showConfetti} />
+        <ProgressBar current={completed} total={total} color={level.color} />
       </div>
 
-      {/* Target slots */}
-      <div style={{ display:"flex", gap:6, marginTop:16, marginBottom:8 }}>
-        {fmtWord(target).split("").map((ch, i) => (
-          <div key={i} style={{
-            width: Math.min(56, 320 / target.length), height: 64, borderRadius:14,
-            border: feedback === "wrong" && i === placed.length
-              ? "3px solid #E17055"
-              : placed[i] ? `3px solid #00B894` : "3px dashed #DFE6E9",
-            background: placed[i] ? "#E8F8F5" : "white",
-            display:"flex", alignItems:"center", justifyContent:"center",
-            fontSize: Math.min(36, 200 / target.length), fontWeight:800,
-            color:"#2D3436", fontFamily:"'Nunito', sans-serif",
-            transition:"all 0.15s ease",
-            boxShadow: placed[i] ? "0 2px 8px rgba(0,184,148,0.2)" : "none",
-          }}>
-            {placed[i] ? fmtWord(target).charAt(i) : ""}
-          </div>
-        ))}
+      {/* ── 2. LJUDIT-FÄLT ── */}
+      <div style={{ flexShrink:0, padding:"6px 0" }}>
+        <MascotBubble mood="happy" size={36}>Säg ordet för ditt barn<br/>och låt dem <span style={{background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>bygga det</span> med bokstäverna!</MascotBubble>
       </div>
 
-      {/* Emoji reward */}
+      {/* ── 3. SKRIVFÄLT + KNAPPFÄLT – delar mittenytan ── */}
       {revealed ? (
-        <div style={{ textAlign:"center", animation:"bounceIn 0.5s ease", margin:"12px 0" }}>
-          <div style={{ fontSize:72 }}>{current.emoji}</div>
-          <div style={{ fontSize:20, fontWeight:800, color:"#2D3436" }}>{fmtWord(target)}!</div>
+        <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center" }}>
+          <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:8, animation:"bounceIn 0.5s ease" }}>
+            <div style={{ fontSize:96 }}>{current.emoji}</div>
+            <div style={{ fontSize:36, fontWeight:800, color:"#2D3436" }}>{fmtWord(target)}!</div>
+          </div>
+        </div>
+      ) : (
+        <div style={{ flex:1, display:"flex", flexDirection:"column", minHeight:0 }}>
+          {/* Skrivfält – centrerat i övre delen */}
+          <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center" }}>
+            <div style={{ display:"flex", gap:8 }}>
+              {fmtWord(target).split("").map((ch, i) => (
+                <div key={i} style={{
+                  width: Math.min(56, 300 / target.length), height: 64, borderRadius:14,
+                  border: feedback === "wrong" && i === placed.length
+                    ? "3px solid #E17055"
+                    : placed[i] ? "3px solid #00B894" : "3px dashed #DFE6E9",
+                  background: placed[i] ? "#E8F8F5" : "white",
+                  display:"flex", alignItems:"center", justifyContent:"center",
+                  fontSize: Math.min(36, 220 / target.length), fontWeight:800,
+                  color:"#2D3436", fontFamily:"'Nunito', sans-serif",
+                  transition:"all 0.15s ease",
+                  boxShadow: placed[i] ? "0 2px 8px rgba(0,184,148,0.2)" : "none",
+                }}>
+                  {placed[i] ? fmtWord(target).charAt(i) : ""}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Knappfält – tiles always in DOM, hidden when used */}
+          <div style={{ flexShrink:0, paddingBottom:6 }}>
+            <div style={{
+              display:"grid",
+              gridTemplateColumns: `repeat(${totalTiles <= 4 ? 2 : 3}, 1fr)`,
+              gap:10,
+              padding:"12px 10px",
+              background:"#F8F9FA", borderRadius:20, width:"100%", maxWidth:360,
+              margin:"0 auto",
+            }}>
+                  {tiles.map(tile => {
+                    const used = usedIds.has(tile.id);
+                    return (
+                    <button key={tile.id} onClick={() => handleTileTap(tile)} disabled={used} style={{
+                      width:"100%",
+                      height: 80,
+                      borderRadius:14,
+                      border:"none", cursor: used ? "default" : "pointer",
+                      background: used ? "transparent" : "linear-gradient(135deg, #FFFFFF, #F0F0F0)",
+                      boxShadow: used ? "none" : "0 3px 10px rgba(0,0,0,0.1)",
+                      fontWeight:900, color:"#2D3436",
+                      fontFamily:"'Nunito', sans-serif",
+                      transition:"all 0.15s ease",
+                      display:"flex", alignItems:"center", justifyContent:"center", gap:3,
+                      visibility: used ? "hidden" : "visible",
+                    }}>
+                      <span style={{ fontSize:36 }}>{tile.letter}</span>
+                      <span style={{ fontSize:22, color:"#B2BEC3", fontWeight:600 }}>{tile.letter.toLowerCase()}</span>
+                    </button>
+                    );
+                  })}
+                </div>
+                <div style={{ textAlign:"center", marginTop:8, height:36 }}>
+                  {placed.length > 0 && (
+                    <button onClick={handleUndo} style={{
+                      padding:"8px 20px", borderRadius:12,
+                      border:"2px solid #DFE6E9", background:"white",
+                      fontSize:14, fontWeight:600, color:"#636E72", cursor:"pointer",
+                    }}>↩ Ångra</button>
+                  )}
+                </div>
+              </div>
+        </div>
+      )}
+
+      {/* ── 5. ACTIONFÄLT ── */}
+      <div style={{ flexShrink:0, display:"flex", justifyContent:"center", padding:"10px 0 20px" }}>
+        {revealed ? (
           <button onClick={handleNext} style={{
-            marginTop:12, padding:"14px 40px", borderRadius:16, border:"none",
+            padding:"16px 44px", borderRadius:20, border:"none",
             background:"linear-gradient(135deg,#4ECDC4,#45B7D1)",
             color:"white", fontSize:16, fontWeight:700, cursor:"pointer",
           }}>Nästa ord →</button>
-        </div>
-      ) : (
-        <>
-          {/* Available letter tiles */}
-          <div style={{
-            display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center",
-            padding:"16px 8px", marginTop:8,
-            background:"#F8F9FA", borderRadius:20, width:"100%", maxWidth:360,
-          }}>
-            {available.map(tile => (
-              <button key={tile.id} onClick={() => handleTileTap(tile)} style={{
-                width: Math.min(62, 320 / (target.length + numDistractors)),
-                height: 58, borderRadius:14,
-                border:"none", cursor:"pointer",
-                background:"linear-gradient(135deg, #FFFFFF, #F0F0F0)",
-                boxShadow:"0 3px 10px rgba(0,0,0,0.1)",
-                fontWeight:800, color:"#2D3436",
-                fontFamily:"'Nunito', sans-serif",
-                transition:"transform 0.1s ease",
-                display:"flex", alignItems:"baseline", justifyContent:"center", gap:1,
-              }}>
-                <span style={{ fontSize: Math.min(28, 160 / (target.length + numDistractors)) }}>{tile.letter}</span>
-                <span style={{ fontSize: Math.min(18, 100 / (target.length + numDistractors)), color:"#B2BEC3" }}>{tile.letter.toLowerCase()}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Undo button */}
-          {placed.length > 0 && (
-            <button onClick={handleUndo} style={{
-              marginTop:10, padding:"8px 20px", borderRadius:12,
-              border:"2px solid #DFE6E9", background:"white",
-              fontSize:14, fontWeight:600, color:"#636E72", cursor:"pointer",
-            }}>↩ Ångra</button>
-          )}
-        </>
-      )}
-
-      {/* Sound button - thumb zone */}
-      <div style={{ flex:1 }} />
-      <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:8, paddingBottom:16 }}>
-        <SoundButton soundKey={target} type="words" label="🔊 Hör ordet" large color={level.color} />
+        ) : (
+          <SoundButton soundKey={target} type="words" label="Hör ordet" large color={level.color} />
+        )}
       </div>
     </div>
   );
@@ -2369,9 +2447,10 @@ function BlendingGame({ level, onComplete, skipRoundRef }) {
   const activeIdx = Math.min(letters.length - 1, Math.floor(carPos * letters.length));
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"20px 16px 80px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", height:"calc(100dvh - 80px)", padding:"20px 16px 0" }}>
       <Confetti active={showConfetti} />
       <ProgressBar current={completed} total={total} color={level.color} />
+      <MascotBubble mood="happy" size={36}>Dra bilen sakta<br/>medan ni <span style={{background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>ljudar tillsammans!</span></MascotBubble>
 
       {/* Letters + car area - centered */}
       <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center" }}>
@@ -2458,7 +2537,7 @@ function BlendingGame({ level, onComplete, skipRoundRef }) {
       </div>
 
       {/* Action buttons - bottom */}
-      <div style={{ display:"flex", gap:8, marginBottom:8 }}>
+      <div style={{ flexShrink:0, display:"flex", gap:8, padding:"10px 0 20px" }}>
         {!revealed ? (
           <>
             <button onClick={() => { if (hasRecording(letters[activeIdx], "letters")) playSound(letters[activeIdx]); }} style={{
@@ -2575,13 +2654,11 @@ function DrawLetterGame({ level, onComplete, skipRoundRef }) {
   if (!current) return null;
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", minHeight:"calc(100dvh - 80px)", padding:"12px 16px 80px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", height:"calc(100dvh - 80px)", padding:"12px 16px 0" }}>
       <Confetti active={showConfetti} />
       <ProgressBar current={completed} total={total} color={level.color} />
-      <div style={{ fontSize:14, color:"#636E72", fontWeight:600, marginBottom:8 }}>
-        Rita bokstaven som gör det här ljudet:
-      </div>
-      <SoundButton soundKey={current} type="letters" label={`🔊 Lyssna`} large color={level.color} />
+      <MascotBubble mood="happy" size={36}>Låt ditt barn <span style={{background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>rita bokstaven</span><br/>som gör ljudet!</MascotBubble>
+      <SoundButton soundKey={current} type="letters" label={`Lyssna`} large color={level.color} />
       <div style={{
         position:"relative", background:"white", borderRadius:20,
         boxShadow:"0 4px 20px rgba(0,0,0,0.08)", overflow:"hidden", marginTop:12,
@@ -2659,6 +2736,8 @@ function SpellWordGame({ level, onComplete }) {
   const current = pool[0];
   const total = words.length;
 
+  const [transitioning, setTransitioning] = useState(false);
+
   const letterOptions = useMemo(() => {
     if (!current) return [];
     const wordLetters = current.word.split("");
@@ -2685,27 +2764,33 @@ function SpellWordGame({ level, onComplete }) {
     if (newInput.length === targetWord.length) {
       setFeedback("correct");
       setShowConfetti(true);
-      setTimeout(() => playSound(targetWord, "words"), 500);
+      setTimeout(() => playSound(targetWord, "words"), 800);
       setTimeout(() => {
         setShowConfetti(false);
-        const newPool = pool.slice(1);
-        setPool(newPool);
-        setCompleted(c => c + 1);
-        setInput([]);
-        setFeedback(null);
-        if (newPool.length === 0) {
-          setTimeout(() => onComplete(), 400);
-        }
-      }, 1200);
+        setTransitioning(true);
+        setTimeout(() => {
+          const newPool = pool.slice(1);
+          setPool(newPool);
+          setCompleted(c => c + 1);
+          setInput([]);
+          setFeedback(null);
+          if (newPool.length === 0) {
+            setTimeout(() => onComplete(), 400);
+          }
+          setTimeout(() => setTransitioning(false), 50);
+        }, 300);
+      }, 1400);
     }
   };
 
   if (!current) return null;
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:16, padding:"20px 16px" }}>
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:16, padding:"20px 16px",
+      opacity: transitioning ? 0 : 1, transition:"opacity 0.25s ease" }}>
       <Confetti active={showConfetti} />
       <ProgressBar current={completed} total={total} color={level.color} />
+      <MascotBubble mood="happy" size={36}>Säg ordet och låt ditt barn<br/><span style={{background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>stava det!</span></MascotBubble>
       {/* Input display */}
       <div style={{ display:"flex", gap:8, minHeight:60 }}>
         {fmtWord(current.word).split("").map((ch, i) => (
@@ -2727,7 +2812,7 @@ function SpellWordGame({ level, onComplete }) {
         ))}
       </div>
       {/* Listen button - centered between slots and keyboard */}
-      <SoundButton soundKey={current.word} type="words" label="🔊 Hör ordet" large color={level.color} />
+      <SoundButton soundKey={current.word} type="words" label="Hör ordet" large color={level.color} />
       {/* Letter keyboard */}
       <div style={{
         display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center",
@@ -2815,9 +2900,7 @@ function SpecialSoundGame({ level, onComplete }) {
     <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:24, padding:"20px 16px" }}>
       <Confetti active={showConfetti} />
       <ProgressBar current={completed} total={total} color={level.color} />
-      <div style={{ fontSize:16, color:"#636E72", fontWeight:600 }}>
-        Bygg ord med {soundKey}-ljudet!
-      </div>
+      <MascotBubble mood="happy" size={36}>Bygg ord med <span style={{background:"linear-gradient(135deg, #4ECDC4, #45B7D1, #A29BFE)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>{soundKey}-ljudet</span><br/>tillsammans!</MascotBubble>
       <SoundButton soundKey={soundKey.toLowerCase()} type="special" label={`Hör ${soundKey}-ljudet`} large color={level.color} />
 
       {/* Word building area */}
@@ -3068,8 +3151,6 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onT
     return sub.levels.some(level => {
       const done = completedLevels.has(level.id);
       if (done) return true;
-      const hasAudio = levelHasAudio(level);
-      if (!hasAudio) return false;
       const levelIdx = LEVELS.findIndex(l => l.id === level.id);
       const prevLevel = levelIdx > 0 ? LEVELS[levelIdx - 1] : null;
       const prevDone = !prevLevel || completedLevels.has(prevLevel.id);
@@ -3442,9 +3523,9 @@ function OnboardingScreen({ onDone }) {
     if (step === 0) return (
       <div style={sty.card}>
         <div style={{ fontSize:18, fontWeight:800, color:"#4ECDC4", opacity:wave1?1:0, transform:wave1?"translateY(0)":"translateY(4px)", transition:"all 0.3s ease", height:24 }}>🔊 "mmm"</div>
-        <div onClick={playLetter} style={{ width:100, height:100, borderRadius:24, background:"linear-gradient(135deg, #E8F8F5, #D4EFDF)", display:"flex", alignItems:"baseline", justifyContent:"center", gap:5, cursor:"pointer", boxShadow:"0 4px 16px rgba(78,205,196,0.2)" }}>
-          <span style={{ fontSize:48, fontWeight:900, color:"#2D3436" }}>M</span>
-          <span style={{ fontSize:28, fontWeight:700, color:"#00B894" }}>m</span>
+        <div onClick={playLetter} style={{ width:140, height:140, borderRadius:32, background:"linear-gradient(135deg, #4ECDC4, #4ECDC4BB)", display:"flex", alignItems:"center", justifyContent:"center", gap:4, cursor:"pointer", boxShadow:"0 8px 30px rgba(78,205,196,0.3)" }}>
+          <span style={{ fontSize:64, fontWeight:900, color:"white" }}>M</span>
+          <span style={{ fontSize:38, fontWeight:700, color:"rgba(255,255,255,0.65)" }}>m</span>
         </div>
         <div style={sty.hint(hint1Done)}>{hint1Done ? "✅ Precis så!" : "👆 Testa! Tryck på bokstaven"}</div>
         <div style={sty.whyBox(why1)}>
@@ -3458,22 +3539,33 @@ function OnboardingScreen({ onDone }) {
 
     if (step === 1) return (
       <div style={sty.card}>
-        <div style={{ fontSize:18, fontWeight:800, color:findSolved?"white":"#E17055", background:findSolved?"#00B894":"#FFF3E0", padding:"8px 22px", borderRadius:12, transition:"all 0.3s ease" }}>{findSolved ? "✅ Rätt!" : <>Hitta: <strong>M m</strong></>}</div>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12, maxWidth:260 }}>
-          {findItems.map((item, i) => (
+        <div style={{ fontSize:18, fontWeight:800, color:findSolved?"white":"#E17055", background:findSolved?"#00B894":"#FFF3E0", padding:"8px 22px", borderRadius:12, transition:"all 0.3s ease" }}>{findSolved ? "✅ Rätt!" : <>Hitta: <strong>Mm</strong></>}</div>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:12, maxWidth:280 }}>
+          {findItems.map((item, i) => {
+            const isLetter = item === "M" || item === "S";
+            const isM = item === "M";
+            return (
             <div key={i} onClick={() => handleFind(item, i)} style={{
-              width:64, height:64, borderRadius:16,
-              background: item === "M" && findSolved ? "#00B894" : "#F8F9FA",
-              border: `3px solid ${findWrong === i ? "#E17055" : (item === "M" && findSolved ? "#00B894" : "#DFE6E9")}`,
-              display:"flex", alignItems:"center", justifyContent:"center",
-              fontSize: item === "M" && findSolved ? 20 : 32, fontWeight: item === "M" && findSolved ? 900 : 400,
-              color: item === "M" && findSolved ? "white" : undefined,
+              width:72, height:72, borderRadius:16,
+              background: isM && findSolved ? "#00B894" : "#F8F9FA",
+              border: `3px solid ${findWrong === i ? "#E17055" : (isM && findSolved ? "#00B894" : "#DFE6E9")}`,
+              display:"flex", alignItems:"center", justifyContent:"center", gap:2,
               cursor:"pointer", transition:"all 0.2s ease",
-              transform: item === "M" && findSolved ? "scale(1.1)" : "none",
-            }}>{item === "M" && findSolved ? "M m" : item}</div>
-          ))}
+              transform: isM && findSolved ? "scale(1.1)" : "none",
+            }}>
+              {isLetter ? (
+                <span style={{ display:"flex", alignItems:"baseline", gap:2 }}>
+                  <span style={{ fontSize: isM && findSolved ? 24 : 28, fontWeight:800, color: isM && findSolved ? "white" : "#2D3436" }}>{item}</span>
+                  <span style={{ fontSize: isM && findSolved ? 16 : 18, fontWeight:600, color: isM && findSolved ? "rgba(255,255,255,0.7)" : "#B2BEC3" }}>{item.toLowerCase()}</span>
+                </span>
+              ) : (
+                <span style={{ fontSize:32 }}>{item}</span>
+              )}
+            </div>
+            );
+          })}
         </div>
-        <div style={sty.hint(findSolved)}>{findSolved ? "✅ Bra jobbat!" : "👆 Tryck på M"}</div>
+        <div style={sty.hint(findSolved)}>{findSolved ? "✅ Bra jobbat!" : "👆 Tryck på Mm"}</div>
         <div style={sty.whyBox(why2)}>
           <div style={sty.whyInner}>
             <div style={sty.whyTitle}>💡 Varför vi gör detta</div>
