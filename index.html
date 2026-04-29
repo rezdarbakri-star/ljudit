@@ -178,6 +178,11 @@ const BONUS_LETTERS = ["C","Q","W","X","Z"];
 const MORE_VOWELS = ["E","I","U","Y"];
 const SWEDISH_EXTRA = ["Å","Ä","Ö"];
 
+// Pool used as distractors in letter-mastery levels (lettersOnly seek mode).
+// Broad enough that even a 12-cell grid has unique distractors. Includes commonly-encountered
+// Swedish letter shapes so the child must do real visual discrimination.
+const MASTERY_LETTER_POOL = ["S","L","M","F","N","R","V","O","A","B","D","G","K","P","T","E","I","U","H","J"];
+
 // Letters that sound too similar - avoid pairing in early levels
 const SIMILAR_SOUNDS = {
   B: ["P", "D"],
@@ -283,10 +288,10 @@ const WORD_LEVELS = {
     { words:["EN","SOL"], emoji:"☀️" },
     { words:["EN","KO"], emoji:"🐄" },
     { words:["EN","BIL"], emoji:"🚗" },
-    { words:["EN","HAT"], emoji:"🎩" },
+    { words:["EN","HATT"], emoji:"🎩" },
     { words:["EN","MUS"], emoji:"🐭" },
     { words:["EN","BÅT"], emoji:"⛵" },
-    { words:["EN","KAT"], emoji:"🐱" },
+    { words:["EN","KATT"], emoji:"🐱" },
     { words:["MIN","BOK"], emoji:"📖" },
     { words:["MIN","FOT"], emoji:"🦶" },
     { words:["MIN","NOS"], emoji:"👃" },
@@ -308,8 +313,8 @@ const WORD_LEVELS = {
   9: [
     { words:["JAG","ÄR","FIN"], emoji:"😊" },
     { words:["EN","RÖD","BIL"], emoji:"🚗" },
-    { words:["JAG","SER","SOL"], emoji:"☀️" },
-    { words:["HAN","HAR","BOLL"], emoji:"⚽" },
+    { words:["JAG","SER","SOLEN"], emoji:"☀️" },
+    { words:["HAN","HAR","BOLLEN"], emoji:"⚽" },
     { words:["HON","ÄR","GLAD"], emoji:"😄" },
     { words:["EN","STOR","GRIS"], emoji:"🐷" },
     { words:["VI","ÄR","HÄR"], emoji:"📍" },
@@ -323,9 +328,9 @@ const WORD_LEVELS = {
     { words:["KOM","HIT","NU"], emoji:"🤸" },
     { words:["JAG","KAN","LÄSA"], emoji:"📖" },
     { words:["HAN","ÅT","MAT"], emoji:"🍽️" },
-    { words:["HON","TOG","BOLL"], emoji:"⚽" },
+    { words:["HON","TOG","BOLLEN"], emoji:"⚽" },
     { words:["VI","GÅR","HEM"], emoji:"🏠" },
-    { words:["JAG","VILL","HA"], emoji:"🙏" },
+    { words:["JAG","KAN","HOPPA"], emoji:"🦘" },
     { words:["DET","ÄR","KALLT"], emoji:"🥶" },
     { words:["DET","ÄR","VARMT"], emoji:"🌡️" },
     { words:["JAG","ÄR","TRÖTT"], emoji:"😴" },
@@ -337,7 +342,7 @@ const WORD_LEVELS = {
     { sentences:["EN HUND LEKTE.", "DEN VAR GLAD."], emoji:"🐶" },
     { sentences:["JAG HAR EN BOLL.", "DEN ÄR RÖD."], emoji:"🔴" },
     { sentences:["DET ÄR KALLT UTE.", "JAG TAR PÅ MIN MÖSSA."], emoji:"🧣" },
-    { sentences:["EN FISK SIM.", "DEN VAR STOR."], emoji:"🐟" },
+    { sentences:["EN FISK SIMMAR.", "DEN ÄR STOR."], emoji:"🐟" },
   ],
   // --- NIVÅ 12: Småsagor 2 (3 meningar) ---
   12: [
@@ -417,18 +422,22 @@ const LEVELS = [
   { id:1, name:"Lär dig M", sub:"Möt bokstaven", type:"intro-letter", focus:"M", count:2, emojisOnly:true, tutorial:true, icon:"🐣", color:"#F39C12" },
   { id:2, name:"M bland 3", sub:"Lite svårare!", type:"intro-letter", focus:"M", count:3, emojisOnly:true, icon:"🐣", color:"#F39C12" },
   { id:3, name:"Hitta M", sub:"M gömmer sig!", type:"seek-letter", focus:"M", icon:"🔍", color:"#F39C12" },
+  { id:201, name:"M-mästare", sub:"Bland bokstäver", type:"seek-letter", focus:"M", lettersOnly:true, icon:"👑", color:"#F39C12" },
   // --- S ---
   { id:4, name:"Lär dig S", sub:"Möt bokstaven", type:"intro-letter", focus:"S", count:2, emojisOnly:true, tutorial:true, icon:"🐣", color:"#4ECDC4" },
   { id:5, name:"S bland 3", sub:"Lite svårare!", type:"intro-letter", focus:"S", count:3, emojisOnly:true, icon:"🐣", color:"#4ECDC4" },
   { id:6, name:"Hitta S", sub:"S gömmer sig!", type:"seek-letter", focus:"S", icon:"🔍", color:"#4ECDC4" },
+  { id:202, name:"S-mästare", sub:"Bland bokstäver", type:"seek-letter", focus:"S", lettersOnly:true, icon:"👑", color:"#4ECDC4" },
   // --- L ---
   { id:7, name:"Lär dig L", sub:"Möt bokstaven", type:"intro-letter", focus:"L", count:2, emojisOnly:true, tutorial:true, icon:"🐣", color:"#45B7D1" },
   { id:8, name:"L bland 3", sub:"Lite svårare!", type:"intro-letter", focus:"L", count:3, emojisOnly:true, icon:"🐣", color:"#45B7D1" },
   { id:9, name:"Hitta L", sub:"L gömmer sig!", type:"seek-letter", focus:"L", icon:"🔍", color:"#45B7D1" },
+  { id:203, name:"L-mästare", sub:"Bland bokstäver", type:"seek-letter", focus:"L", lettersOnly:true, icon:"👑", color:"#45B7D1" },
   // --- F ---
   { id:10, name:"Lär dig F", sub:"Möt bokstaven", type:"intro-letter", focus:"F", count:2, emojisOnly:true, tutorial:true, icon:"🐣", color:"#A29BFE" },
   { id:11, name:"F bland 3", sub:"Lite svårare!", type:"intro-letter", focus:"F", count:3, emojisOnly:true, icon:"🐣", color:"#A29BFE" },
   { id:12, name:"Hitta F", sub:"F gömmer sig!", type:"seek-letter", focus:"F", icon:"🔍", color:"#A29BFE" },
+  { id:204, name:"F-mästare", sub:"Bland bokstäver", type:"seek-letter", focus:"F", lettersOnly:true, icon:"👑", color:"#A29BFE" },
   // --- Blanda M, S, L, F ---
   { id:13, name:"Blanda M, S, L, F", sub:"2 kort", type:"letter-pair", count:2, letters:["M","S","L","F"], icon:"🌱", color:"#4ECDC4" },
   { id:14, name:"Blanda M, S, L, F", sub:"3 kort", type:"letter-pair", count:3, letters:["M","S","L","F"], icon:"🌱", color:"#45B7D1" },
@@ -436,17 +445,22 @@ const LEVELS = [
   { id:15, name:"Lär dig O", sub:"Möt bokstaven", type:"intro-letter", focus:"O", count:2, emojisOnly:true, tutorial:true, icon:"🐣", color:"#E17055" },
   { id:16, name:"O bland 3", sub:"Lite svårare!", type:"intro-letter", focus:"O", count:3, emojisOnly:true, icon:"🐣", color:"#E17055" },
   { id:17, name:"Hitta O", sub:"O gömmer sig!", type:"seek-letter", focus:"O", icon:"🔍", color:"#E17055" },
+  { id:205, name:"O-mästare", sub:"Bland bokstäver", type:"seek-letter", focus:"O", lettersOnly:true, icon:"👑", color:"#E17055" },
   // --- A ---
   { id:18, name:"Lär dig A", sub:"Möt bokstaven", type:"intro-letter", focus:"A", count:2, emojisOnly:true, tutorial:true, icon:"🐣", color:"#00B894" },
   { id:19, name:"A bland 3", sub:"Lite svårare!", type:"intro-letter", focus:"A", count:3, emojisOnly:true, icon:"🐣", color:"#00B894" },
   { id:20, name:"Hitta A", sub:"A gömmer sig!", type:"seek-letter", focus:"A", icon:"🔍", color:"#00B894" },
+  { id:206, name:"A-mästare", sub:"Bland bokstäver", type:"seek-letter", focus:"A", lettersOnly:true, icon:"👑", color:"#00B894" },
   // --- N, R, V ---
   { id:21, name:"Lär dig N", sub:"Möt bokstaven", type:"intro-letter", focus:"N", count:2, emojisOnly:true, tutorial:true, icon:"🐣", color:"#6C5CE7" },
   { id:22, name:"Hitta N", sub:"N gömmer sig!", type:"seek-letter", focus:"N", icon:"🔍", color:"#6C5CE7" },
+  { id:207, name:"N-mästare", sub:"Bland bokstäver", type:"seek-letter", focus:"N", lettersOnly:true, icon:"👑", color:"#6C5CE7" },
   { id:23, name:"Lär dig R", sub:"Möt bokstaven", type:"intro-letter", focus:"R", count:2, emojisOnly:true, tutorial:true, icon:"🐣", color:"#FD79A8" },
   { id:24, name:"Hitta R", sub:"R gömmer sig!", type:"seek-letter", focus:"R", icon:"🔍", color:"#FD79A8" },
+  { id:208, name:"R-mästare", sub:"Bland bokstäver", type:"seek-letter", focus:"R", lettersOnly:true, icon:"👑", color:"#FD79A8" },
   { id:25, name:"Lär dig V", sub:"Möt bokstaven", type:"intro-letter", focus:"V", count:2, emojisOnly:true, tutorial:true, icon:"🐣", color:"#FDCB6E" },
   { id:26, name:"Hitta V", sub:"V gömmer sig!", type:"seek-letter", focus:"V", icon:"🔍", color:"#FDCB6E" },
+  { id:209, name:"V-mästare", sub:"Bland bokstäver", type:"seek-letter", focus:"V", lettersOnly:true, icon:"👑", color:"#FDCB6E" },
   { id:27, name:"Alla uthållna", sub:"2 kort", type:"letter-pair", count:2, letters:EASY_LETTERS, icon:"🔤", color:"#96CEB4" },
   { id:28, name:"Alla uthållna", sub:"3 kort", type:"letter-pair", count:3, letters:EASY_LETTERS, icon:"🔤", color:"#45B7D1" },
   // --- Korta konsonanter ---
@@ -492,6 +506,89 @@ const LEVELS = [
   // --- BONUS ---
   { id:45, name:"Bonusbokstäver", sub:"C, Q, W, X, Z", type:"letter-pair", count:2, letters:BONUS_LETTERS, icon:"🏆", color:"#FDCB6E" },
 ];
+
+/* ─────────────────────────────────────────────
+   CHILD LEVEL OPTIONS – Parent picks where their child is
+   minLevelId = first level shown in the list
+   ───────────────────────────────────────────── */
+
+const CHILD_LEVEL_OPTIONS = [
+  {
+    key: "starting",
+    title: "Helt i början",
+    desc: "Inga bokstäver, inga ord",
+    minLevelId: 1,
+    color: "#4ECDC4",
+    icon: "🐣",
+  },
+  {
+    key: "knowsLetters",
+    title: "Känner bokstäverna",
+    desc: 'Vet namnen ("be", "ce") men inte ljuden',
+    minLevelId: 1,
+    color: "#45B7D1",
+    icon: "🔤",
+    note: "Vi börjar från start. När barnet redan kan namnen är det extra viktigt att fokusera på ljuden istället – säg \"mmm\", inte \"em\".",
+  },
+  {
+    key: "soundsSome",
+    title: "Börjar ljuda",
+    desc: "Kan ljuda några bokstäver",
+    minLevelId: 13,
+    color: "#A29BFE",
+    icon: "🌱",
+  },
+  {
+    key: "soundsMost",
+    title: "Ljudar bra",
+    desc: "Kan ljuda de flesta bokstäver",
+    minLevelId: 35,
+    color: "#FDCB6E",
+    icon: "📝",
+  },
+  {
+    key: "reads",
+    title: "Läser redan",
+    desc: "Kan läsa hela ord",
+    minLevelId: 53,
+    color: "#FD79A8",
+    icon: "📚",
+  },
+];
+
+const getMinLevelId = (key) => {
+  const opt = CHILD_LEVEL_OPTIONS.find(o => o.key === key);
+  return opt ? opt.minLevelId : 1;
+};
+
+// Levels not yet implemented – skipped when finding "next" so the user never lands on a stub.
+// Source of truth must match the comingSoon flags in LevelSelectScreen.
+const COMING_SOON_IDS = new Set([38, 39, 40, 41, 42, 43, 44, 45]);
+// LEVELS is curated in pedagogical order — preserve array order, do not re-sort by id
+// (ids like 50 appear mid-array, and per-letter mastery levels use 200+ but live next to their letter).
+const ACTIVE_LEVELS_SORTED = LEVELS.filter(l => !COMING_SOON_IDS.has(l.id));
+
+// Resolve entry point as ARRAY INDEX, not an id-threshold. This is the only correct approach
+// because some ids (e.g. mastery 201+) sit early in the array even though their numeric id is large.
+const getEntryIdx = (list, minLevelId) => {
+  const idx = list.findIndex(l => l.id === minLevelId);
+  return idx < 0 ? 0 : idx;
+};
+
+// First uncompleted active level at or beyond the parent-chosen entry point. Returns null when nothing left.
+const getNextActiveLevel = (completedLevels, minLevelId) => {
+  const startIdx = getEntryIdx(ACTIVE_LEVELS_SORTED, minLevelId);
+  return ACTIVE_LEVELS_SORTED.slice(startIdx).find(l => !completedLevels.has(l.id)) || null;
+};
+
+// Next active level strictly after the given currentId in array order – used after a level is completed.
+const getLevelAfter = (currentId, completedLevels, minLevelId) => {
+  const curIdx = ACTIVE_LEVELS_SORTED.findIndex(l => l.id === currentId);
+  if (curIdx < 0) return getNextActiveLevel(completedLevels, minLevelId);
+  const startIdx = getEntryIdx(ACTIVE_LEVELS_SORTED, minLevelId);
+  const after = ACTIVE_LEVELS_SORTED.slice(Math.max(curIdx + 1, startIdx));
+  return after.find(l => !completedLevels.has(l.id)) || after[0] || null;
+};
 
 /* ─────────────────────────────────────────────
    EMBEDDED AUDIO – Pre-recorded letter sounds
@@ -1506,7 +1603,7 @@ const SEEK_ROUNDS = 6;
 const CARD_COLORS = ["#FF6B6B","#4ECDC4","#45B7D1","#96CEB4","#FFEAA7","#DDA0DD","#F39C12","#A29BFE","#FD79A8","#00B894","#6C5CE7","#E17055","#74B9FF","#FDCB6E"];
 
 function SeekLetterGame({ level, onComplete, onBack, skipRoundRef }) {
-  const { focus } = level;
+  const { focus, lettersOnly = false } = level;
   const [round, setRound] = useState(0);
   const [grid, setGrid] = useState([]);
   const [feedback, setFeedback] = useState(null);
@@ -1527,15 +1624,26 @@ function SeekLetterGame({ level, onComplete, onBack, skipRoundRef }) {
   });
 
   const letterDistractorPool = useMemo(() => {
+    if (lettersOnly) {
+      // Mastery mode: full visual-discrimination pool. Do NOT exclude similar-sounding letters –
+      // the test is shape recognition, and tapping a wrong letter still plays its sound (good feedback).
+      return MASTERY_LETTER_POOL.filter(l => l !== focus);
+    }
     const similar = SIMILAR_SOUNDS[focus] || [];
     return EASY_LETTERS.filter(l => l !== focus && !similar.includes(l));
-  }, [focus]);
+  }, [focus, lettersOnly]);
 
   const setupRound = useCallback(() => {
-    // Pick random emojis and a couple distractor letters
-    const numLetters = round < 2 ? 1 : round < 4 ? 2 : 3;
-    const numEmojis = gridSize - 1 - numLetters;
-    const emojis = pickRandom(DISTRACTOR_EMOJIS, numEmojis, []);
+    let numLetters, numEmojis;
+    if (lettersOnly) {
+      // Letters-only mastery: every distractor cell is a letter, no emojis at all
+      numLetters = gridSize - 1;
+      numEmojis = 0;
+    } else {
+      numLetters = round < 2 ? 1 : round < 4 ? 2 : 3;
+      numEmojis = gridSize - 1 - numLetters;
+    }
+    const emojis = numEmojis > 0 ? pickRandom(DISTRACTOR_EMOJIS, numEmojis, []) : [];
     const letters = pickRandom(letterDistractorPool, numLetters, []);
 
     const items = [
@@ -1553,7 +1661,7 @@ function SeekLetterGame({ level, onComplete, onBack, skipRoundRef }) {
     setGrid(shuffled);
     setFeedback(null);
     setFound(false);
-  }, [focus, round, gridSize, letterDistractorPool]);
+  }, [focus, round, gridSize, letterDistractorPool, lettersOnly]);
 
   useEffect(() => { setupRound(); }, [setupRound, round]);
 
@@ -3029,7 +3137,7 @@ function LevelCompleteScreen({ level, onNext, onMenu }) {
    HOME SCREEN
    ───────────────────────────────────────────── */
 
-function HomeScreen({ onStart, onStudio, onOnboarding, completedLevels, audioReady }) {
+function HomeScreen({ onContinue, onBrowse, onStudio, onOnboarding, onChangeLevel, completedLevels, audioReady, childLevel, nextLevel }) {
   const totalCompleted = completedLevels.size;
   const tapCountRef = useRef(0);
   const tapTimerRef = useRef(null);
@@ -3046,18 +3154,39 @@ function HomeScreen({ onStart, onStudio, onOnboarding, completedLevels, audioRea
     tapTimerRef.current = setTimeout(() => { tapCountRef.current = 0; }, 600);
   };
 
+  const childLevelOpt = CHILD_LEVEL_OPTIONS.find(o => o.key === childLevel);
+  const hasProgress = totalCompleted > 0;
+  const allDone = !nextLevel;
+  const ctaLabel = allDone ? "Allt klart! 🎉" : (hasProgress ? "Fortsätt" : "Börja!");
+  const ctaIcon = allDone ? "" : (hasProgress ? " ▶" : " 🚀");
+
   return (
     <div style={{
       display:"flex", flexDirection:"column", alignItems:"center",
       justifyContent:"center", padding:"20px 20px", textAlign:"center",
       position:"relative", height:"100dvh", overflow:"hidden", boxSizing:"border-box",
     }}>
-      <button onClick={onOnboarding} style={{
+      {/* Top-right: help */}
+      <button onClick={onOnboarding} title="Hur fungerar appen?" style={{
         position:"absolute", top:16, right:16,
         width:36, height:36, borderRadius:18, border:"2px solid #DFE6E9",
         background:"white", fontSize:16, cursor:"pointer", display:"flex",
         alignItems:"center", justifyContent:"center", color:"#B2BEC3",
       }}>❓</button>
+
+      {/* Top-left: change level */}
+      {onChangeLevel && (
+        <button onClick={onChangeLevel} title="Ändra barnets nivå" style={{
+          position:"absolute", top:16, left:16,
+          height:36, borderRadius:18, border:"2px solid #DFE6E9",
+          background:"white", fontSize:13, fontWeight:700, cursor:"pointer", display:"flex",
+          alignItems:"center", justifyContent:"center", color:"#636E72", padding:"0 12px", gap:6,
+          fontFamily:"inherit",
+        }}>
+          <span style={{ fontSize:14 }}>{childLevelOpt?.icon || "⚙️"}</span>
+          <span>Nivå</span>
+        </button>
+      )}
 
       {/* Brand: mascot + title */}
       <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:0 }}>
@@ -3077,18 +3206,48 @@ function HomeScreen({ onStart, onStudio, onOnboarding, completedLevels, audioRea
         Ljuda med Ljudit – lär ditt barn att läsa!
       </p>
 
-      <button onClick={onStart} style={{
-        width:"100%", maxWidth:300, marginTop:16,
+      {/* Show what's next so the parent knows what they're starting */}
+      {nextLevel && hasProgress && (
+        <div style={{
+          marginTop:14, padding:"8px 14px", borderRadius:12,
+          background:"white", border:`1.5px solid ${nextLevel.color}33`,
+          fontSize:12, fontWeight:700, color:"#636E72",
+          display:"flex", alignItems:"center", gap:8,
+          boxShadow:`0 2px 10px ${nextLevel.color}1A`,
+        }}>
+          <span style={{ fontSize:18 }}>{nextLevel.icon}</span>
+          <span style={{ color:"#2D3436" }}>{nextLevel.name}</span>
+          <span style={{ color:"#B2BEC3", fontWeight:500 }}>· {nextLevel.sub}</span>
+        </div>
+      )}
+
+      <button onClick={allDone ? onBrowse : onContinue} style={{
+        width:"100%", maxWidth:300, marginTop:hasProgress ? 12 : 16,
         padding:"16px 48px", borderRadius:20, border:"none",
-        background:"linear-gradient(135deg, #4ECDC4, #45B7D1)",
+        background: allDone
+          ? "linear-gradient(135deg, #FDCB6E, #E17055)"
+          : "linear-gradient(135deg, #4ECDC4, #45B7D1)",
         color:"white", fontSize:18, fontWeight:700, cursor:"pointer",
-        boxShadow:"0 8px 30px rgba(78,205,196,0.4)",
+        boxShadow: allDone
+          ? "0 8px 30px rgba(225,112,85,0.4)"
+          : "0 8px 30px rgba(78,205,196,0.4)",
       }}>
-        Börja! 🚀
+        {ctaLabel}{ctaIcon}
       </button>
 
+      {/* Subtle secondary action – browse all levels */}
+      {!allDone && (
+        <button onClick={onBrowse} style={{
+          marginTop:10, padding:"8px 18px", border:"none", background:"none",
+          color:"#95A5A6", fontSize:13, fontWeight:600, cursor:"pointer",
+          fontFamily:"inherit", textDecoration:"underline", textUnderlineOffset:3,
+        }}>
+          Bläddra alla nivåer
+        </button>
+      )}
+
       <div style={{
-          marginTop:14, padding:"10px 16px", borderRadius:12,
+          marginTop:hasProgress || allDone ? 14 : 18, padding:"10px 16px", borderRadius:12,
           background:"#F0F3F8", border:"1px solid #E8ECF0",
           fontSize:11, color:"#95A5A6", maxWidth:300, lineHeight:1.5, width:"100%",
         }}>
@@ -3103,29 +3262,46 @@ function HomeScreen({ onStart, onStudio, onOnboarding, completedLevels, audioRea
    LEVEL SELECT SCREEN
    ───────────────────────────────────────────── */
 
-function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onToggleUnlock }) {
-  const sections = [
+function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onToggleUnlock, minLevelId = 1 }) {
+  // Filter LEVELS by ARRAY POSITION (not id-comparison) – mastery levels with high ids that
+  // belong early in the curriculum must be hidden when parent picks a later entry point.
+  const entryIdx = LEVELS.findIndex(l => l.id === minLevelId);
+  const visibleLevels = entryIdx <= 0 ? LEVELS : LEVELS.slice(entryIdx);
+  const inRange = (lo, hi) => visibleLevels.filter(l => l.id >= lo && l.id <= hi);
+  const inRangeOrSet = (lo, hi, extraIds = []) => visibleLevels.filter(l => (l.id >= lo && l.id <= hi) || extraIds.includes(l.id));
+  const idMatch = (id) => visibleLevels.filter(l => l.id === id);
+
+  const sectionsAll = [
     { title:"Bokstäver", emoji:"🔤", desc:"Lär dig bokstavsljuden", color:"#4ECDC4", subs:[
-      { title:"Uthållna ljud", levels: LEVELS.filter(l => l.id <= 14), emoji:"🐣", color:"#4ECDC4" },
-      { title:"Fler ljud", levels: LEVELS.filter(l => l.id >= 15 && l.id <= 28), emoji:"🌱", color:"#00B894" },
-      { title:"Alla bokstäver", levels: LEVELS.filter(l => l.id >= 29 && l.id <= 34), emoji:"⭐", color:"#FDCB6E" },
+      { title:"Uthållna ljud", levels: inRangeOrSet(1, 14, [201, 202, 203, 204]), emoji:"🐣", color:"#4ECDC4" },
+      { title:"Fler ljud", levels: inRangeOrSet(15, 28, [205, 206, 207, 208, 209]), emoji:"🌱", color:"#00B894" },
+      { title:"Alla bokstäver", levels: inRange(29, 34), emoji:"⭐", color:"#FDCB6E" },
     ]},
     { title:"Läsa", emoji:"📖", desc:"Ord, meningar och sagor", color:"#A29BFE", subs:[
-      { title:"Läsa ord", levels: LEVELS.filter(l => l.id >= 35 && l.id <= 52), emoji:"📝", color:"#6C5CE7" },
-      { title:"Meningar", levels: LEVELS.filter(l => l.id >= 53 && l.id <= 56), emoji:"💬", color:"#A29BFE" },
-      { title:"Småsagor", levels: LEVELS.filter(l => l.id >= 57 && l.id <= 59), emoji:"📚", color:"#74B9FF" },
+      { title:"Läsa ord", levels: inRange(35, 52), emoji:"📝", color:"#6C5CE7" },
+      { title:"Meningar", levels: inRange(53, 56), emoji:"💬", color:"#A29BFE" },
+      { title:"Småsagor", levels: inRange(57, 59), emoji:"📚", color:"#74B9FF" },
     ]},
     { title:"Skriva", emoji:"✏️", desc:"Bygg, stava och rita", color:"#FF9800", subs:[
-      { title:"Bygg ord", levels: LEVELS.filter(l => l.id >= 60 && l.id <= 65), emoji:"🧩", color:"#FF9800" },
-      { title:"Rita bokstäver", levels: LEVELS.filter(l => l.id === 39), emoji:"✏️", color:"#E17055", comingSoon:true },
-      { title:"Stava ord", levels: LEVELS.filter(l => l.id === 40), emoji:"🔠", color:"#FDCB6E", comingSoon:true },
+      { title:"Bygg ord", levels: inRange(60, 65), emoji:"🧩", color:"#FF9800" },
+      { title:"Rita bokstäver", levels: idMatch(39), emoji:"✏️", color:"#E17055", comingSoon:true },
+      { title:"Stava ord", levels: idMatch(40), emoji:"🔠", color:"#FDCB6E", comingSoon:true },
     ]},
     { title:"Övrigt", emoji:"🎯", desc:"Ljudning, specialljud & bonus", color:"#E17055", subs:[
-      { title:"Ljuda ut", levels: LEVELS.filter(l => l.id === 38), emoji:"🚗", color:"#00B894", comingSoon:true },
-      { title:"Specialljud", levels: LEVELS.filter(l => l.id >= 41 && l.id <= 44), emoji:"🔊", color:"#6C5CE7", comingSoon:true },
-      { title:"Bonus", levels: LEVELS.filter(l => l.id >= 45), emoji:"🏆", color:"#FDCB6E", comingSoon:true },
+      { title:"Ljuda ut", levels: idMatch(38), emoji:"🚗", color:"#00B894", comingSoon:true },
+      { title:"Specialljud", levels: inRange(41, 44), emoji:"🔊", color:"#6C5CE7", comingSoon:true },
+      { title:"Bonus", levels: visibleLevels.filter(l => l.id >= 45), emoji:"🏆", color:"#FDCB6E", comingSoon:true },
     ]},
   ];
+
+  // Drop subs that have zero levels AND aren't comingSoon (comingSoon kept as future-content placeholder)
+  // Then drop sections whose subs are all empty/coming-soon-empty.
+  const sections = sectionsAll
+    .map(sec => ({
+      ...sec,
+      subs: sec.subs.filter(sub => sub.levels.length > 0 || sub.comingSoon),
+    }))
+    .filter(sec => sec.subs.length > 0);
 
   const [view, setView] = useState("sections"); // sections | subs | levels
   const [activeSec, setActiveSec] = useState(0);
@@ -3151,10 +3327,11 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onT
     return sub.levels.some(level => {
       const done = completedLevels.has(level.id);
       if (done) return true;
-      const levelIdx = LEVELS.findIndex(l => l.id === level.id);
-      const prevLevel = levelIdx > 0 ? LEVELS[levelIdx - 1] : null;
-      const prevDone = !prevLevel || completedLevels.has(prevLevel.id);
-      return prevDone;
+      // First visible level is always reachable; otherwise need previous visible level done
+      const visIdx = visibleLevels.findIndex(l => l.id === level.id);
+      if (visIdx <= 0) return true;
+      const prevLevel = visibleLevels[visIdx - 1];
+      return completedLevels.has(prevLevel.id);
     });
   };
 
@@ -3321,8 +3498,8 @@ function LevelSelectScreen({ onSelect, completedLevels, onHome, allUnlocked, onT
         {sub.levels.map((level, li) => {
           const done = completedLevels.has(level.id);
           const hasAudio = levelHasAudio(level);
-          const levelIdx = LEVELS.findIndex(l => l.id === level.id);
-          const prevLevel = levelIdx > 0 ? LEVELS[levelIdx - 1] : null;
+          const visIdx = visibleLevels.findIndex(l => l.id === level.id);
+          const prevLevel = visIdx > 0 ? visibleLevels[visIdx - 1] : null;
           const prevDone = !prevLevel || completedLevels.has(prevLevel.id);
           const locked = allUnlocked ? false : (!prevDone && !done);
           const lockReason = locked ? "Slutför föregående nivå först" : "";
@@ -3698,6 +3875,137 @@ function OnboardingScreen({ onDone }) {
 }
 
 /* ─────────────────────────────────────────────
+   CHILD LEVEL SCREEN – Parent picks child's starting level
+   ───────────────────────────────────────────── */
+
+function ChildLevelScreen({ onDone, onBack, currentKey }) {
+  const [selected, setSelected] = useState(currentKey || null);
+  const [showNote, setShowNote] = useState(false);
+
+  const selectedOpt = CHILD_LEVEL_OPTIONS.find(o => o.key === selected);
+
+  const handleSelect = (key) => {
+    setSelected(key);
+    const opt = CHILD_LEVEL_OPTIONS.find(o => o.key === key);
+    if (opt && opt.note) setShowNote(true);
+    else setShowNote(false);
+  };
+
+  const handleConfirm = () => {
+    if (!selected) return;
+    onDone(selected);
+  };
+
+  return (
+    <div style={{
+      minHeight:"100dvh", display:"flex", flexDirection:"column",
+      padding:"20px 16px", boxSizing:"border-box",
+      background:"linear-gradient(180deg, #F8F9FA 0%, #E8F4F8 50%, #F0E6FF 100%)",
+      fontFamily:"'Nunito', 'Segoe UI', system-ui, sans-serif",
+      maxWidth:480, margin:"0 auto",
+    }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');`}</style>
+
+      {/* Header with optional back */}
+      {onBack && (
+        <button onClick={onBack} style={{
+          width:40, height:40, borderRadius:12, border:"2px solid #DFE6E9",
+          background:"white", fontSize:18, cursor:"pointer", display:"flex",
+          alignItems:"center", justifyContent:"center", marginBottom:12,
+        }}>←</button>
+      )}
+
+      {/* Mascot + heading */}
+      <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:8, marginTop: onBack ? 4 : 24, marginBottom:18 }}>
+        <MascotImg mood="happy" size={72} />
+        <h1 style={{
+          fontSize:24, fontWeight:900, color:"#2D3436",
+          margin:"4px 0 0 0", textAlign:"center", lineHeight:1.2,
+        }}>
+          Var är ditt barn idag?
+        </h1>
+        <p style={{
+          fontSize:13, color:"#636E72", margin:"2px 0 0 0",
+          textAlign:"center", fontWeight:600, lineHeight:1.4,
+        }}>
+          Välj det som stämmer bäst – vi anpassar nivåerna.
+        </p>
+      </div>
+
+      {/* Options */}
+      <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:14 }}>
+        {CHILD_LEVEL_OPTIONS.map((opt, i) => {
+          const isSelected = selected === opt.key;
+          return (
+            <div key={opt.key} style={{
+              opacity:0, animation:`cardSlideIn 0.35s ease ${i * 0.06}s forwards`,
+            }}>
+              <button onClick={() => handleSelect(opt.key)} style={{
+                display:"flex", alignItems:"center", gap:14, width:"100%",
+                padding:"14px 16px", borderRadius:16,
+                border: isSelected ? `2px solid ${opt.color}` : "2px solid #EEE",
+                background: isSelected ? `${opt.color}15` : "white",
+                cursor:"pointer", textAlign:"left", transition:"all 0.15s ease",
+                boxShadow: isSelected ? `0 4px 14px ${opt.color}33` : "0 2px 8px rgba(0,0,0,0.04)",
+                fontFamily:"inherit",
+              }}>
+                <div style={{
+                  width:44, height:44, borderRadius:14,
+                  background:`linear-gradient(135deg, ${opt.color}, ${opt.color}BB)`,
+                  display:"flex", alignItems:"center", justifyContent:"center",
+                  fontSize:22, flexShrink:0,
+                }}>{opt.icon}</div>
+                <div style={{ flex:1 }}>
+                  <div style={{ fontSize:15, fontWeight:800, color:"#2D3436" }}>{opt.title}</div>
+                  <div style={{ fontSize:12, color:"#636E72", fontWeight:500, marginTop:2 }}>{opt.desc}</div>
+                </div>
+                {isSelected && <span style={{ fontSize:20, color:opt.color }}>✓</span>}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Educational note for "knowsLetters" */}
+      {showNote && selectedOpt?.note && (
+        <div style={{
+          background:"linear-gradient(135deg, #FFF9E6, #FFF3CD)",
+          borderLeft:"4px solid #FDCB6E",
+          borderRadius:"0 14px 14px 0",
+          padding:"12px 14px", marginBottom:14,
+          animation:"cardSlideIn 0.3s ease",
+        }}>
+          <div style={{ fontSize:13, fontWeight:800, color:"#E17055", marginBottom:4, display:"flex", alignItems:"center", gap:6 }}>
+            <span>💡</span> Bra att veta
+          </div>
+          <p style={{ fontSize:13, color:"#636E72", lineHeight:1.45, fontWeight:500, margin:0 }}>
+            {selectedOpt.note}
+          </p>
+        </div>
+      )}
+
+      {/* Confirm button */}
+      <div style={{ marginTop:"auto", paddingTop:8 }}>
+        <button onClick={handleConfirm} disabled={!selected} style={{
+          width:"100%", padding:"16px", borderRadius:16, border:"none",
+          background: selected
+            ? "linear-gradient(135deg, #4ECDC4, #45B7D1)"
+            : "#DFE6E9",
+          color:"white", fontSize:16, fontWeight:800, cursor: selected ? "pointer" : "default",
+          boxShadow: selected ? "0 6px 20px rgba(78,205,196,0.35)" : "none",
+          fontFamily:"inherit", transition:"all 0.2s ease",
+        }}>
+          {currentKey ? "Spara ändring" : "Kom igång!"}
+        </button>
+        <p style={{ fontSize:11, color:"#B2BEC3", textAlign:"center", marginTop:10, fontWeight:500 }}>
+          Du kan ändra nivån när som helst i inställningarna.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
    LOGIN SCREEN
    ───────────────────────────────────────────── */
 
@@ -3807,12 +4115,6 @@ function LoginScreen({ onEmail, onGuest, error, loading }) {
 
 function App() {
   const [screen, setScreen] = useState("splash");
-
-  const goToLevels = useCallback(() => {
-    setScreen("loading");
-    playSfx("loading", 0.2);
-    setTimeout(() => setScreen("levels"), 1800);
-  }, []);
   const [currentLevel, setCurrentLevel] = useState(null);
   const [completedLevels, setCompletedLevels] = useState(() => {
     try {
@@ -3829,6 +4131,54 @@ function App() {
   const [authUser, setAuthUser] = useState(null);
   const [authError, setAuthError] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
+  const [childLevel, setChildLevel] = useState(() => {
+    try { return localStorage.getItem("ljudit_child_level") || null; } catch(e) { return null; }
+  });
+
+  const minLevelId = getMinLevelId(childLevel);
+
+  // Refs let the setTimeout below see the latest values without stale closures.
+  const completedRef = useRef(completedLevels);
+  const minLevelIdRef = useRef(minLevelId);
+  useEffect(() => { completedRef.current = completedLevels; }, [completedLevels]);
+  useEffect(() => { minLevelIdRef.current = minLevelId; }, [minLevelId]);
+
+  const startLevel = useCallback((level) => {
+    setCurrentLevel(level);
+    setScreen("playing");
+  }, []);
+
+  // Primary CTA: jump straight into the next uncompleted level. Plays the loading flourish
+  // first so the audio system has a beat to warm up and the snail wake-up animation runs.
+  const continueToNext = useCallback(() => {
+    setScreen("loading");
+    playSfx("loading", 0.2);
+    setTimeout(() => {
+      const next = getNextActiveLevel(completedRef.current, minLevelIdRef.current);
+      if (next) {
+        setCurrentLevel(next);
+        setScreen("playing");
+      } else {
+        // Everything done – fall back to the browse view so the parent can revisit anything.
+        setScreen("levels");
+      }
+    }, 1800);
+  }, []);
+
+  // Secondary CTA: open the browse/category view for cherry-picking specific levels.
+  const goToLevels = useCallback(() => {
+    setScreen("loading");
+    playSfx("loading", 0.2);
+    setTimeout(() => setScreen("levels"), 1800);
+  }, []);
+
+  const saveChildLevel = useCallback((key) => {
+    setChildLevel(key);
+    try { localStorage.setItem("ljudit_child_level", key); } catch(e) {}
+    if (firebaseUidRef.current && typeof firebase !== "undefined") {
+      firebase.database().ref("users/" + firebaseUidRef.current + "/childLevel").set(key).catch(() => {});
+    }
+  }, []);
 
   // Firebase: listen for auth state
   useEffect(() => {
@@ -3846,6 +4196,14 @@ function App() {
               try { localStorage.setItem("ljudit_progress", JSON.stringify([...merged])); } catch(e) {}
               return merged;
             });
+          }
+        }).catch(() => {});
+        // Sync childLevel from Firebase – server-side wins if set
+        firebase.database().ref("users/" + user.uid + "/childLevel").once("value").then(snap => {
+          const val = snap.val();
+          if (val && CHILD_LEVEL_OPTIONS.find(o => o.key === val)) {
+            setChildLevel(val);
+            try { localStorage.setItem("ljudit_child_level", val); } catch(e) {}
           }
         }).catch(() => {});
       }
@@ -3912,11 +4270,6 @@ function App() {
     });
   }, []);
 
-  const startLevel = (level) => {
-    setCurrentLevel(level);
-    setScreen("playing");
-  };
-
   const handleComplete = () => {
     setCompletedLevels(prev => {
       const next = new Set([...prev, currentLevel.id]);
@@ -3932,12 +4285,10 @@ function App() {
   };
 
   const nextLevel = () => {
-    const idx = LEVELS.findIndex(l => l.id === currentLevel.id);
-    if (idx < LEVELS.length - 1) {
-      startLevel(LEVELS[idx + 1]);
-    } else {
-      setScreen("levels");
-    }
+    if (!currentLevel) { setScreen("levels"); return; }
+    const next = getLevelAfter(currentLevel.id, completedLevels, minLevelId);
+    if (next) startLevel(next);
+    else setScreen("levels");
   };
 
   const handleStudioComplete = () => {
@@ -3969,8 +4320,8 @@ function App() {
     }
   };
 
-  // Show login screen if not authenticated (but after onboarding)
-  if (screen !== "onboarding" && screen !== "splash" && authReady && !authUser && typeof firebase !== "undefined") {
+  // Show login screen if not authenticated (but after onboarding/levelChoice)
+  if (screen !== "onboarding" && screen !== "levelChoice" && screen !== "splash" && authReady && !authUser && typeof firebase !== "undefined") {
     return <LoginScreen
       onEmail={handleEmailLogin}
       onGuest={handleGuestLogin}
@@ -3979,8 +4330,8 @@ function App() {
     />;
   }
 
-  // Show loading while checking auth (but not during onboarding)
-  if (screen !== "onboarding" && screen !== "splash" && !authReady && typeof firebase !== "undefined") {
+  // Show loading while checking auth (but not during onboarding/levelChoice)
+  if (screen !== "onboarding" && screen !== "levelChoice" && screen !== "splash" && !authReady && typeof firebase !== "undefined") {
     return (
       <div style={{
         minHeight:"100dvh", display:"flex", alignItems:"center", justifyContent:"center",
@@ -4082,7 +4433,12 @@ function App() {
             const t1 = setTimeout(() => setPhase(1), 2200);
             const t2 = setTimeout(() => {
               let next = "home";
-              try { if (!localStorage.getItem("ljudit_onboarded")) next = "onboarding"; } catch(e) {}
+              try {
+                const onboarded = localStorage.getItem("ljudit_onboarded");
+                const cl = localStorage.getItem("ljudit_child_level");
+                if (!onboarded) next = "onboarding";
+                else if (!cl) next = "levelChoice";
+              } catch(e) {}
               setScreen(next);
             }, 3200);
             return () => { clearTimeout(t1); clearTimeout(t2); };
@@ -4194,16 +4550,31 @@ function App() {
       {screen === "onboarding" && (
         <OnboardingScreen onDone={() => {
           try { localStorage.setItem("ljudit_onboarded", "1"); } catch(e) {}
-          setScreen("home");
+          // After tutorial, go to level choice if not yet set, else home
+          setScreen(childLevel ? "home" : "levelChoice");
         }} />
+      )}
+      {screen === "levelChoice" && (
+        <ChildLevelScreen
+          currentKey={childLevel}
+          onBack={childLevel ? () => setScreen("home") : null}
+          onDone={(key) => {
+            saveChildLevel(key);
+            setScreen("home");
+          }}
+        />
       )}
       {screen === "home" && (
         <HomeScreen
-          onStart={() => goToLevels()}
+          onContinue={continueToNext}
+          onBrowse={goToLevels}
           onStudio={() => setScreen("studio")}
           onOnboarding={() => setScreen("onboarding")}
+          onChangeLevel={() => setScreen("levelChoice")}
           completedLevels={completedLevels}
           audioReady={audioReady}
+          childLevel={childLevel}
+          nextLevel={getNextActiveLevel(completedLevels, minLevelId)}
         />
       )}
       {screen === "studio" && (
@@ -4219,6 +4590,7 @@ function App() {
           onHome={() => setScreen("home")}
           allUnlocked={allUnlocked}
           onToggleUnlock={() => setAllUnlocked(u => !u)}
+          minLevelId={minLevelId}
         />
       )}
       {screen === "playing" && (
